@@ -880,9 +880,10 @@ function connectDirect() {
     startMicrophone();
   };
 
-  wsConnection.onmessage = (event) => {
+  wsConnection.onmessage = async (event) => {
     try {
-      const data = JSON.parse(event.data);
+      const text = event.data instanceof Blob ? await event.data.text() : event.data;
+      const data = JSON.parse(text);
       console.log('Mensaje recibido:', JSON.stringify(data).substring(0, 100));
       const parts = data?.serverContent?.modelTurn?.parts || [];
       parts.forEach(part => {
