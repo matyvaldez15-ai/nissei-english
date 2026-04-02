@@ -963,13 +963,15 @@ function addToTranscript(speaker, text) {
   if (t.textContent === 'La conversación aparecerá acá...') {
     t.textContent = '';
     t._lastSpeaker = '';
+    t._buffer = '';
   }
   if (t._lastSpeaker !== speaker) {
-    t.textContent += (t.textContent ? '\n' : '') + speaker + ': ' + text;
+    if (t._buffer) t.textContent += '\n';
+    t.textContent += speaker + ': ';
     t._lastSpeaker = speaker;
-  } else {
-    t.textContent += text;
+    t._buffer = text;
   }
+  t.textContent += text;
   t.scrollTop = t.scrollHeight;
 }
 
