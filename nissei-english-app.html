@@ -943,18 +943,14 @@ async function startMicrophone() {
 
 let audioQueue = [];
 let isPlayingAudio = false;
+let nextStartTime = 0;
 
 function playAudioChunk(base64Audio) {
-  audioQueue.push(base64Audio);
-  if (!isPlayingAudio) playNextChunk();
-}
-
-function playNextChunk() {
-  if (audioQueue.length === 0) { isPlayingAudio = false; return; }
-  isPlayingAudio = true;
-  const base64Audio = audioQueue.shift();
   try {
-    if (!audioCtxOutput) audioCtxOutput = new AudioContext();
+    if (!audioCtxOutput) {
+      audioCtxOutput = new AudioContext();
+      nextStartTime = audioCtxOutput.currentTime;
+    }
     const binary = atob(base64Audio);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
@@ -967,9 +963,10 @@ function playNextChunk() {
     source.buffer = buffer;
     source.playbackRate.value = 1.15;
     source.connect(audioCtxOutput.destination);
-    source.onended = () => playNextChunk();
-    source.start();
-  } catch(e) { playNextChunk(); }
+    const startAt = Math.max(nextStartTime, audioCtxOutput.currentTime);
+    source.start(startAt);
+    nextStartTime = startAt + buffer.duration / 1.15;
+  } catch(e) {}
 }
 
 function addToTranscript(speaker, text) {
@@ -1011,6 +1008,7 @@ function closeVoiceModal() {
   if (audioCtxOutput) { audioCtxOutput.close(); audioCtxOutput = null; }
   audioQueue = [];
   isPlayingAudio = false;
+  nextStartTime = 0;
 }
 
 // ── INICIALIZACIÓN ────────────────────────────────────────────
