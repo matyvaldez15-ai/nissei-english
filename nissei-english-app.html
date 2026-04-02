@@ -941,7 +941,18 @@ async function startMicrophone() {
   }
 }
 
+let audioQueue = [];
+let isPlayingAudio = false;
+
 function playAudioChunk(base64Audio) {
+  audioQueue.push(base64Audio);
+  if (!isPlayingAudio) playNextChunk();
+}
+
+function playNextChunk() {
+  if (audioQueue.length === 0) { isPlayingAudio = false; return; }
+  isPlayingAudio = true;
+  const base64Audio = audioQueue.shift();
   try {
     if (!audioCtxOutput) audioCtxOutput = new AudioContext();
     const binary = atob(base64Audio);
@@ -955,8 +966,9 @@ function playAudioChunk(base64Audio) {
     const source = audioCtxOutput.createBufferSource();
     source.buffer = buffer;
     source.connect(audioCtxOutput.destination);
+    source.onended = () => playNextChunk();
     source.start();
-  } catch(e) {}
+  } catch(e) { playNextChunk(); }
 }
 
 function addToTranscript(speaker, text) {
@@ -996,6 +1008,8 @@ function closeVoiceModal() {
   if (audioContext) { audioContext.close(); audioContext = null; }
   if (audioStream) { audioStream.getTracks().forEach(t => t.stop()); audioStream = null; }
   if (audioCtxOutput) { audioCtxOutput.close(); audioCtxOutput = null; }
+  audioQueue = [];
+  isPlayingAudio = false;
 }
 
 // ── INICIALIZACIÓN ────────────────────────────────────────────
