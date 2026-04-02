@@ -589,9 +589,6 @@ let currentStep = 1;
 let completedClasses = JSON.parse(localStorage.getItem('completed') || '[]');
 let voiceMode = 'shadowing';
 let apiKey = localStorage.getItem('gemini_api_key') || '';
-let peerConnection = null;
-let audioStream = null;
-let wsConnection = null;
 
 // ── NAVEGACIÓN ────────────────────────────────────────────────
 function showScreen(id) {
