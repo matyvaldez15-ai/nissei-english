@@ -960,8 +960,16 @@ function playAudioChunk(base64Audio) {
 
 function addToTranscript(speaker, text) {
   const t = document.getElementById('transcript-text');
-  if (t.textContent === 'La conversación aparecerá acá...') t.textContent = '';
-  t.textContent += (t.textContent ? '\n' : '') + speaker + ': ' + text;
+  if (t.textContent === 'La conversación aparecerá acá...') {
+    t.textContent = '';
+    t._lastSpeaker = '';
+  }
+  if (t._lastSpeaker !== speaker) {
+    t.textContent += (t.textContent ? '\n' : '') + speaker + ': ' + text;
+    t._lastSpeaker = speaker;
+  } else {
+    t.textContent += text;
+  }
   t.scrollTop = t.scrollHeight;
 }
 
