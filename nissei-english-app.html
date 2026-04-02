@@ -941,9 +941,8 @@ async function startMicrophone() {
   }
 }
 
-let audioQueue = [];
-let isPlayingAudio = false;
 let nextStartTime = 0;
+const SPEED = 1.15;
 
 function playAudioChunk(base64Audio) {
   try {
@@ -954,18 +953,23 @@ function playAudioChunk(base64Audio) {
     const binary = atob(base64Audio);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
     const samples = bytes.length / 2;
-    const buffer = audioCtxOutput.createBuffer(1, samples, 24000);
-    const channel = buffer.getChannelData(0);
     const view = new DataView(bytes.buffer);
+
+    // Resample to higher sample rate to speed up without pitch change
+    const originalSampleRate = 24000;
+    const newSampleRate = Math.round(originalSampleRate * SPEED);
+    const buffer = audioCtxOutput.createBuffer(1, samples, newSampleRate);
+    const channel = buffer.getChannelData(0);
     for (let i = 0; i < samples; i++) channel[i] = view.getInt16(i * 2, true) / 32768;
+
     const source = audioCtxOutput.createBufferSource();
     source.buffer = buffer;
-    source.playbackRate.value = 1.15;
     source.connect(audioCtxOutput.destination);
     const startAt = Math.max(nextStartTime, audioCtxOutput.currentTime);
     source.start(startAt);
-    nextStartTime = startAt + buffer.duration / 1.15;
+    nextStartTime = startAt + buffer.duration;
   } catch(e) {}
 }
 
@@ -1006,8 +1010,6 @@ function closeVoiceModal() {
   if (audioContext) { audioContext.close(); audioContext = null; }
   if (audioStream) { audioStream.getTracks().forEach(t => t.stop()); audioStream = null; }
   if (audioCtxOutput) { audioCtxOutput.close(); audioCtxOutput = null; }
-  audioQueue = [];
-  isPlayingAudio = false;
   nextStartTime = 0;
 }
 
