@@ -965,6 +965,7 @@ function playNextChunk() {
     for (let i = 0; i < samples; i++) channel[i] = view.getInt16(i * 2, true) / 32768;
     const source = audioCtxOutput.createBufferSource();
     source.buffer = buffer;
+    source.playbackRate.value = 1.15;
     source.connect(audioCtxOutput.destination);
     source.onended = () => playNextChunk();
     source.start();
