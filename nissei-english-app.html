@@ -922,7 +922,12 @@ async function startMicrophone() {
         }
         const b64 = btoa(String.fromCharCode(...new Uint8Array(pcm.buffer)));
         wsConnection.send(JSON.stringify({
-          realtime_input: { media_chunks: [{ data: b64, mime_type: 'audio/pcm;rate=16000' }] }
+          realtimeInput: {
+            audio: {
+              data: b64,
+              mimeType: 'audio/pcm;rate=16000'
+            }
+          }
         }));
       }
     };
