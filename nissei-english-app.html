@@ -851,7 +851,7 @@ function startVoiceSession() {
 }
 
 function connectDirect() {
-  const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=${apiKey}`;
+  const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${apiKey}`;
   
   try {
     wsConnection = new WebSocket(wsUrl);
@@ -864,7 +864,7 @@ function connectDirect() {
     console.log('WebSocket abierto, enviando setup...');
     const setupMsg = {
       setup: {
-        model: 'models/gemini-2.5-flash-preview-native-audio-12-2025',
+        model: 'models/gemini-3.1-flash-live-preview',
         generationConfig: {
           responseModalities: ['AUDIO'],
           speechConfig: {
