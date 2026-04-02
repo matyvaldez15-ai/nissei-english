@@ -833,8 +833,7 @@ function saveApiKey() {
   startVoiceSession();
 }
 
-// ── GEMINI LIVE VIA TOKEN EFÍMERO ────────────────────────────
-const PROXY_URL = 'https://nissei-proxy.onrender.com';
+// ── GEMINI LIVE DIRECTO ───────────────────────────────────────
 let wsConnection = null;
 let audioStream = null;
 let audioContext = null;
@@ -848,44 +847,34 @@ function startVoiceSession() {
   document.getElementById('wave-bars').classList.remove('inactive');
   const classIdx = Math.min(currentClass - 1, PROMPTS[voiceMode].length - 1);
   currentSystemPrompt = PROMPTS[voiceMode][classIdx] || PROMPTS[voiceMode][0];
-  getEphemeralToken();
+  connectDirect();
 }
 
-async function getEphemeralToken() {
+function connectDirect() {
+  const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=${apiKey}`;
+  
   try {
-    setStatus('Obteniendo token...', 'Conectando con el servidor...');
-    const response = await fetch(`${PROXY_URL}/token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ apiKey, systemPrompt: currentSystemPrompt })
-    });
-    const data = await response.json();
-    if (data.error) throw new Error(data.error);
-    if (!data.name) throw new Error('Token no recibido: ' + JSON.stringify(data));
-    console.log('Token obtenido:', data.name.substring(0, 20) + '...');
-    connectWithToken(data.name);
-  } catch (e) {
-    setStatus('Error: ' + e.message, 'Verificá tu API Key');
-    document.getElementById('wave-bars').classList.add('inactive');
+    wsConnection = new WebSocket(wsUrl);
+  } catch(e) {
+    setStatus('Error al conectar', e.message);
+    return;
   }
-}
-
-function connectWithToken(token) {
-  setStatus('Conectando a Gemini...', 'Estableciendo sesión de voz...');
-  const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?access_token=${token}`;
-  wsConnection = new WebSocket(wsUrl);
 
   wsConnection.onopen = () => {
-    wsConnection.send(JSON.stringify({
+    console.log('WebSocket abierto, enviando setup...');
+    const setupMsg = {
       setup: {
-        model: 'models/gemini-3.1-flash-live-preview',
-        generation_config: {
-          response_modalities: ['AUDIO'],
-          speech_config: { voice_config: { prebuilt_voice_config: { voice_name: 'Zephyr' } } }
+        model: 'models/gemini-2.5-flash-preview-native-audio-12-2025',
+        generationConfig: {
+          responseModalities: ['AUDIO'],
+          speechConfig: {
+            voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Zephyr' } }
+          }
         },
-        system_instruction: { parts: [{ text: currentSystemPrompt }] }
+        systemInstruction: { parts: [{ text: currentSystemPrompt }] }
       }
-    }));
+    };
+    wsConnection.send(JSON.stringify(setupMsg));
     setStatus('Conectado — La IA está lista', 'Hablá en inglés cuando quieras');
     document.getElementById('finish-btn').style.display = 'block';
     startMicrophone();
@@ -894,6 +883,7 @@ function connectWithToken(token) {
   wsConnection.onmessage = (event) => {
     try {
       const data = JSON.parse(event.data);
+      console.log('Mensaje recibido:', JSON.stringify(data).substring(0, 100));
       const parts = data?.serverContent?.modelTurn?.parts || [];
       parts.forEach(part => {
         if (part.inlineData?.data) playAudioChunk(part.inlineData.data);
@@ -901,18 +891,18 @@ function connectWithToken(token) {
       });
       const trans = data?.serverContent?.outputTranscription?.text;
       if (trans) addToTranscript('Alex', trans);
-    } catch(e) {}
+    } catch(e) { console.log('Error parsing:', e); }
   };
 
   wsConnection.onerror = (e) => {
     console.log('WS error:', e);
-    setStatus('Error de conexión', 'Intentá de nuevo en unos segundos');
+    setStatus('Error de conexión', 'Verificá tu API Key');
     document.getElementById('wave-bars').classList.add('inactive');
   };
 
   wsConnection.onclose = (e) => {
-    console.log('WS cerró:', e.code, e.reason);
-    setStatus('Sesión finalizada', '');
+    console.log('WS cerró. Código:', e.code, 'Razón:', e.reason);
+    setStatus('Sesión finalizada — código: ' + e.code, e.reason || '');
     document.getElementById('wave-bars').classList.add('inactive');
   };
 }
