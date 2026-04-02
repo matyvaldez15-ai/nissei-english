@@ -833,8 +833,8 @@ function saveApiKey() {
   startVoiceSession();
 }
 
-// ── GEMINI LIVE VIA PROXY ─────────────────────────────────────
-const PROXY_URL = 'wss://nissei-proxy.onrender.com';
+// ── GEMINI LIVE VIA TOKEN EFÍMERO ────────────────────────────
+const PROXY_URL = 'https://nissei-proxy.onrender.com';
 let wsConnection = null;
 let audioStream = null;
 let audioContext = null;
@@ -848,12 +848,32 @@ function startVoiceSession() {
   document.getElementById('wave-bars').classList.remove('inactive');
   const classIdx = Math.min(currentClass - 1, PROMPTS[voiceMode].length - 1);
   currentSystemPrompt = PROMPTS[voiceMode][classIdx] || PROMPTS[voiceMode][0];
-  connectProxy();
+  getEphemeralToken();
 }
 
-function connectProxy() {
-  const url = `${PROXY_URL}?key=${apiKey}`;
-  wsConnection = new WebSocket(url);
+async function getEphemeralToken() {
+  try {
+    setStatus('Obteniendo token...', 'Conectando con el servidor...');
+    const response = await fetch(`${PROXY_URL}/token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apiKey, systemPrompt: currentSystemPrompt })
+    });
+    const data = await response.json();
+    if (data.error) throw new Error(data.error);
+    if (!data.name) throw new Error('Token no recibido: ' + JSON.stringify(data));
+    console.log('Token obtenido:', data.name.substring(0, 20) + '...');
+    connectWithToken(data.name);
+  } catch (e) {
+    setStatus('Error: ' + e.message, 'Verificá tu API Key');
+    document.getElementById('wave-bars').classList.add('inactive');
+  }
+}
+
+function connectWithToken(token) {
+  setStatus('Conectando a Gemini...', 'Estableciendo sesión de voz...');
+  const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?access_token=${token}`;
+  wsConnection = new WebSocket(wsUrl);
 
   wsConnection.onopen = () => {
     wsConnection.send(JSON.stringify({
@@ -884,12 +904,14 @@ function connectProxy() {
     } catch(e) {}
   };
 
-  wsConnection.onerror = () => {
-    setStatus('Error de conexión', 'Verificá tu API Key y tu conexión a internet');
+  wsConnection.onerror = (e) => {
+    console.log('WS error:', e);
+    setStatus('Error de conexión', 'Intentá de nuevo en unos segundos');
     document.getElementById('wave-bars').classList.add('inactive');
   };
 
-  wsConnection.onclose = () => {
+  wsConnection.onclose = (e) => {
+    console.log('WS cerró:', e.code, e.reason);
     setStatus('Sesión finalizada', '');
     document.getElementById('wave-bars').classList.add('inactive');
   };
