@@ -836,162 +836,123 @@ function saveApiKey() {
   startVoiceSession();
 }
 
+// ── GEMINI LIVE VIA PROXY ─────────────────────────────────────
+const PROXY_URL = 'wss://nissei-proxy.onrender.com';
+let wsConnection = null;
+let audioStream = null;
+let audioContext = null;
+let audioProcessor = null;
+let audioCtxOutput = null;
+let currentSystemPrompt = '';
+
 function startVoiceSession() {
-  document.getElementById('voice-status').textContent = 'Conectando con Gemini...';
-  document.getElementById('voice-substatus').textContent = 'Un momento...';
+  setStatus('Conectando con Gemini Live...', 'Un momento...');
   document.getElementById('pulse-ring').classList.add('listening');
-
-  const classIdx = Math.min(currentClass - 1, 1); // Usar prompts disponibles
-  const prompt = PROMPTS[voiceMode][classIdx] || PROMPTS[voiceMode][0];
-
-  // Conectar via WebSocket a Gemini Live API
-  connectGeminiLive(prompt);
+  document.getElementById('wave-bars').classList.remove('inactive');
+  const classIdx = Math.min(currentClass - 1, PROMPTS[voiceMode].length - 1);
+  currentSystemPrompt = PROMPTS[voiceMode][classIdx] || PROMPTS[voiceMode][0];
+  connectProxy();
 }
 
-function connectGeminiLive(systemPrompt) {
-  const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=${apiKey}`;
+function connectProxy() {
+  const url = `${PROXY_URL}?key=${apiKey}`;
+  wsConnection = new WebSocket(url);
 
-  try {
-    wsConnection = new WebSocket(wsUrl);
+  wsConnection.onopen = () => {
+    wsConnection.send(JSON.stringify({
+      setup: {
+        model: 'models/gemini-2.0-flash-live-001',
+        generation_config: {
+          response_modalities: ['AUDIO'],
+          speech_config: { voice_config: { prebuilt_voice_config: { voice_name: 'Zephyr' } } }
+        },
+        system_instruction: { parts: [{ text: currentSystemPrompt }] }
+      }
+    }));
+    setStatus('Conectado — La IA está lista', 'Hablá en inglés cuando quieras');
+    document.getElementById('finish-btn').style.display = 'block';
+    startMicrophone();
+  };
 
-    wsConnection.onopen = () => {
-      // Enviar configuración inicial
-      const setupMsg = {
-        setup: {
-          model: "models/gemini-2.0-flash-live-001",
-          generation_config: {
-            response_modalities: ["AUDIO"],
-            speech_config: {
-              voice_config: { prebuilt_voice_config: { voice_name: "Zephyr" } }
-            }
-          },
-          system_instruction: {
-            parts: [{ text: systemPrompt }]
-          }
-        }
-      };
-      wsConnection.send(JSON.stringify(setupMsg));
-      document.getElementById('voice-status').textContent = 'Conectado — La IA está lista';
-      document.getElementById('voice-substatus').textContent = 'Hablá cuando quieras';
-      document.getElementById('wave-bars').classList.remove('inactive');
-      document.getElementById('finish-btn').style.display = 'block';
-      startMicrophone();
-    };
+  wsConnection.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      const parts = data?.serverContent?.modelTurn?.parts || [];
+      parts.forEach(part => {
+        if (part.inlineData?.data) playAudioChunk(part.inlineData.data);
+        if (part.text) addToTranscript('Alex', part.text);
+      });
+      const trans = data?.serverContent?.outputTranscription?.text;
+      if (trans) addToTranscript('Alex', trans);
+    } catch(e) {}
+  };
 
-    wsConnection.onmessage = (event) => {
-      handleGeminiResponse(event.data);
-    };
+  wsConnection.onerror = () => {
+    setStatus('Error de conexión', 'Verificá tu API Key y tu conexión a internet');
+    document.getElementById('wave-bars').classList.add('inactive');
+  };
 
-    wsConnection.onerror = () => {
-      document.getElementById('voice-status').textContent = 'Error de conexión';
-      document.getElementById('voice-substatus').textContent = 'Verificá tu API Key y conexión a internet';
-      document.getElementById('wave-bars').classList.add('inactive');
-    };
-
-    wsConnection.onclose = () => {
-      document.getElementById('voice-status').textContent = 'Sesión finalizada';
-      document.getElementById('wave-bars').classList.add('inactive');
-    };
-
-  } catch (e) {
-    document.getElementById('voice-status').textContent = 'No se pudo conectar';
-    document.getElementById('voice-substatus').textContent = 'Revisá tu API Key';
-  }
+  wsConnection.onclose = () => {
+    setStatus('Sesión finalizada', '');
+    document.getElementById('wave-bars').classList.add('inactive');
+  };
 }
 
 async function startMicrophone() {
   try {
     audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const audioContext = new AudioContext({ sampleRate: 16000 });
+    audioContext = new AudioContext({ sampleRate: 16000 });
     const source = audioContext.createMediaStreamSource(audioStream);
-    const processor = audioContext.createScriptProcessor(4096, 1, 1);
-
-    processor.onaudioprocess = (e) => {
-      if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
-        const inputData = e.inputBuffer.getChannelData(0);
-        const pcm16 = float32ToPCM16(inputData);
-        const base64Audio = btoa(String.fromCharCode(...new Uint8Array(pcm16.buffer)));
-
-        const audioMsg = {
-          realtime_input: {
-            media_chunks: [{
-              data: base64Audio,
-              mime_type: "audio/pcm;rate=16000"
-            }]
-          }
-        };
-        wsConnection.send(JSON.stringify(audioMsg));
+    audioProcessor = audioContext.createScriptProcessor(4096, 1, 1);
+    audioProcessor.onaudioprocess = (e) => {
+      if (wsConnection?.readyState === WebSocket.OPEN) {
+        const input = e.inputBuffer.getChannelData(0);
+        const pcm = new Int16Array(input.length);
+        for (let i = 0; i < input.length; i++) {
+          pcm[i] = Math.max(-32768, Math.min(32767, input[i] * 32768));
+        }
+        const b64 = btoa(String.fromCharCode(...new Uint8Array(pcm.buffer)));
+        wsConnection.send(JSON.stringify({
+          realtime_input: { media_chunks: [{ data: b64, mime_type: 'audio/pcm;rate=16000' }] }
+        }));
       }
     };
-
-    source.connect(processor);
-    processor.connect(audioContext.destination);
-  } catch (e) {
-    document.getElementById('voice-substatus').textContent = 'Permití el acceso al micrófono en el navegador';
+    source.connect(audioProcessor);
+    audioProcessor.connect(audioContext.destination);
+    setStatus('Escuchando...', 'Hablá en inglés cuando estés listo');
+  } catch(e) {
+    setStatus('Permití el micrófono', 'Hacé clic en el candado de la barra de direcciones');
   }
 }
 
-function float32ToPCM16(float32Array) {
-  const buffer = new ArrayBuffer(float32Array.length * 2);
-  const view = new DataView(buffer);
-  for (let i = 0; i < float32Array.length; i++) {
-    const s = Math.max(-1, Math.min(1, float32Array[i]));
-    view.setInt16(i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true);
-  }
-  return new Int16Array(buffer);
-}
-
-let audioQueue = [];
-let isPlaying = false;
-const audioCtxOutput = new (window.AudioContext || window.webkitAudioContext)();
-
-async function handleGeminiResponse(data) {
+function playAudioChunk(base64Audio) {
   try {
-    const response = JSON.parse(data);
-
-    // Texto del transcript
-    if (response.serverContent?.modelTurn?.parts) {
-      response.serverContent.modelTurn.parts.forEach(part => {
-        if (part.text) {
-          const t = document.getElementById('transcript-text');
-          t.textContent += '\nAlex: ' + part.text;
-          t.scrollTop = t.scrollHeight;
-        }
-        if (part.inlineData?.data) {
-          playAudioChunk(part.inlineData.data);
-        }
-      });
-    }
-
-    if (response.serverContent?.outputTranscription?.text) {
-      const t = document.getElementById('transcript-text');
-      t.textContent += '\nAlex: ' + response.serverContent.outputTranscription.text;
-      t.scrollTop = t.scrollHeight;
-    }
-
-  } catch (e) {
-    // Ignorar errores de parsing
-  }
-}
-
-async function playAudioChunk(base64Audio) {
-  try {
+    if (!audioCtxOutput) audioCtxOutput = new AudioContext();
     const binary = atob(base64Audio);
     const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-
-    const buffer = audioCtxOutput.createBuffer(1, bytes.length / 2, 24000);
-    const channelData = buffer.getChannelData(0);
-    const dataView = new DataView(bytes.buffer);
-    for (let i = 0; i < channelData.length; i++) {
-      channelData[i] = dataView.getInt16(i * 2, true) / 32768;
-    }
-
+    const samples = bytes.length / 2;
+    const buffer = audioCtxOutput.createBuffer(1, samples, 24000);
+    const channel = buffer.getChannelData(0);
+    const view = new DataView(bytes.buffer);
+    for (let i = 0; i < samples; i++) channel[i] = view.getInt16(i * 2, true) / 32768;
     const source = audioCtxOutput.createBufferSource();
     source.buffer = buffer;
     source.connect(audioCtxOutput.destination);
     source.start();
-  } catch (e) {}
+  } catch(e) {}
+}
+
+function addToTranscript(speaker, text) {
+  const t = document.getElementById('transcript-text');
+  if (t.textContent === 'La conversación aparecerá acá...') t.textContent = '';
+  t.textContent += (t.textContent ? '\n' : '') + speaker + ': ' + text;
+  t.scrollTop = t.scrollHeight;
+}
+
+function setStatus(main, sub) {
+  document.getElementById('voice-status').textContent = main;
+  document.getElementById('voice-substatus').textContent = sub || '';
 }
 
 function finishVoiceSession() {
@@ -1004,15 +965,11 @@ function closeVoiceModal() {
   document.getElementById('voice-modal').classList.remove('open');
   document.getElementById('wave-bars').classList.add('inactive');
   document.getElementById('pulse-ring').classList.remove('listening');
-
-  if (wsConnection) {
-    wsConnection.close();
-    wsConnection = null;
-  }
-  if (audioStream) {
-    audioStream.getTracks().forEach(t => t.stop());
-    audioStream = null;
-  }
+  if (wsConnection) { wsConnection.close(); wsConnection = null; }
+  if (audioProcessor) { audioProcessor.disconnect(); audioProcessor = null; }
+  if (audioContext) { audioContext.close(); audioContext = null; }
+  if (audioStream) { audioStream.getTracks().forEach(t => t.stop()); audioStream = null; }
+  if (audioCtxOutput) { audioCtxOutput.close(); audioCtxOutput = null; }
 }
 
 // ── INICIALIZACIÓN ────────────────────────────────────────────
