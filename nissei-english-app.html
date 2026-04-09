@@ -376,7 +376,8 @@
 
     <!-- Estado -->
     <p class="text-sm font-medium text-primary-container mb-1" id="voice-status">Conectando con la IA...</p>
-    <p class="text-xs text-on-surface-variant mb-6" id="voice-substatus">Esperá unos segundos</p>
+    <p class="text-xs text-on-surface-variant mb-1" id="voice-substatus">Esperá unos segundos</p>
+    <p class="text-sm font-bold text-secondary mb-5" id="voice-hint" style="display:none">Di <span style="background:#E6F1FB;padding:2px 8px;border-radius:6px;color:#185FA5">"Hello"</span> para comenzar</p>
 
     <!-- Transcript -->
     <div class="bg-surface-container-low rounded-xl p-4 mb-6 text-left min-h-[80px] max-h-[120px] overflow-y-auto">
@@ -5424,6 +5425,9 @@ function addToTranscript(speaker, text) {
 function setStatus(main, sub) {
   document.getElementById('voice-status').textContent = main;
   document.getElementById('voice-substatus').textContent = sub || '';
+  // Show "di Hello" hint only when connected and listening
+  const hint = document.getElementById('voice-hint');
+  if (hint) hint.style.display = (main === 'Escuchando...') ? 'block' : 'none';
 }
 
 function finishVoiceSession() {
