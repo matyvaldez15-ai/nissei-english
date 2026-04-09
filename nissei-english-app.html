@@ -258,8 +258,8 @@
           </div>
           <span class="material-symbols-outlined text-secondary" id="step-1-check">chevron_right</span>
         </div>
-        <button onclick="completeStep(1)" class="mt-4 w-full py-3 bg-secondary text-white rounded-xl font-bold hover:brightness-110 active:scale-95 transition-all">
-          Reproducir diálogo
+        <button onclick="playClassVideo()" class="mt-4 w-full py-3 bg-secondary text-white rounded-xl font-bold hover:brightness-110 active:scale-95 transition-all">
+          Ver conversación
         </button>
       </div>
 
@@ -448,8 +448,23 @@
 
 
 <!-- ============================================================ -->
-<!-- PANTALLA: PROGRESO -->
+<!-- MODAL: VIDEO CONVERSACIÓN -->
 <!-- ============================================================ -->
+<div id="video-modal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);flex-direction:column;align-items:center;justify-content:center;" onclick="closeVideoModal(event)">
+  <div style="width:100%;max-width:700px;padding:0 16px;" onclick="event.stopPropagation()">
+    <div style="background:#000;border-radius:16px;overflow:hidden;position:relative;padding-top:56.25%;">
+      <iframe id="video-iframe" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+      <p style="color:white;font-size:14px;font-weight:600;" id="video-title">Clase 1 — Yes, I do</p>
+      <button onclick="closeVideoModal()" style="background:white;color:#002147;border:none;border-radius:8px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer;">
+        ✓ Listo, continuar
+      </button>
+    </div>
+  </div>
+</div>
+
+
 <div id="screen-progress" class="screen">
   <div class="max-w-2xl mx-auto px-6 pt-10 pb-32">
     <div class="flex items-center gap-3 mb-8">
@@ -6191,8 +6206,8 @@ Despedida: "Excelente clase! Nos vemos maniana." `,
           </div>
           <span class="material-symbols-outlined text-secondary" id="step-1-check">chevron_right</span>
         </div>
-        <button onclick="completeStep(1)" class="mt-4 w-full py-3 bg-secondary text-white rounded-xl font-bold hover:brightness-110 active:scale-95 transition-all">
-          Reproducir diálogo
+        <button onclick="playClassVideo()" class="mt-4 w-full py-3 bg-secondary text-white rounded-xl font-bold hover:brightness-110 active:scale-95 transition-all">
+          Ver conversación
         </button>
       </div>
 
@@ -12620,7 +12635,101 @@ function closeVoiceModal() {
   nextStartTime = 0;
 }
 
-// ── INICIALIZACIÓN ────────────────────────────────────────────
+// ── VIDEOS POR CLASE ─────────────────────────────────────────
+const CLASS_VIDEOS = [
+  'E0RSM4ZFGAM', // Clase 1 — Yes, I do
+  '', // Clase 2
+  '', // Clase 3
+  '', // Clase 4
+  '', // Clase 5
+  '', // Clase 6
+  '', // Clase 7
+  '', // Clase 8
+  '', // Clase 9
+  '', // Clase 10
+  '', // Clase 11
+  '', // Clase 12
+  '', // Clase 13
+  '', // Clase 14
+  '', // Clase 15
+  '', // Clase 16
+  '', // Clase 17
+  '', // Clase 18
+  '', // Clase 19
+  '', // Clase 20
+  '', // Clase 21
+  '', // Clase 22
+  '', // Clase 23
+  '', // Clase 24
+  '', // Clase 25
+  '', // Clase 26
+  '', // Clase 27
+  '', // Clase 28
+  '', // Clase 29
+  '', // Clase 30
+  '', // Clase 31
+  '', // Clase 32
+  '', // Clase 33
+  '', // Clase 34
+  '', // Clase 35
+  '', // Clase 36
+  '', // Clase 37
+  '', // Clase 38
+  '', // Clase 39
+  '', // Clase 40
+  '', // Clase 41
+  '', // Clase 42
+  '', // Clase 43
+  '', // Clase 44
+  '', // Clase 45
+  '', // Clase 46
+  '', // Clase 47
+  '', // Clase 48
+  '', // Clase 49
+  '', // Clase 50
+  '', // Clase 51
+  '', // Clase 52
+  '', // Clase 53
+  '', // Clase 54
+  '', // Clase 55
+  '', // Clase 56
+  '', // Clase 57
+  '', // Clase 58
+  '', // Clase 59
+  '', // Clase 60
+];
+
+function playClassVideo() {
+  const videoId = CLASS_VIDEOS[currentClass - 1];
+  const modal = document.getElementById('video-modal');
+  const iframe = document.getElementById('video-iframe');
+  const title = document.getElementById('video-title');
+
+  // Get class title
+  const weekIdx = Math.floor((currentClass - 1) / 5);
+  const classIdx = (currentClass - 1) % 5;
+  const classTitle = WEEKS[weekIdx].classes[classIdx].title;
+  title.textContent = `Clase ${currentClass} — ${classTitle}`;
+
+  if (videoId) {
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+    modal.style.display = 'flex';
+  } else {
+    // No video yet — complete step anyway
+    alert('El video de esta clase estará disponible próximamente.');
+    completeStep(1);
+  }
+}
+
+function closeVideoModal(event) {
+  const modal = document.getElementById('video-modal');
+  const iframe = document.getElementById('video-iframe');
+  modal.style.display = 'none';
+  iframe.src = ''; // Stop video
+  completeStep(1); // Mark step as complete
+}
+
+
 function saveName() {
   const input = document.getElementById('name-input');
   const name = input ? input.value.trim() : '';
