@@ -151,8 +151,8 @@
     <div class="flex justify-between items-center px-6 py-4 w-full max-w-5xl mx-auto">
       <span class="text-lg font-extrabold text-[#002147] font-['Manrope'] tracking-tight">Nissei English for Sales</span>
       <div class="hidden md:flex items-center gap-8">
-        <a class="text-[#002147] font-bold" href="#">Dashboard</a>
-        <a class="text-slate-500 hover:text-slate-700 px-3 py-1 rounded-lg cursor-pointer" onclick="showProgressScreen()">Progreso</a>
+        <button class="text-[#002147] font-bold" onclick="goToDashboard()">Dashboard</button>
+        <button class="text-slate-500 hover:text-slate-700 px-3 py-1 rounded-lg" onclick="showProgressScreen()">Progreso</button>
       </div>
       <div class="flex items-center gap-3">
         <div class="hidden sm:flex flex-col items-end">
@@ -198,11 +198,11 @@
 
   <!-- Nav móvil -->
   <nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 backdrop-blur-xl z-50 rounded-t-3xl shadow-lg">
-    <button class="flex flex-col items-center text-white bg-[#002147] rounded-full px-5 py-2">
+    <button onclick="goToDashboard()" class="flex flex-col items-center text-white bg-[#002147] rounded-full px-5 py-2">
       <span class="material-symbols-outlined text-[20px]">dashboard</span>
       <span class="text-[10px] uppercase tracking-wider mt-0.5">Inicio</span>
     </button>
-    <button class="flex flex-col items-center text-slate-400">
+    <button onclick="showProgressScreen()" class="flex flex-col items-center text-slate-400">
       <span class="material-symbols-outlined text-[20px]">query_stats</span>
       <span class="text-[10px] uppercase tracking-wider mt-0.5">Progreso</span>
     </button>
@@ -6084,8 +6084,8 @@ Despedida: "Excelente clase! Nos vemos maniana." `,
     <div class="flex justify-between items-center px-6 py-4 w-full max-w-5xl mx-auto">
       <span class="text-lg font-extrabold text-[#002147] font-['Manrope'] tracking-tight">Nissei English for Sales</span>
       <div class="hidden md:flex items-center gap-8">
-        <a class="text-[#002147] font-bold" href="#">Dashboard</a>
-        <a class="text-slate-500 hover:text-slate-700 px-3 py-1 rounded-lg cursor-pointer" onclick="showProgressScreen()">Progreso</a>
+        <button class="text-[#002147] font-bold" onclick="goToDashboard()">Dashboard</button>
+        <button class="text-slate-500 hover:text-slate-700 px-3 py-1 rounded-lg" onclick="showProgressScreen()">Progreso</button>
       </div>
       <div class="flex items-center gap-3">
         <div class="hidden sm:flex flex-col items-end">
@@ -6131,11 +6131,11 @@ Despedida: "Excelente clase! Nos vemos maniana." `,
 
   <!-- Nav móvil -->
   <nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 backdrop-blur-xl z-50 rounded-t-3xl shadow-lg">
-    <button class="flex flex-col items-center text-white bg-[#002147] rounded-full px-5 py-2">
+    <button onclick="goToDashboard()" class="flex flex-col items-center text-white bg-[#002147] rounded-full px-5 py-2">
       <span class="material-symbols-outlined text-[20px]">dashboard</span>
       <span class="text-[10px] uppercase tracking-wider mt-0.5">Inicio</span>
     </button>
-    <button class="flex flex-col items-center text-slate-400">
+    <button onclick="showProgressScreen()" class="flex flex-col items-center text-slate-400">
       <span class="material-symbols-outlined text-[20px]">query_stats</span>
       <span class="text-[10px] uppercase tracking-wider mt-0.5">Progreso</span>
     </button>
