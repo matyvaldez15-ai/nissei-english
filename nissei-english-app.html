@@ -5299,9 +5299,9 @@ function connectDirect() {
     setTimeout(() => {
       if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
         wsConnection.send(JSON.stringify({
-          clientContent: {
-            turns: [{ role: 'user', parts: [{ text: 'Comienza la sesión ahora. Saludá al alumno en español y preguntá si está listo.' }] }],
-            turnComplete: true
+          client_content: {
+            turns: [{ role: 'user', parts: [{ text: 'Comienza la sesión ahora. Saluda al alumno en español y pregunta si está listo.' }] }],
+            turn_complete: true
           }
         }));
       }
