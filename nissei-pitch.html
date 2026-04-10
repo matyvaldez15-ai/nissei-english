@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nissei English for Sales — Presentación Ejecutiva</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#1B4FD8;--blue-light:#3B7BFC;--blue-dim:#0F2E7E;--gold:#F5A623;--green:#00C48C;--bg:#F8F9FF;--bg2:#EEF2FF;--dark:#0D1117;--card:#FFFFFF;--border:rgba(27,79,216,0.12);--border2:rgba(27,79,216,0.25);--text:#0D1117;--muted:#6B7280;--red:#E8001C}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Cabinet Grotesk',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Fraunces',serif}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 48px;display:flex;align-items:center;justify-content:space-between;background:rgba(248,249,255,0.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-dot{width:10px;height:10px;background:var(--blue);border-radius:50%}
+.nav-text{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:17px;letter-spacing:-0.02em}
+.nav-text span{color:var(--blue)}
+.nav-links{display:flex;gap:28px}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--blue)}
+.nav-pill{background:var(--blue);color:white;padding:6px 16px;border-radius:100px;font-size:12px;font-weight:700}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 48px 100px;position:relative;overflow:hidden;background:linear-gradient(170deg,#EEF2FF 0%,#F8F9FF 60%)}
+.hero-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.hero-bg::before{content:'';position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(27,79,216,0.1) 0%,transparent 70%);top:-200px;left:50%;transform:translateX(-50%)}
+.hero-bg::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(245,166,35,0.08) 0%,transparent 70%);bottom:0;right:-100px}
+.pill{display:inline-flex;align-items:center;gap:6px;background:white;border:1.5px solid var(--border2);padding:6px 16px 6px 10px;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:0.06em;color:var(--blue);margin-bottom:28px;box-shadow:0 2px 12px rgba(27,79,216,0.08);animation:up .8s ease both}
+.pill-dot{width:8px;height:8px;background:var(--blue);border-radius:50%}
+.hero h1{font-size:clamp(52px,9vw,108px);font-weight:900;line-height:0.95;letter-spacing:-0.04em;margin-bottom:8px;animation:up .8s .08s ease both;color:var(--dark)}
+.hero h1 em{color:var(--blue);font-style:italic}
+.hero h1 .sub{display:block;font-weight:300;font-size:0.42em;letter-spacing:-0.01em;color:var(--muted);margin-top:10px;font-style:italic}
+.hero-sub{font-size:18px;color:var(--muted);max-width:520px;margin:28px auto 52px;font-weight:400;animation:up .8s .16s ease both}
+.kpis{display:flex;flex-wrap:wrap;justify-content:center;background:white;border-radius:20px;border:1.5px solid var(--border);box-shadow:0 8px 40px rgba(27,79,216,0.08);overflow:hidden;max-width:700px;margin:0 auto;animation:up .8s .24s ease both}
+.kpi{padding:24px 36px;text-align:center;flex:1;min-width:140px;position:relative}
+.kpi+.kpi::before{content:'';position:absolute;left:0;top:20%;height:60%;width:1px;background:var(--border)}
+.kpi .n{font-family:'Fraunces',serif;font-size:40px;font-weight:900;color:var(--blue);line-height:1;display:block}
+.kpi .l{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;display:block}
+@keyframes up{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+section{padding:96px 48px;max-width:1160px;margin:0 auto}
+.slabel{font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;display:block}
+.stitle{font-size:clamp(32px,4vw,56px);font-weight:900;letter-spacing:-0.03em;line-height:1.05;margin-bottom:14px;color:var(--dark)}
+.stitle em{color:var(--blue);font-style:italic}
+.ssub{color:var(--muted);font-size:17px;max-width:560px;margin-bottom:56px}
+.card{background:white;border:1.5px solid var(--border);border-radius:20px;padding:32px;transition:box-shadow .3s,border-color .3s,transform .3s}
+.card:hover{box-shadow:0 8px 40px rgba(27,79,216,0.1);border-color:var(--border2);transform:translateY(-3px)}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.div{height:1px;background:var(--border);max-width:1160px;margin:0 auto}
+.rv{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s}
+.rv.on{opacity:1;transform:none}
+.ctable{width:100%;border-collapse:collapse}
+.ctable th{text-align:left;padding:10px 16px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--border);font-weight:600}
+.ctable td{padding:14px 16px;border-bottom:1px solid rgba(27,79,216,0.06);font-size:14px;vertical-align:middle}
+.ctable tr:last-child td{border:none}
+.ctable tr.star{background:linear-gradient(90deg,rgba(27,79,216,0.05),transparent)}
+.ctable tr.star td:first-child{border-left:3px solid var(--blue)}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700}
+.b-blue{background:rgba(27,79,216,0.1);color:var(--blue)}
+.b-green{background:rgba(0,196,140,0.12);color:#008f66}
+.b-gold{background:rgba(245,166,35,0.15);color:#b07000}
+.b-gray{background:rgba(107,114,128,0.1);color:var(--muted)}
+.b-red{background:rgba(232,0,28,0.1);color:var(--red)}
+.crow{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
+.crow:last-child{border:none}
+.crow .name{font-size:15px;font-weight:500}
+.crow .note{font-size:12px;color:var(--muted);margin-top:2px}
+.crow .amt{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--blue)}
+.crow .amt.free{color:var(--green)}
+.total-box{background:linear-gradient(135deg,var(--blue),var(--blue-dim));color:white;border-radius:16px;padding:24px 28px;display:flex;justify-content:space-between;align-items:center;margin-top:20px}
+.total-box .tl{font-size:13px;opacity:.75}
+.total-box .ta{font-family:'Fraunces',serif;font-size:44px;font-weight:900;line-height:1}
+.rbar-wrap{margin-bottom:18px}
+.rbar-top{display:flex;justify-content:space-between;margin-bottom:6px;font-size:14px;font-weight:500}
+.rbar-track{height:10px;background:var(--bg2);border-radius:100px;overflow:hidden}
+.rbar-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--blue-dim),var(--blue-light));width:0;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
+.tl-wrap{position:relative;padding-left:28px}
+.tl-wrap::before{content:'';position:absolute;left:6px;top:8px;bottom:0;width:2px;background:linear-gradient(var(--blue),transparent)}
+.tl-item{position:relative;margin-bottom:36px}
+.tl-item::before{content:'';position:absolute;left:-26px;top:5px;width:14px;height:14px;border-radius:50%;background:white;border:3px solid var(--blue);box-shadow:0 0 0 4px rgba(27,79,216,0.12)}
+.tl-phase{font-size:10px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.tl-title{font-family:'Fraunces',serif;font-size:19px;font-weight:700;margin-bottom:6px}
+.tl-desc{color:var(--muted);font-size:14px;line-height:1.65}
+.edtech-hero{background:linear-gradient(135deg,#0D1117 0%,#0F2E7E 100%);color:white;padding:100px 48px;text-align:center;position:relative;overflow:hidden}
+.edtech-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 50% 50%,rgba(59,123,252,0.2),transparent)}
+.edtech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1000px;margin:0 auto}
+.ecard{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:18px;padding:28px;text-align:left;transition:background .3s}
+.ecard:hover{background:rgba(255,255,255,0.1)}
+.ecard .enum{font-family:'Fraunces',serif;font-size:52px;font-weight:900;color:rgba(255,255,255,0.1);line-height:1}
+.ecard .etitle{font-family:'Fraunces',serif;font-size:18px;font-weight:700;margin-bottom:8px;color:white}
+.ecard .edesc{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6}
+.ecard.hl{background:linear-gradient(135deg,var(--blue),var(--blue-light));border:none}
+.ecard.hl .enum{color:rgba(255,255,255,0.15);font-size:40px}
+.ecard.hl .etitle{font-size:22px}
+.ecard.hl .edesc{color:rgba(255,255,255,0.8);font-size:14px}
+.cta-sec{text-align:center;padding:100px 48px;background:white;border-top:1.5px solid var(--border)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:16px 36px;background:var(--blue);color:white;border-radius:100px;font-weight:700;font-size:15px;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:scale(1.04);box-shadow:0 8px 32px rgba(27,79,216,0.3)}
+.btn-o{background:transparent;color:var(--blue);border:2px solid var(--blue)}
+.btn-o:hover{background:var(--blue);color:white}
+.check-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.check-list li{display:flex;align-items:flex-start;gap:10px;font-size:14px}
+.check-list li .ico{width:20px;height:20px;background:var(--blue);color:white;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.x-list li .ico{background:rgba(232,0,28,0.1);color:var(--red)}
+@media(max-width:768px){nav{padding:14px 20px}.nav-links{display:none}section{padding:64px 20px}.edtech-hero{padding:64px 20px}.g3,.g4,.edtech-grid{grid-template-columns:1fr}.g2{grid-template-columns:1fr}.hero{padding:120px 20px 80px}.kpis{flex-direction:column}.kpi+.kpi::before{display:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-dot"></div>
+    <div class="nav-text">nissei <span>english</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#diferencial">Diferencial</a>
+    <a href="#mercado">Mercado</a>
+    <a href="#competencia">Competencia</a>
+    <a href="#inversion">Inversión</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#edtech">Visión</a>
+  </div>
+  <div class="nav-pill">Presentación Ejecutiva 2025</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div style="position:relative;z-index:1">
+    <div class="pill"><span class="pill-dot"></span>Innovación interna · Nissei Paraguay</div>
+    <h1>English for <em>Sales</em><span class="sub">El primer curso de inglés con IA diseñado para vendedores de tecnología en Paraguay</span></h1>
+    <p class="hero-sub">Una plataforma web que usa inteligencia artificial conversacional para convertir a Nissei en referente en capacitación tecnológica de la región.</p>
+    <div class="kpis">
+      <div class="kpi"><span class="n">60</span><span class="l">Clases con IA</span></div>
+      <div class="kpi"><span class="n">12</span><span class="l">Semanas</span></div>
+      <div class="kpi"><span class="n">$27</span><span class="l">Invertido</span></div>
+      <div class="kpi"><span class="n">100%</span><span class="l">Nissei-specific</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="div"></div>
+
+<!-- DIFERENCIAL -->
+<section id="diferencial">
+  <div class="rv">
+    <span class="slabel">El diferencial</span>
+    <h2 class="stitle">Nissei como empleador que <em>invierte</em> en su gente</h2>
+    <p class="ssub">Más que un curso de inglés — es una señal de que Nissei es una empresa donde vale la pena trabajar y crecer profesionalmente.</p>
+  </div>
+  <div class="g3 rv">
+    <div class="card">
+      <div style="font-size:40px;margin-bottom:16px">🏆</div>
+      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;margin-bottom:8px">Ventaja como empleador</div>
+      <div style="color:var(--muted);font-size:14px;line-height:1.6">En un mercado donde los vendedores eligen dónde trabajar, ofrecer formación en inglés con IA es un beneficio tangible que muy pocas empresas en Paraguay pueden brindar. Atrae y retiene talento de calidad.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:40px;margin-bottom:16px">🚀</div>
+      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;margin-bottom:8px">Crecimiento profesional real</div>
+      <div style="color:var(--muted);font-size:14px;line-height:1.6">El inglés abre puertas. Un vendedor que aprende inglés en Nissei tiene más confianza, más herramientas y más futuro. Eso genera lealtad, compromiso y orgullo de pertenecer a la empresa.</div>
+    </div>
+    <div class="card">
+      <div style="font-size:40px;margin-bottom:16px">⭐</div>
+      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;margin-bottom:8px">Experiencia diferencial con clientes</div>
+      <div style="color:var(--muted);font-size:14px;line-height:1.6">Nissei ya cuenta con colaboradores que hablan inglés, pero este programa garantiza que cualquier vendedor pueda dar una respuesta básica con seguridad, mejorando la experiencia de todo cliente extranjero.</div>
+    </div>
+  </div>
+  <div class="card rv" style="margin-top:20px;background:var(--bg2);border-style:dashed">
+    <div style="display:flex;gap:32px;align-items:center;flex-wrap:wrap">
+      <div style="font-size:52px">💡</div>
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;margin-bottom:8px">El contexto real en Nissei</div>
+        <p style="color:var(--muted);font-size:15px;max-width:680px">Nissei Asunción recibe entre 50 y 100 clientes extranjeros por día, de los cuales aproximadamente 5 a 10 son angloparlantes. En Distrito Perseverancia, el shopping está rodeado de expatriados recién llegados. En CDE, el 80% es público brasilero — adaptable a portugués. Este proyecto no resuelve una crisis: <strong style="color:var(--dark)">crea una ventaja donde antes no existía ninguna.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- MERCADO -->
+<section id="mercado">
+  <div class="rv">
+    <span class="slabel">Mercado de referencia</span>
+    <h2 class="stitle">Un mercado global de <em>$6.4B</em> creciendo 18% anual</h2>
+    <p class="ssub">El segmento de aprendizaje de idiomas con IA es uno de los de mayor crecimiento en EdTech a nivel mundial.</p>
+  </div>
+  <div class="g3 rv">
+    <div class="card">
+      <div style="font-family:'Fraunces',serif;font-size:56px;font-weight:900;color:var(--blue);line-height:1">$6.4B</div>
+      <div style="font-weight:600;margin:8px 0 6px">Mercado global — idiomas con IA</div>
+      <div style="color:var(--muted);font-size:14px">2024. Proyección 2030: <strong>$25B</strong>. Impulsado por la adopción masiva de IA conversacional.</div>
+    </div>
+    <div class="card">
+      <div style="font-family:'Fraunces',serif;font-size:56px;font-weight:900;color:var(--blue);line-height:1">18%</div>
+      <div style="font-weight:600;margin:8px 0 6px">Crecimiento anual compuesto</div>
+      <div style="color:var(--muted);font-size:14px">Ningún otro sector EdTech crece a esta velocidad. La IA conversacional en tiempo real es el gran diferenciador.</div>
+    </div>
+    <div class="card" style="background:var(--blue);color:white">
+      <div style="font-family:'Fraunces',serif;font-size:56px;font-weight:900;color:rgba(255,255,255,0.2);line-height:1">0</div>
+      <div style="font-weight:600;margin:8px 0 6px">Soluciones para vendedores de tech en LATAM</div>
+      <div style="color:rgba(255,255,255,0.65);font-size:14px">No existe nada similar diseñado para el contexto de una tienda de tecnología en Paraguay o la región.</div>
+    </div>
+  </div>
+
+  <div class="rv" style="margin-top:48px">
+    <span class="slabel">Academias de inglés en Paraguay</span>
+    <h3 style="font-family:'Fraunces',serif;font-size:28px;font-weight:700;margin-bottom:8px">Lo que existe hoy en el mercado local</h3>
+    <p style="color:var(--muted);font-size:15px;margin-bottom:28px">Las opciones actuales son presenciales, lentas y no están diseñadas para el aprendizaje dentro del entorno laboral.</p>
+  </div>
+  <div class="card rv">
+    <table class="ctable">
+      <thead><tr><th>Academia</th><th>Costo mensual</th><th>Duración</th><th>Metodología</th><th>IA conversacional</th><th>Foco ventas</th></tr></thead>
+      <tbody>
+        <tr><td><strong>CCPA</strong> (Centro Cultural Paraguayo Americano)</td><td>~$12–$18 USD/mes</td><td>3–4 años</td><td>Presencial tradicional</td><td><span class="badge b-gray">No</span></td><td><span class="badge b-gray">No</span></td></tr>
+        <tr><td><strong>Anglo English</strong></td><td>~$15–$25 USD/mes</td><td>3–4 años</td><td>Presencial / Online</td><td><span class="badge b-gray">No</span></td><td><span class="badge b-gray">No</span></td></tr>
+        <tr><td><strong>Wizard Paraguay</strong> (Pearson)</td><td>~$20–$35 USD/mes</td><td>2–3 años</td><td>Método Wizard</td><td><span class="badge b-gray">No</span></td><td><span class="badge b-gray">No</span></td></tr>
+        <tr><td><strong>Ministerio de Defensa</strong></td><td>~$8–$12 USD/mes</td><td>3.5 años</td><td>Tradicional</td><td><span class="badge b-gray">No</span></td><td><span class="badge b-gray">No</span></td></tr>
+        <tr><td><strong>Primavera English</strong></td><td>~$20–$40 USD/mes</td><td>Variable</td><td>Personalizado</td><td><span class="badge b-gray">No</span></td><td><span class="badge b-gray">No</span></td></tr>
+        <tr><td><strong>Choice Paraguay</strong></td><td>~$25–$45 USD/mes</td><td>Variable</td><td>Adultos / Profesionales</td><td><span class="badge b-gray">No</span></td><td><span class="badge b-gray">Parcial</span></td></tr>
+        <tr class="star"><td><strong>🔵 Nissei English for Sales</strong></td><td><strong>Piloto gratuito</strong></td><td><strong>3 meses</strong></td><td><strong>IA conversacional + video</strong></td><td><span class="badge b-blue">Sí — Gemini Live</span></td><td><span class="badge b-blue">100% Nissei</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- COMPETENCIA GLOBAL -->
+<section id="competencia">
+  <div class="rv">
+    <span class="slabel">Apps globales de idiomas</span>
+    <h2 class="stitle">Vs. las apps más usadas <em>del mundo</em></h2>
+    <p class="ssub">Duolingo, Babbel, Rosetta Stone — ninguna está diseñada para el contexto de venta en una tienda de tecnología.</p>
+  </div>
+  <div class="card rv">
+    <table class="ctable">
+      <thead><tr><th>App</th><th>Precio/mes USD</th><th>Enfoque</th><th>IA voz real-time</th><th>Contenido ventas</th><th>Adaptable empresa</th></tr></thead>
+      <tbody>
+        <tr><td>🟡 <strong>Duolingo</strong></td><td>Gratis / $13.99 Super</td><td>Gamificación general</td><td><span class="badge b-gray">Limitada</span></td><td><span class="badge b-gray">No</span></td><td><span class="badge b-gray">No</span></td></tr>
+        <tr><td>🟠 <strong>Babbel</strong></td><td>$8.95 – $17.95</td><td>Gramática estructurada</td><td><span class="badge b-gray">Reconoc. básico</span></td><td><span class="badge b-gray">No</span></td><td><span class="badge b-gold">Babbel Business</span></td></tr>
+        <tr><td>🔴 <strong>Rosetta Stone</strong></td><td>$11.99 – $14.99</td><td>Inmersión sin traducción</td><td><span class="badge b-gray">No</span></td><td><span class="badge b-gray">No</span></td><td><span class="badge b-gray">No</span></td></tr>
+        <tr><td>🟣 <strong>Speak AI</strong></td><td>$14.99 – $19.99</td><td>Conversación con IA</td><td><span class="badge b-green">Sí</span></td><td><span class="badge b-gray">No</span></td><td><span class="badge b-gray">No</span></td></tr>
+        <tr><td>🔵 <strong>Elsa Speak</strong></td><td>$6.99 – $11.99</td><td>Pronunciación IA</td><td><span class="badge b-green">Sí</span></td><td><span class="badge b-gray">No</span></td><td><span class="badge b-gray">No</span></td></tr>
+        <tr><td>🟢 <strong>Mondly</strong></td><td>$9.99</td><td>Conversación + IA básica</td><td><span class="badge b-green">Básica</span></td><td><span class="badge b-gray">No</span></td><td><span class="badge b-gray">No</span></td></tr>
+        <tr class="star"><td>🔵 <strong>Nissei English for Sales</strong></td><td><strong>Piloto gratuito</strong></td><td><strong>Ventas en tienda</strong></td><td><span class="badge b-blue">Sí — Gemini Live</span></td><td><span class="badge b-blue">100% Nissei</span></td><td><span class="badge b-blue">Totalmente</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="g2 rv" style="margin-top:20px">
+    <div class="card">
+      <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;margin-bottom:16px;color:var(--red)">Lo que ninguna app tiene</div>
+      <ul class="check-list x-list">
+        <li><span class="ico">✕</span>Situaciones reales de Nissei (tax free, CDE, garantía)</li>
+        <li><span class="ico">✕</span>Vocabulario tech específico (iPhone, Samsung, PlayStation)</li>
+        <li><span class="ico">✕</span>Sectores de la tienda en inglés</li>
+        <li><span class="ico">✕</span>Personalidades de clientes: turista, apurado, indeciso, corporativo</li>
+        <li><span class="ico">✕</span>Coach IA que explica en español y practica en inglés</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;margin-bottom:16px;color:var(--blue)">Lo que tiene Nissei English for Sales</div>
+      <ul class="check-list">
+        <li><span class="ico">✓</span>60 frases reales extraídas de situaciones de venta Nissei</li>
+        <li><span class="ico">✓</span>Videos animados estilo Pixar con el contexto de la tienda</li>
+        <li><span class="ico">✓</span>IA que corrige pronunciación en tiempo real en español</li>
+        <li><span class="ico">✓</span>Shadowing: lento → medio → velocidad natural</li>
+        <li><span class="ico">✓</span>Exámenes con clientes IA de diferentes personalidades</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- INVERSIÓN -->
+<section id="inversion">
+  <div class="rv">
+    <span class="slabel">Inversión y costos</span>
+    <h2 class="stitle">Un prototipo de <em>$27</em> que vale $40,000</h2>
+    <p class="ssub">Desarrollado individualmente con IA y metodología propia durante 5 meses de investigación pedagógica y 15 horas de programación.</p>
+  </div>
+  <div class="g2 rv">
+    <div class="card">
+      <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;margin-bottom:24px">Costos reales hasta hoy</div>
+      <div class="crow"><div><div class="name">Claude AI (Anthropic)</div><div class="note">Asistente IA para el desarrollo</div></div><div class="amt">$20</div></div>
+      <div class="crow"><div><div class="name">Kling AI</div><div class="note">Generación de videos animados Pixar</div></div><div class="amt">$7</div></div>
+      <div class="crow"><div><div class="name">Vercel (hosting web)</div><div class="note">Publicación online del curso</div></div><div class="amt free">$0</div></div>
+      <div class="crow"><div><div class="name">GitHub</div><div class="note">Control de versiones del código</div></div><div class="amt free">$0</div></div>
+      <div class="crow"><div><div class="name">Google Gemini Live API</div><div class="note">IA de voz ($300 crédito gratuito)</div></div><div class="amt free">~$0</div></div>
+      <div class="total-box"><div><div class="tl">Inversión total hasta hoy</div><div style="font-size:12px;opacity:.55;margin-top:2px">+ 5 meses de investigación propia</div></div><div class="ta">$27</div></div>
+    </div>
+    <div class="card">
+      <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;margin-bottom:24px">Inversión para escalar al 100%</div>
+      <div class="crow"><div><div class="name">Claude AI Pro</div><div class="note">Desarrollo y mantenimiento continuo</div></div><div class="amt">$20/mes</div></div>
+      <div class="crow"><div><div class="name">Kling AI — Plan estándar</div><div class="note">60 videos completos en 2–3 semanas</div></div><div class="amt">$30–$66/mes</div></div>
+      <div class="crow"><div><div class="name">Gemini Live API</div><div class="note">Para uso activo de múltiples empresas</div></div><div class="amt">~$80/mes</div></div>
+      <div class="crow"><div><div class="name">Vercel Pro (opcional)</div><div class="note">Mayor performance y uptime garantizado</div></div><div class="amt">$20/mes</div></div>
+      <div class="total-box"><div><div class="tl">Costo operativo mensual escalado</div><div style="font-size:12px;opacity:.55;margin-top:2px">con múltiples empresas activas</div></div><div class="ta">~$200</div></div>
+    </div>
+  </div>
+  <div class="card rv" style="margin-top:20px">
+    <div style="display:flex;gap:48px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;gap:40px;flex-wrap:wrap">
+        <div><div style="font-family:'Fraunces',serif;font-size:52px;font-weight:900;color:var(--blue)">5</div><div style="color:var(--muted);font-size:13px">meses investigación<br>pedagógica</div></div>
+        <div><div style="font-family:'Fraunces',serif;font-size:52px;font-weight:900;color:var(--blue)">15hs</div><div style="color:var(--muted);font-size:13px">de programación<br>del prototipo</div></div>
+        <div><div style="font-family:'Fraunces',serif;font-size:52px;font-weight:900;color:var(--blue)">1</div><div style="color:var(--muted);font-size:13px">persona sola<br>desarrollando</div></div>
+      </div>
+      <div style="flex:1;min-width:260px;background:var(--bg2);border-radius:14px;padding:20px">
+        <div style="font-size:12px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Valor real del desarrollo</div>
+        <p style="color:var(--muted);font-size:14px">Una agencia de software cobraría entre <strong style="color:var(--text)">$15,000 y $40,000 USD</strong> por un proyecto similar. Este fue construido con IA y metodología propia en una fracción del tiempo y costo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- INGRESOS B2B -->
+<section id="ingresos">
+  <div class="rv">
+    <span class="slabel">Modelo de ingresos — venta B2B</span>
+    <h2 class="stitle">Vender a <em>otras empresas</em> con la misma plataforma</h2>
+    <p class="ssub">Una vez validado en Nissei, el framework puede venderse a cualquier empresa con clientes extranjeros: hoteles, shoppings, clínicas, retail.</p>
+  </div>
+  <div class="g3 rv">
+    <div class="card">
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);display:block;margin-bottom:12px">Escenario 1 — Piloto validado</span>
+      <div style="font-size:15px;font-weight:500;margin-bottom:8px">1 empresa / 25 usuarios</div>
+      <div style="font-family:'Fraunces',serif;font-size:52px;font-weight:900;line-height:1;color:var(--blue)">$500<span style="font-size:22px;color:var(--muted)">/mes</span></div>
+      <div style="color:var(--muted);font-size:13px;margin-top:10px">Costo operativo: ~$100 | Margen: 80%</div>
+    </div>
+    <div class="card" style="background:var(--blue);color:white;border-color:var(--blue)">
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.5);display:block;margin-bottom:12px">Escenario 2 — 5 empresas</span>
+      <div style="font-size:15px;font-weight:500;margin-bottom:8px">5 empresas / 150 usuarios</div>
+      <div style="font-family:'Fraunces',serif;font-size:52px;font-weight:900;line-height:1">$3,000<span style="font-size:22px;color:rgba(255,255,255,.5)">/mes</span></div>
+      <div style="color:rgba(255,255,255,.6);font-size:13px;margin-top:10px">Costo operativo: ~$300 | Margen: 90%</div>
+    </div>
+    <div class="card">
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);display:block;margin-bottom:12px">Escenario 3 — Mercado LATAM</span>
+      <div style="font-size:15px;font-weight:500;margin-bottom:8px">20+ empresas / 600+ usuarios</div>
+      <div style="font-family:'Fraunces',serif;font-size:52px;font-weight:900;line-height:1;color:var(--gold)">$12,000<span style="font-size:22px;color:var(--muted)">/mes</span></div>
+      <div style="color:var(--muted);font-size:13px;margin-top:10px">Costo operativo: ~$600 | Margen: 95%</div>
+    </div>
+  </div>
+  <div class="card rv" style="margin-top:20px">
+    <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;margin-bottom:24px">Mercado potencial en Paraguay y región</div>
+    <div class="rbar-wrap"><div class="rbar-top"><span>Turismo y hotelería</span><span style="color:var(--blue);font-weight:700">Alto potencial</span></div><div class="rbar-track"><div class="rbar-fill" data-w="85"></div></div></div>
+    <div class="rbar-wrap"><div class="rbar-top"><span>Retail y comercio</span><span style="color:var(--blue);font-weight:700">Alto potencial</span></div><div class="rbar-track"><div class="rbar-fill" data-w="80"></div></div></div>
+    <div class="rbar-wrap"><div class="rbar-top"><span>Shoppings y centros comerciales</span><span style="color:var(--blue);font-weight:700">Alto potencial</span></div><div class="rbar-track"><div class="rbar-fill" data-w="75"></div></div></div>
+    <div class="rbar-wrap"><div class="rbar-top"><span>Clínicas y salud privada</span><span style="color:var(--blue);font-weight:700">Medio potencial</span></div><div class="rbar-track"><div class="rbar-fill" data-w="60"></div></div></div>
+    <div class="rbar-wrap"><div class="rbar-top"><span style="color:var(--blue);font-weight:600">Portugués para CDE — mismo sistema</span><span style="color:var(--gold);font-weight:700">Enorme potencial</span></div><div class="rbar-track"><div class="rbar-fill" data-w="95" style="background:linear-gradient(90deg,#b07000,var(--gold))"></div></div></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="rv">
+    <span class="slabel">Plan de ejecución</span>
+    <h2 class="stitle">De prototipo a producto en <em>6 meses</em></h2>
+    <p class="ssub">Un plan claro, ejecutable y con hitos medibles en cada etapa.</p>
+  </div>
+  <div class="g2 rv">
+    <div>
+      <div class="tl-wrap">
+        <div class="tl-item"><div class="tl-phase">Fase 1 — Completado ✓</div><div class="tl-title">Investigación pedagógica</div><div class="tl-desc">5 meses de investigación del método Krashen. Currículo de 60 clases con frases reales de Nissei. Definición del método y flujo de enseñanza.</div></div>
+        <div class="tl-item"><div class="tl-phase">Fase 2 — Completado ✓</div><div class="tl-title">Desarrollo del prototipo</div><div class="tl-desc">Plataforma web funcional: 60 clases, shadowing con IA, simulador con diferentes personalidades, sistema de progreso y videos.</div></div>
+        <div class="tl-item"><div class="tl-phase">Fase 3 — Próximas 3 semanas</div><div class="tl-title">Producción de los 60 videos</div><div class="tl-desc">Videos animados estilo Pixar con Kling AI. Cada uno muestra la situación real de venta en el ambiente de la tienda Nissei.</div></div>
+        <div class="tl-item"><div class="tl-phase">Fase 4 — Mes 2</div><div class="tl-title">Prueba piloto — 10 vendedores</div><div class="tl-desc">10 vendedores voluntarios. Inicio gratuito. Seguimiento semanal y ajuste de contenido según feedback real de los usuarios.</div></div>
+        <div class="tl-item"><div class="tl-phase">Fase 5 — Mes 3–4</div><div class="tl-title">Medición de resultados</div><div class="tl-desc">Exámenes en la app. Evaluación de conversaciones reales con clientes extranjeros. Presentación de métricas al directorio.</div></div>
+        <div class="tl-item"><div class="tl-phase">Fase 6 — Mes 5–6</div><div class="tl-title">Modelo comercial B2B</div><div class="tl-desc">Con resultados comprobados, definir precio y estrategia. Portugués para CDE. Iniciar conversaciones con otras empresas.</div></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div class="card">
+        <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;margin-bottom:20px">📊 Cómo medimos si funcionó</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="padding:12px;background:var(--bg2);border-radius:10px"><div style="font-weight:600;font-size:14px;margin-bottom:4px">Test antes vs después</div><div style="color:var(--muted);font-size:13px">Simulación de venta en inglés al inicio y al final. Evaluación objetiva del progreso individual.</div></div>
+          <div style="padding:12px;background:var(--bg2);border-radius:10px"><div style="font-weight:600;font-size:14px;margin-bottom:4px">Conversaciones reales observadas</div><div style="color:var(--muted);font-size:13px">Supervisores evalúan 2–3 interacciones con clientes extranjeros antes y después.</div></div>
+          <div style="padding:12px;background:var(--bg2);border-radius:10px"><div style="font-weight:600;font-size:14px;margin-bottom:4px">Progreso en la plataforma</div><div style="color:var(--muted);font-size:13px">La app registra clases completadas, práctica diaria y puntaje en exámenes de cada vendedor.</div></div>
+          <div style="padding:12px;background:var(--bg2);border-radius:10px"><div style="font-weight:600;font-size:14px;margin-bottom:4px">NPS y satisfacción</div><div style="color:var(--muted);font-size:13px">¿Lo recomendarían a colegas? ¿Sienten más confianza? ¿Quieren continuar?</div></div>
+        </div>
+      </div>
+      <div class="card" style="background:var(--bg2)">
+        <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:700;margin-bottom:12px">¿Qué pasa si el piloto funciona?</div>
+        <ul class="check-list" style="font-size:13px">
+          <li><span class="ico">✓</span>Expansión a todas las sucursales Nissei</li>
+          <li><span class="ico">✓</span>Adaptación para portugués (Ciudad del Este)</li>
+          <li><span class="ico">✓</span>Modelo de venta B2B a otras empresas paraguayas</li>
+          <li><span class="ico">✓</span>Creación de departamento de IA en Nissei</li>
+          <li><span class="ico">✓</span>Nissei como referente de innovación en Paraguay</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- EDTECH VISION -->
+<div class="edtech-hero" id="edtech">
+  <div style="position:relative;z-index:1;max-width:1000px;margin:0 auto">
+    <div class="rv">
+      <span class="slabel" style="color:rgba(255,255,255,.45)">La visión a 3–5 años</span>
+      <h2 style="font-family:'Fraunces',serif;font-size:clamp(44px,7vw,88px);font-weight:900;letter-spacing:-0.04em;line-height:1;color:white;margin-bottom:16px">Nissei como empresa de <em style="color:#60A5FA">EdTech</em></h2>
+      <p style="color:rgba(255,255,255,.6);font-size:19px;max-width:700px;margin:0 auto 60px;font-family:'Cabinet Grotesk',sans-serif">En 3 a 5 años, Nissei podría ser reconocida no solo como la tienda de tecnología más grande de Paraguay — sino como la empresa que <strong style="color:white">usa y vende tecnología para capacitar personas</strong>. Un nuevo negocio nacido desde adentro.</p>
+    </div>
+    <div class="edtech-grid rv">
+      <div class="ecard"><div class="enum">01</div><div class="etitle">Portugués para CDE</div><div class="edesc">La misma plataforma adaptada para vendedores de CDE con clientes brasileros. El 80% del trabajo ya está hecho.</div></div>
+      <div class="ecard hl">
+        <div class="enum">★</div>
+        <div class="etitle">Nissei EdTech — Nuevo departamento de IA</div>
+        <div class="edesc">Un departamento interno que desarrolla herramientas con IA para los propios procesos de Nissei y las comercializa a otras empresas. Nissei como referente de innovación empresarial en la región.</div>
+      </div>
+      <div class="ecard"><div class="enum">03</div><div class="etitle">Capacitación interna</div><div class="edesc">Cursos de producto, técnicas de venta, procesos internos con IA. Complemento continuo a Venda Mais los 365 días del año.</div></div>
+      <div class="ecard"><div class="enum">04</div><div class="etitle">Venta B2B Paraguay</div><div class="edesc">Hoteles, agencias, clínicas, shoppings. Cualquier empresa con clientes extranjeros puede usar este framework.</div></div>
+      <div class="ecard"><div class="enum">05</div><div class="etitle">App móvil nativa</div><div class="edesc">Evolución a iOS y Android con notificaciones push, práctica offline y estadísticas avanzadas de aprendizaje.</div></div>
+      <div class="ecard"><div class="enum">06</div><div class="etitle">Expansión LATAM</div><div class="edesc">Argentina, Uruguay, Bolivia y más. El mismo modelo aplicado a empresas hispanohablantes con necesidad de inglés para ventas.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-sec">
+  <div class="rv">
+    <span class="slabel" style="display:block;margin-bottom:12px">La propuesta</span>
+    <h2 style="font-family:'Fraunces',serif;font-size:clamp(40px,6vw,72px);font-weight:900;letter-spacing:-0.03em;margin-bottom:16px;color:var(--dark)">Piloto gratuito.<br><em style="color:var(--blue)">Resultados medibles.</em></h2>
+    <p style="color:var(--muted);font-size:18px;max-width:480px;margin:0 auto 48px">10 vendedores. 3 meses. Sin costo para Nissei. Al final, los números hablan solos.</p>
+    <div style="display:flex;flex-direction:column;gap:12px;max-width:420px;margin:0 auto 52px;text-align:left">
+      <div style="display:flex;align-items:center;gap:14px"><div style="width:30px;height:30px;background:var(--blue);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">1</div><span style="font-size:15px">Selección de 10 vendedores voluntarios</span></div>
+      <div style="display:flex;align-items:center;gap:14px"><div style="width:30px;height:30px;background:var(--blue);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">2</div><span style="font-size:15px">3 meses de curso con IA — completamente gratis</span></div>
+      <div style="display:flex;align-items:center;gap:14px"><div style="width:30px;height:30px;background:var(--blue);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">3</div><span style="font-size:15px">Medición objetiva del progreso y satisfacción</span></div>
+      <div style="display:flex;align-items:center;gap:14px"><div style="width:30px;height:30px;background:var(--blue);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">4</div><span style="font-size:15px">Decisión de expansión basada en resultados reales</span></div>
+    </div>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <a href="https://nissei-english.vercel.app/nissei-english-app.html" target="_blank" class="btn">Ver demo en vivo →</a>
+      <a href="#diferencial" class="btn btn-o">Volver al inicio</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const obs=new IntersectionObserver(els=>els.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')}),{threshold:.1});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+const bobs=new IntersectionObserver(els=>{els.forEach(e=>{if(e.isIntersecting)e.target.querySelectorAll('.rbar-fill').forEach(b=>{b.style.width=b.dataset.w+'%'})})},{threshold:.3});
+document.querySelectorAll('section').forEach(el=>bobs.observe(el));
+</script>
+</body>
+</html>
