@@ -416,6 +416,63 @@
 <!-- ============================================================ -->
 <!-- PANTALLA 0: BIENVENIDA / INGRESO DE NOMBRE -->
 <!-- ============================================================ -->
+
+<div id="screen-onboarding" class="screen" style="background:linear-gradient(160deg,#f0f4ff 0%,#ffffff 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;">
+  <div style="max-width:480px;width:100%;text-align:center;">
+    <!-- Slides container -->
+    <div id="ob-slides" style="overflow:hidden;position:relative;">
+
+      <!-- Slide 1 -->
+      <div class="ob-slide" id="ob-1" style="transition:opacity .4s;">
+        <div style="font-size:72px;margin-bottom:20px;">🧠</div>
+        <h2 style="font-family:Manrope,sans-serif;font-size:28px;font-weight:800;color:#002147;letter-spacing:-0.02em;margin-bottom:12px;line-height:1.2;">El cerebro aprende<br>mientras dormís</h2>
+        <p style="color:#64748b;font-size:16px;line-height:1.6;max-width:380px;margin:0 auto;">Cada sesión corta activa un proceso de consolidación que ocurre durante el sueño. Por eso <strong style="color:#002147;">10 minutos todos los días</strong> es más poderoso que 2 horas los sábados.</p>
+      </div>
+
+      <!-- Slide 2 (hidden) -->
+      <div class="ob-slide" id="ob-2" style="display:none;transition:opacity .4s;">
+        <div style="font-size:72px;margin-bottom:20px;">🔁</div>
+        <h2 style="font-family:Manrope,sans-serif;font-size:28px;font-weight:800;color:#002147;letter-spacing:-0.02em;margin-bottom:12px;line-height:1.2;">La frecuencia<br>supera a la duración</h2>
+        <p style="color:#64748b;font-size:16px;line-height:1.6;max-width:380px;margin:0 auto;">El lingüista Paul Nation estudió esto durante 30 años. Su conclusión: <strong style="color:#002147;">la repetición diaria</strong> construye conexiones neuronales permanentes. La maratón semanal no lo hace.</p>
+      </div>
+
+      <!-- Slide 3 (hidden) -->
+      <div class="ob-slide" id="ob-3" style="display:none;transition:opacity .4s;">
+        <div style="font-size:72px;margin-bottom:20px;">🎯</div>
+        <h2 style="font-family:Manrope,sans-serif;font-size:28px;font-weight:800;color:#002147;letter-spacing:-0.02em;margin-bottom:12px;line-height:1.2;">Tu plan diario<br>son solo 3 pasos</h2>
+        <div style="display:flex;flex-direction:column;gap:10px;text-align:left;max-width:340px;margin:0 auto 4px;">
+          <div style="background:white;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
+            <span style="font-size:24px;">📚</span>
+            <div><p style="font-weight:700;font-size:14px;color:#002147;">Completá una clase</p><p style="font-size:12px;color:#64748b;">Video + vocabulario + shadowing</p></div>
+            <span style="margin-left:auto;font-size:12px;font-weight:700;color:#1d4ed8;">~4 min</span>
+          </div>
+          <div style="background:white;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
+            <span style="font-size:24px;">🎧</span>
+            <div><p style="font-weight:700;font-size:14px;color:#002147;">Escuchá el audio del día</p><p style="font-size:12px;color:#64748b;">Conversación real en inglés</p></div>
+            <span style="margin-left:auto;font-size:12px;font-weight:700;color:#1d4ed8;">~3 min</span>
+          </div>
+          <div style="background:white;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
+            <span style="font-size:24px;">🎤</span>
+            <div><p style="font-weight:700;font-size:14px;color:#002147;">Practicá con un simulador</p><p style="font-size:12px;color:#64748b;">Cliente real con IA</p></div>
+            <span style="margin-left:auto;font-size:12px;font-weight:700;color:#1d4ed8;">~3 min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dots -->
+    <div style="display:flex;justify-content:center;gap:8px;margin:28px 0 24px;">
+      <div class="ob-dot" id="dot-1" style="width:28px;height:6px;border-radius:3px;background:#002147;transition:all .3s;"></div>
+      <div class="ob-dot" id="dot-2" style="width:8px;height:6px;border-radius:3px;background:#cbd5e1;transition:all .3s;"></div>
+      <div class="ob-dot" id="dot-3" style="width:8px;height:6px;border-radius:3px;background:#cbd5e1;transition:all .3s;"></div>
+    </div>
+
+    <!-- Buttons -->
+    <button id="ob-next-btn" onclick="obNext()" style="width:100%;padding:16px;background:#002147;color:white;border:none;border-radius:14px;font-family:Manrope,sans-serif;font-weight:700;font-size:16px;cursor:pointer;margin-bottom:12px;">Siguiente →</button>
+    <button onclick="obSkip()" style="width:100%;padding:12px;background:transparent;border:none;color:#94a3b8;font-size:14px;cursor:pointer;">Saltar introducción</button>
+  </div>
+</div>
+
 <div id="screen-welcome" class="screen">
   <div class="min-h-screen flex flex-col items-center justify-center px-6 bg-gradient-to-b from-white to-surface-container-low">
     <div class="w-full max-w-sm">
@@ -6510,8 +6567,13 @@ function showScreen(id) {
   window.scrollTo(0, 0);
   // Mobile nav: hide on class/celebration/welcome, show elsewhere
   var mNav = document.getElementById('mobile-nav-global');
-  var hideOn = ['screen-class','screen-celebration','screen-welcome'];
-  if (mNav) { var isMobile = window.innerWidth < 768; mNav.style.display = (hideOn.indexOf(id) >= 0 || !isMobile) ? 'none' : 'flex'; }
+  var hideNavOn = ['screen-class','screen-celebration','screen-welcome','screen-onboarding'];
+  if (mNav) { var isMobile = window.innerWidth < 768; mNav.style.display = (hideNavOn.indexOf(id) >= 0 || !isMobile) ? 'none' : 'flex'; }
+  // Help button: hide on class/celebration/onboarding/welcome
+  var hBtn = document.getElementById('help-btn');
+  if (hBtn && localStorage.getItem('ob_seen')) {
+    hBtn.style.display = ['screen-class','screen-celebration','screen-onboarding','screen-welcome'].indexOf(id) >= 0 ? 'none' : 'flex';
+  }
   // Highlight active mobile nav button
   var navMap = {'screen-dashboard':'mnav-dashboard','screen-progress':'mnav-progreso','screen-audios':'mnav-audios','screen-simulators':'mnav-sims'};
   ['mnav-dashboard','mnav-progreso','mnav-audios','mnav-sims'].forEach(function(bid) {
@@ -7528,17 +7590,67 @@ window.addEventListener('resize', function() {
   mNav.style.display = (hideOn.indexOf(activeScreen.id) >= 0 || !isMobile) ? 'none' : 'flex';
 });
 
+// ── ONBOARDING ────────────────────────────────────────────────
+var obCurrentSlide = 1;
+
+function obNext() {
+  if (obCurrentSlide < 3) {
+    document.getElementById('ob-' + obCurrentSlide).style.display = 'none';
+    obCurrentSlide++;
+    document.getElementById('ob-' + obCurrentSlide).style.display = 'block';
+    // Update dots
+    [1,2,3].forEach(function(i) {
+      var dot = document.getElementById('dot-' + i);
+      dot.style.width = i === obCurrentSlide ? '28px' : '8px';
+      dot.style.background = i === obCurrentSlide ? '#002147' : '#cbd5e1';
+    });
+    // Change button text on last slide
+    if (obCurrentSlide === 3) {
+      document.getElementById('ob-next-btn').textContent = 'Comenzar el curso →';
+      document.getElementById('ob-next-btn').onclick = obSkip;
+    }
+  } else {
+    obSkip();
+  }
+}
+
+function obSkip() {
+  localStorage.setItem('ob_seen', '1');
+  showScreen('screen-welcome');
+  // Show help button from now on
+  var hb = document.getElementById('help-btn');
+  if (hb) hb.style.display = 'flex';
+}
+
+// ── HELP MODAL ────────────────────────────────────────────────
+function openHelpModal() {
+  document.getElementById('help-modal').style.display = 'flex';
+}
+function closeHelpModal() {
+  document.getElementById('help-modal').style.display = 'none';
+}
+
+
 function initApp() {
   // Show mobile nav if on mobile screen
   var mNav = document.getElementById('mobile-nav-global');
   if (mNav && window.innerWidth < 768) mNav.style.display = 'flex';
+  // Show help button if onboarding already seen
+  var hb = document.getElementById('help-btn');
+  if (hb && localStorage.getItem('ob_seen')) hb.style.display = 'flex';
+  // Hide help button on small mobile (has bottom nav already)
   const savedName = localStorage.getItem('user_name');
   if (savedName) {
     applyName(savedName);
     buildProgressMap();
     showScreen('screen-dashboard');
   } else {
-    showScreen('screen-welcome');
+    // First time? Show onboarding
+    if (!localStorage.getItem('ob_seen')) {
+      showScreen('screen-onboarding');
+    } else {
+      showScreen('screen-welcome');
+    }
     // Focus en el input
     setTimeout(() => {
       const input = document.getElementById('name-input');
@@ -7560,5 +7672,56 @@ document.querySelector('button.material-symbols-outlined')?.addEventListener('cl
 initApp();
 
 </script>
+
+<!-- Help floating button -->
+<button id="help-btn" onclick="openHelpModal()" style="position:fixed;bottom:90px;right:20px;width:44px;height:44px;border-radius:50%;background:#002147;color:white;border:none;font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,33,71,0.25);z-index:150;display:none;align-items:center;justify-content:center;">?</button>
+
+<!-- Help Modal -->
+<div id="help-modal" style="display:none;position:fixed;inset:0;z-index:210;background:rgba(0,0,0,0.6);align-items:flex-end;justify-content:center;padding:0;">
+  <div style="background:white;border-radius:24px 24px 0 0;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:32px 24px 40px;margin:0 auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+      <h3 style="font-family:Manrope,sans-serif;font-size:20px;font-weight:800;color:#002147;">¿Por qué funciona este método?</h3>
+      <button onclick="closeHelpModal()" style="background:#f1f5f9;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">✕</button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="background:#f0f4ff;border-radius:16px;padding:18px;">
+        <p style="font-size:20px;margin-bottom:8px;">🧠</p>
+        <p style="font-weight:700;color:#002147;font-size:15px;margin-bottom:6px;">El cerebro aprende mientras dormís</p>
+        <p style="color:#64748b;font-size:14px;line-height:1.6;">Cada sesión corta activa un proceso de consolidación que ocurre durante el sueño. <strong style="color:#002147;">10 minutos diarios</strong> es más poderoso que 2 horas los sábados.</p>
+      </div>
+
+      <div style="background:#f0fdf4;border-radius:16px;padding:18px;">
+        <p style="font-size:20px;margin-bottom:8px;">🔁</p>
+        <p style="font-weight:700;color:#002147;font-size:15px;margin-bottom:6px;">La frecuencia supera a la duración</p>
+        <p style="color:#64748b;font-size:14px;line-height:1.6;">El lingüista Paul Nation estudió esto durante 30 años. Su conclusión: <strong style="color:#002147;">la repetición diaria</strong> construye conexiones neuronales permanentes que el estudio esporádico no logra.</p>
+      </div>
+
+      <div style="background:#fff7ed;border-radius:16px;padding:18px;">
+        <p style="font-size:20px;margin-bottom:8px;">📥</p>
+        <p style="font-weight:700;color:#002147;font-size:15px;margin-bottom:6px;">Input comprensible — método Krashen</p>
+        <p style="color:#64748b;font-size:14px;line-height:1.6;">Aprendés inglés igual que aprendiste español: <strong style="color:#002147;">escuchando primero</strong>, repitiendo después. Los audios y videos activan la adquisición natural antes de que practiques hablando.</p>
+      </div>
+
+      <div style="background:#fdf4ff;border-radius:16px;padding:18px;">
+        <p style="font-size:20px;margin-bottom:8px;">🎯</p>
+        <p style="font-weight:700;color:#002147;font-size:15px;margin-bottom:6px;">Contexto real de Nissei</p>
+        <p style="color:#64748b;font-size:14px;line-height:1.6;">Todas las frases y situaciones son de la tienda real. El cerebro retiene mejor lo que es <strong style="color:#002147;">relevante y útil</strong> para su contexto diario.</p>
+      </div>
+
+      <div style="background:#f0f9ff;border-radius:16px;padding:16px;text-align:center;">
+        <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">Tu plan diario: solo 10 minutos</p>
+        <div style="display:flex;justify-content:center;gap:16px;margin-top:10px;">
+          <div style="text-align:center;"><span style="font-size:24px;">📚</span><p style="font-size:11px;color:#64748b;margin-top:4px;">1 clase<br>~4 min</p></div>
+          <div style="text-align:center;"><span style="font-size:24px;">🎧</span><p style="font-size:11px;color:#64748b;margin-top:4px;">1 audio<br>~3 min</p></div>
+          <div style="text-align:center;"><span style="font-size:24px;">🎤</span><p style="font-size:11px;color:#64748b;margin-top:4px;">1 sim<br>~3 min</p></div>
+        </div>
+      </div>
+    </div>
+
+    <button onclick="closeHelpModal()" style="width:100%;padding:14px;background:#002147;color:white;border:none;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;margin-top:20px;">Entendido 👍</button>
+  </div>
+</div>
+
 </body>
 </html>
