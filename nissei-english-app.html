@@ -7059,12 +7059,7 @@ function closeVoiceModal() {
   document.getElementById('voice-modal').classList.remove('open');
   document.getElementById('wave-bars').classList.add('inactive');
   document.getElementById('pulse-ring').classList.remove('listening');
-  if (wsConnection) { wsConnection.close(); wsConnection = null; }
-  if (audioProcessor) { audioProcessor.disconnect(); audioProcessor = null; }
-  if (audioContext) { audioContext.close(); audioContext = null; }
-  if (audioStream) { audioStream.getTracks().forEach(t => t.stop()); audioStream = null; }
-  if (audioCtxOutput) { audioCtxOutput.close(); audioCtxOutput = null; }
-  nextStartTime = 0;
+  stopVoiceSession();
 }
 
 // ── VIDEOS POR CLASE ─────────────────────────────────────────
@@ -7339,6 +7334,34 @@ function openSimulator(sim) {
   currentSystemPrompt = sim.prompt;
   voiceMode = 'simulation';
   connectDirect();
+}
+
+function stopVoiceSession() {
+  // Kill WebSocket
+  if (wsConnection) {
+    try { wsConnection.close(); } catch(e) {}
+    wsConnection = null;
+  }
+  // Kill microphone tracks completely
+  if (audioStream) {
+    audioStream.getTracks().forEach(function(t) { t.stop(); });
+    audioStream = null;
+  }
+  // Kill audio processor
+  if (audioProcessor) {
+    try { audioProcessor.disconnect(); } catch(e) {}
+    audioProcessor = null;
+  }
+  // Kill audio contexts
+  if (audioContext) {
+    try { audioContext.close(); } catch(e) {}
+    audioContext = null;
+  }
+  if (audioCtxOutput) {
+    try { audioCtxOutput.close(); } catch(e) {}
+    audioCtxOutput = null;
+  }
+  nextStartTime = 0;
 }
 
 function closeSimModal() {
