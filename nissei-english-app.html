@@ -7601,25 +7601,46 @@ function obNext() {
     // Update dots
     [1,2,3].forEach(function(i) {
       var dot = document.getElementById('dot-' + i);
+      if (!dot) return;
       dot.style.width = i === obCurrentSlide ? '28px' : '8px';
       dot.style.background = i === obCurrentSlide ? '#002147' : '#cbd5e1';
     });
     // Change button text on last slide
     if (obCurrentSlide === 3) {
-      document.getElementById('ob-next-btn').textContent = 'Comenzar el curso →';
-      document.getElementById('ob-next-btn').onclick = obSkip;
+      var btn = document.getElementById('ob-next-btn');
+      if (btn) { btn.textContent = 'Comenzar el curso →'; btn.onclick = obSkip; }
     }
   } else {
     obSkip();
   }
 }
 
+function resetOnboarding() {
+  obCurrentSlide = 1;
+  [1,2,3].forEach(function(i) {
+    var s = document.getElementById('ob-' + i);
+    if (s) s.style.display = i === 1 ? 'block' : 'none';
+    var d = document.getElementById('dot-' + i);
+    if (d) { d.style.width = i === 1 ? '28px' : '8px'; d.style.background = i === 1 ? '#002147' : '#cbd5e1'; }
+  });
+  var btn = document.getElementById('ob-next-btn');
+  if (btn) { btn.textContent = 'Siguiente →'; btn.onclick = obNext; }
+}
+
 function obSkip() {
   localStorage.setItem('ob_seen', '1');
-  showScreen('screen-welcome');
   // Show help button from now on
   var hb = document.getElementById('help-btn');
   if (hb) hb.style.display = 'flex';
+  // Go to dashboard if already has name, else welcome
+  var savedName = localStorage.getItem('user_name');
+  if (savedName) {
+    applyName(savedName);
+    buildProgressMap();
+    showScreen('screen-dashboard');
+  } else {
+    showScreen('screen-welcome');
+  }
 }
 
 // ── HELP MODAL ────────────────────────────────────────────────
@@ -7647,10 +7668,13 @@ function initApp() {
   } else {
     // First time? Show onboarding
     if (!localStorage.getItem('ob_seen')) {
+      resetOnboarding();
       showScreen('screen-onboarding');
     } else {
       showScreen('screen-welcome');
     }
+    // Reset onboarding slide state
+    obCurrentSlide = 1;
     // Focus en el input
     setTimeout(() => {
       const input = document.getElementById('name-input');
