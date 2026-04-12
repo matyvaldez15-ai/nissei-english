@@ -141,53 +141,14 @@
 </head>
 <body class="bg-surface font-body text-on-surface min-h-screen">
 
-<!-- GLOBAL NAV - always visible -->
-<nav id="global-nav" style="display:none;position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,33,71,0.08);box-shadow:0 1px 12px rgba(0,0,0,0.06);">
-  <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 24px;max-width:1100px;margin:0 auto;">
-    <span style="font-size:17px;font-weight:800;color:#002147;letter-spacing:-0.02em;font-family:Manrope,sans-serif;">Nissei English for Sales</span>
-    <div class="hidden md:flex" style="display:flex;align-items:center;gap:24px;">
-      <button onclick="goToDashboard()" id="gnav-dashboard" style="font-weight:700;color:#002147;background:none;border:none;cursor:pointer;font-size:14px;padding:6px 12px;border-radius:8px;">Dashboard</button>
-      <button onclick="showProgressScreen()" id="gnav-progress" style="font-weight:500;color:#64748b;background:none;border:none;cursor:pointer;font-size:14px;padding:6px 12px;border-radius:8px;transition:color .2s;">Progreso</button>
-      <button onclick="showAudios()" id="gnav-audios" style="font-weight:500;color:#64748b;background:none;border:none;cursor:pointer;font-size:14px;padding:6px 12px;border-radius:8px;transition:color .2s;">Audios</button>
-      <button onclick="showSimulators()" id="gnav-simuladores" style="font-weight:500;color:#64748b;background:none;border:none;cursor:pointer;font-size:14px;padding:6px 12px;border-radius:8px;transition:color .2s;">Simuladores</button>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div style="text-align:right;" class="hidden sm:block">
-        <span style="font-size:13px;font-weight:700;color:#002147;display:block;" id="gnav-name">-</span>
-        <span style="font-size:10px;font-weight:700;color:#1d4ed8;text-transform:uppercase;letter-spacing:0.05em;" id="gnav-progress-text">0% Completado</span>
-      </div>
-      <span class="material-symbols-outlined" style="color:#64748b;font-size:28px;cursor:pointer;" onclick="goToDashboard()">account_circle</span>
-    </div>
-  </div>
-  <!-- Mobile nav -->
-  <div style="display:flex;justify-content:space-around;padding:8px 0 10px;border-top:1px solid rgba(0,0,0,0.05);" class="md:hidden" id="gnav-mobile">
-    <button onclick="goToDashboard()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 12px;" id="gnav-m-dashboard">
-      <span class="material-symbols-outlined" style="font-size:20px;color:#002147;">dashboard</span>
-      <span style="font-size:9px;font-weight:700;color:#002147;text-transform:uppercase;letter-spacing:0.05em;">Inicio</span>
-    </button>
-    <button onclick="showProgressScreen()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 12px;" id="gnav-m-progress">
-      <span class="material-symbols-outlined" style="font-size:20px;color:#94a3b8;">query_stats</span>
-      <span style="font-size:9px;font-weight:500;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;">Progreso</span>
-    </button>
-    <button onclick="showAudios()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 12px;" id="gnav-m-audios">
-      <span class="material-symbols-outlined" style="font-size:20px;color:#94a3b8;">headphones</span>
-      <span style="font-size:9px;font-weight:500;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;">Audios</span>
-    </button>
-    <button onclick="showSimulators()" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 12px;" id="gnav-m-sims">
-      <span class="material-symbols-outlined" style="font-size:20px;color:#94a3b8;">record_voice_over</span>
-      <span style="font-size:9px;font-weight:500;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;">Sims</span>
-    </button>
-  </div>
-</nav>
-
 
 <!-- ============================================================ -->
 <!-- PANTALLA 1: DASHBOARD / MAPA DE PROGRESO -->
 <!-- ============================================================ -->
 <div id="screen-dashboard" class="screen active">
 
-  <!-- Header (replaced by global nav) -->
-  <header class="bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm" style="display:none;">
+  <!-- Header -->
+  <header class="bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
     <div class="flex justify-between items-center px-6 py-4 w-full max-w-5xl mx-auto">
       <span class="text-lg font-extrabold text-[#002147] font-['Manrope'] tracking-tight">Nissei English for Sales</span>
       <div class="hidden md:flex items-center gap-8">
@@ -238,8 +199,8 @@
 
   </main>
 
-  <!-- Nav móvil (replaced by global nav) -->
-  <nav class="md:hidden fixed bottom-0" style="display:none;" left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 backdrop-blur-xl z-50 rounded-t-3xl shadow-lg">
+  <!-- Nav móvil -->
+  <nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 backdrop-blur-xl z-50 rounded-t-3xl shadow-lg">
     <button onclick="goToDashboard()" class="flex flex-col items-center text-white bg-[#002147] rounded-full px-5 py-2">
       <span class="material-symbols-outlined text-[20px]">dashboard</span>
       <span class="text-[10px] uppercase tracking-wider mt-0.5">Inicio</span>
@@ -513,7 +474,24 @@
 
 
 <div id="screen-audios" class="screen">
-  <div class="pt-2 px-6 max-w-3xl mx-auto mt-2"><h2 class="font-headline font-bold text-xl text-primary-container">Input diario 🎧</h2><p class="text-xs text-on-surface-variant mb-4">Escucha conversaciones reales todos los dias · Racha: <span id="audio-streak" class="font-bold text-secondary">0 dias</span></p></div>
+  <header class="bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
+    <div class="flex justify-between items-center px-6 py-4 w-full max-w-5xl mx-auto">
+      <span class="text-lg font-extrabold text-[#002147] font-['Manrope'] tracking-tight">Nissei English for Sales</span>
+      <div class="hidden md:flex items-center gap-8">
+        <button class="text-[#002147] font-bold" onclick="goToDashboard()">Dashboard</button>
+        <button class="text-slate-500 hover:text-slate-700 px-3 py-1 rounded-lg" onclick="showProgressScreen()">Progreso</button>
+        <button class="text-slate-700 font-semibold bg-slate-100 px-3 py-1 rounded-lg">Audios</button>
+        <button class="text-slate-500 hover:text-slate-700 px-3 py-1 rounded-lg" onclick="showSimulators()">Simuladores</button>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex flex-col items-end">
+          <span class="text-sm font-bold text-primary" id="user-name-audios"></span>
+          <span class="text-[10px] uppercase font-bold text-secondary" id="audio-streak">0 dias racha</span>
+        </div>
+        <button class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full">account_circle</button>
+      </div>
+    </div>
+  </header>
   <main class="max-w-3xl mx-auto px-6 pt-6 pb-32">
     <!-- XP Banner -->
     <div class="bg-gradient-to-r from-secondary to-primary-container rounded-2xl p-4 mb-6 flex items-center gap-4">
@@ -574,7 +552,24 @@
   </div>
 </div>
 <div id="screen-simulators" class="screen">
-  <div class="px-6 max-w-5xl mx-auto mt-2"><h2 class="font-headline font-bold text-xl text-primary-container">Simuladores de venta 🎤</h2><p class="text-xs text-on-surface-variant mb-4">Practica con clientes reales en cualquier momento</p></div>
+  <header class="bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
+    <div class="flex justify-between items-center px-6 py-4 w-full max-w-5xl mx-auto">
+      <span class="text-lg font-extrabold text-[#002147] font-['Manrope'] tracking-tight">Nissei English for Sales</span>
+      <div class="hidden md:flex items-center gap-8">
+        <button class="text-[#002147] font-bold" onclick="goToDashboard()">Dashboard</button>
+        <button class="text-slate-500 hover:text-slate-700 px-3 py-1 rounded-lg" onclick="showProgressScreen()">Progreso</button>
+        <button class="text-slate-500 hover:text-slate-700 px-3 py-1 rounded-lg" onclick="showAudios()">Audios</button>
+        <button class="text-slate-700 font-semibold bg-slate-100 px-3 py-1 rounded-lg">Simuladores</button>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex flex-col items-end">
+          <span class="text-sm font-bold text-primary" id="user-name-sims"></span>
+          <span class="text-[10px] uppercase font-bold text-secondary" id="user-progress-sims"></span>
+        </div>
+        <button class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full">account_circle</button>
+      </div>
+    </div>
+  </header>
   <main class="max-w-5xl mx-auto px-6 pt-8 pb-32">
     <div class="mb-10">
       <div class="flex items-center gap-3 mb-5">
@@ -6497,7 +6492,6 @@ function showScreen(id) {
 function goToDashboard() {
   buildProgressMap();
   showScreen('screen-dashboard');
-  updateGlobalNav('dashboard');
 }
 
 function openClass(classNum) {
@@ -7095,10 +7089,9 @@ function saveName() {
 
 function applyName(name) {
   // Aplicar nombre en todos los lugares donde aparece
-  document.querySelectorAll('#user-name').forEach(el => el.textContent = name);
-  // Update global nav name
-  const gnav = document.getElementById('gnav-name');
-  if (gnav) gnav.textContent = name.split(' ')[0];
+  document.querySelectorAll('#user-name,#user-name-audios,#user-name-sims,#user-name-prog').forEach(el => el.textContent = name);
+  const pct = Math.round((completedClasses.length / 60) * 100) + '% Completado (' + completedClasses.length + '/60)';
+  document.querySelectorAll('#user-progress-sims,#user-progress-prog').forEach(el => el.textContent = pct);
   document.querySelectorAll('#celebration-name').forEach(el => el.textContent = name.split(' ')[0]);
 }
 
@@ -7484,46 +7477,6 @@ function openExam(examNum) {
   }
 }
 
-
-// ── GLOBAL NAV ────────────────────────────────────────────────
-function updateGlobalNav(activeSection) {
-  const nav = document.getElementById('global-nav');
-  if (!nav) return;
-
-  // Show nav for all screens except welcome and class/celebration
-  const hideOn = ['screen-welcome', 'screen-class', 'screen-celebration'];
-  const currentScreen = document.querySelector('.screen.active');
-  const screenId = currentScreen ? currentScreen.id : '';
-  nav.style.display = hideOn.includes(screenId) ? 'none' : 'block';
-
-  // Update name and progress
-  const nameEl = document.getElementById('gnav-name');
-  const progressEl = document.getElementById('gnav-progress-text');
-  if (nameEl) nameEl.textContent = localStorage.getItem('user_name') || 'Usuario';
-  if (progressEl) {
-    const pct = Math.round((completedClasses.length / 60) * 100);
-    progressEl.textContent = pct + '% Completado (' + completedClasses.length + '/60)';
-  }
-
-  // Highlight active button
-  const sections = ['dashboard', 'progress', 'audios', 'simuladores'];
-  sections.forEach(function(s) {
-    const btn = document.getElementById('gnav-' + s);
-    const mbtn = document.getElementById('gnav-m-' + (s === 'simuladores' ? 'sims' : s === 'progress' ? 'progress' : s));
-    const isActive = s === activeSection;
-    if (btn) {
-      btn.style.color = isActive ? '#002147' : '#64748b';
-      btn.style.fontWeight = isActive ? '700' : '500';
-      btn.style.background = isActive ? 'rgba(0,33,71,0.05)' : 'none';
-    }
-    if (mbtn) {
-      const icon = mbtn.querySelector('.material-symbols-outlined');
-      const label = mbtn.querySelector('span:last-child');
-      if (icon) icon.style.color = isActive ? '#002147' : '#94a3b8';
-      if (label) { label.style.color = isActive ? '#002147' : '#94a3b8'; label.style.fontWeight = isActive ? '700' : '500'; }
-    }
-  });
-}
 
 
 function initApp() {
