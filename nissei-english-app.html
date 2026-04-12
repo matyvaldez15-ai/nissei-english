@@ -7005,7 +7005,7 @@ var SIMULATORS = [
   {id:15,month:2,name:"Sophie",country:"Netherlands",flag:"NL",topic:"Garantia",color:"#F39C12",skin:"#FDBCB4",hair:"#D4AC0D",prompt:"You are Sophie, Dutch expat living in Asuncion. ONLY English. Intermediate level. GOAL: Understand the warranty on a laptop before buying. Ask: How long is the warranty? Ask: What does the warranty cover? Only factory defects? Ask: If something goes wrong, where do I go? Ask: Do I need to keep the receipt? Ask: Can I exchange it if it does not work properly? React: Great, that gives me confidence. I will take it! 8-10 exchanges. End in Spanish."},
   {id:16,month:2,name:"Carlos",country:"Mexico",flag:"MX",topic:"Restaurantes cercanos",color:"#8E44AD",skin:"#C68642",hair:"#1A1A1A",prompt:"You are Carlos, Mexican tourist who just finished shopping at Nissei. ONLY English. Intermediate level. GOAL: Get restaurant recommendations near the store. Say: Thank you! I love this phone. Then: I am starving. Are there any good restaurants nearby? Ask: Is there a burger place? How far is it? Ask: What about something local? I want to try Paraguayan food. Ask: Which way do I go from here? 8 exchanges. Friendly. End in Spanish: evaluate the recommendations and directions."},
   {id:17,month:2,name:"Yuki",country:"South Korea",flag:"KR",topic:"Stock para empresa",color:"#2980B9",skin:"#F5CBA7",hair:"#1A1A1A",prompt:"You are Yuki, Korean corporate buyer at Nissei. ONLY English. Intermediate-advanced level. GOAL: Check if Nissei has 20 units of Samsung Galaxy A55. Say: I represent a company. Do you have 20 units of the Samsung Galaxy A55 in stock? Ask: Can you hold them until Friday? Ask: What is the price per unit for a bulk order? Ask: Do you issue corporate invoices? Ask: Is there a discount for large quantities? 8-10 exchanges. Professional. End in Spanish."},
-  {id:18,month:2,name:"Grace",country:"UK",flag:"UK",topic:"Sector gaming",color:"#16A085",skin:"#F5CBA7",hair:"#8B4513",prompt:"You are Grace, British gamer visiting Nissei. ONLY English. Intermediate level. GOAL: Find the gaming section and buy a PlayStation 5. Say: Hi! I am looking for the gaming section. Follow the directions. Once there: Do you have the PlayStation 5 in stock? Ask: What games do you have for PS5? Ask: Does it come with a controller? Ask: What is the warranty on this? React: I will take it! Where do I pay? Then follow the complete closing process. 10 exchanges. End in Spanish."},
+  {id:18,month:2,name:"Hannah",country:"UK",flag:"UK",topic:"Sector gaming",color:"#16A085",skin:"#F5CBA7",hair:"#8B4513",prompt:"You are Hannah, British gamer visiting Nissei. ONLY English. Intermediate level. GOAL: Find the gaming section and buy a PlayStation 5. Say: Hi! I am looking for the gaming section. Follow the directions. Once there: Do you have the PlayStation 5 in stock? Ask: What games do you have for PS5? Ask: Does it come with a controller? Ask: What is the warranty on this? React: I will take it! Where do I pay? Then follow the complete closing process. 10 exchanges. End in Spanish."},
   {id:19,month:2,name:"David",country:"USA",flag:"US",topic:"Reclamo post-venta",color:"#E74C3C",skin:"#FDBCB4",hair:"#2C3E50",prompt:"You are David, American customer who bought a phone last week that stopped working. ONLY English. Intermediate level. Enter looking frustrated but polite. Say: Hello, I have a problem. I bought this phone here last week and it stopped working yesterday. When apologized to: soften a little: OK, I understand. What can you do for me? Ask: Can you exchange it? It is under warranty. Ask: Where do I go? After clear solution: Alright. I hope this gets resolved quickly. Thank you. 8-10 exchanges. End in Spanish: evaluate how the complaint was handled."},
   {id:20,month:2,name:"Fatima",country:"Morocco",flag:"MA",topic:"Reserva de producto",color:"#9B59B6",skin:"#C68642",hair:"#1A1A1A",prompt:"You are Fatima, Moroccan expat living in Paraguay. ONLY English. Intermediate level. GOAL: Reserve a MacBook Air for Saturday pickup. Ask: I want to reserve a product. I saw a MacBook Air here. Can I reserve one? Ask: Do I need to pay a deposit? Ask: How long can you hold it for me? Ask: What happens if I cannot come on that day? Ask: Can I pay the rest when I come to pick it up? React: Perfect! I will come on Saturday. Thank you! 8-10 exchanges. End in Spanish."},
   {id:21,month:3,name:"Ryan",country:"USA",flag:"US",topic:"Venta completa",color:"#1ABC9C",skin:"#FDBCB4",hair:"#8B4513",prompt:"You are Ryan, American tourist buying a phone as a gift for his wife. ONLY English. Advanced level - full sale simulation. Complete the full purchase journey: needs discovery, product recommendation, price, tax free with passport, cashier, delivery area, testing, farewell. Wife is 35, loves photography, prefers elegant style. Be cooperative but ask detailed questions throughout. 12-15 exchanges. End in Spanish: full evaluation with score 1-10."},
@@ -7022,7 +7022,29 @@ var SIMULATORS = [
 
 function getAvatar(sim) {
   var bg = sim.color, sk = sim.skin, hr = sim.hair, fl = sim.flag;
-  return '<svg width="70" height="70" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg"><circle cx="35" cy="35" r="35" fill="' + bg + '"/><ellipse cx="35" cy="44" rx="19" ry="13" fill="' + sk + '"/><circle cx="35" cy="27" r="13" fill="' + sk + '"/><ellipse cx="35" cy="18" rx="13" ry="8" fill="' + hr + '"/><circle cx="30" cy="26" r="1.8" fill="#222"/><circle cx="40" cy="26" r="1.8" fill="#222"/><path d="M30 32 Q35 37 40 32" stroke="#c0392b" stroke-width="1.5" fill="none" stroke-linecap="round"/><text x="35" y="67" text-anchor="middle" font-family="Arial" font-size="9" fill="white">' + fl + '</text></svg>';
+  // Determine if female by id (even = female style)
+  var isFemale = (sim.id % 2 === 0);
+  var hairPath = isFemale
+    ? '<ellipse cx="35" cy="19" rx="14" ry="10" fill="' + hr + '"/><ellipse cx="22" cy="26" rx="5" ry="9" fill="' + hr + '"/><ellipse cx="48" cy="26" rx="5" ry="9" fill="' + hr + '"/>'
+    : '<ellipse cx="35" cy="19" rx="13" ry="7" fill="' + hr + '"/>';
+  var ears = '<ellipse cx="21" cy="29" rx="3.5" ry="4" fill="' + sk + '"/><ellipse cx="49" cy="29" rx="3.5" ry="4" fill="' + sk + '"/>';
+  var neck = '<rect x="30" y="40" width="10" height="7" rx="3" fill="' + sk + '"/>';
+  var body = '<ellipse cx="35" cy="57" rx="16" ry="10" fill="' + bg + '" opacity="0.7"/>';
+  return '<svg width="70" height="70" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">'
+    + '<circle cx="35" cy="35" r="35" fill="' + bg + '"/>'
+    + body + neck + ears
+    + '<circle cx="35" cy="29" r="14" fill="' + sk + '"/>'
+    + hairPath
+    + '<circle cx="30" cy="27" r="2.2" fill="#1a1a1a"/>'
+    + '<circle cx="40" cy="27" r="2.2" fill="#1a1a1a"/>'
+    + '<circle cx="30.7" cy="26.3" r="0.7" fill="white"/>'
+    + '<circle cx="40.7" cy="26.3" r="0.7" fill="white"/>'
+    + '<ellipse cx="29" cy="31" rx="2.5" ry="1.2" fill="' + sk + '" opacity="0.6"/>'
+    + '<ellipse cx="41" cy="31" rx="2.5" ry="1.2" fill="' + sk + '" opacity="0.6"/>'
+    + '<path d="M30 34 Q35 38 40 34" stroke="#c0392b" stroke-width="1.8" fill="none" stroke-linecap="round"/>'
+    + '<ellipse cx="35" cy="33" rx="3" ry="1.2" fill="' + sk + '" opacity="0.5"/>'
+    + '<text x="35" y="68" text-anchor="middle" font-family="Arial" font-size="8" font-weight="bold" fill="white" opacity="0.9">' + fl + '</text>'
+    + '</svg>';
 }
 
 function showSimulators() {
