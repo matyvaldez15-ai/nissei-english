@@ -162,7 +162,7 @@
           <span class="text-sm font-bold text-primary" id="user-name">Carlos Mendoza</span>
           <span class="text-[10px] uppercase font-bold text-secondary" id="user-progress">2% Completado (1/60)</span>
         </div>
-        <button class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full">account_circle</button>
+        <button onclick="openProfile()" class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full">account_circle</button>
       </div>
     </div>
   </header>
@@ -417,62 +417,6 @@
 <!-- PANTALLA 0: BIENVENIDA / INGRESO DE NOMBRE -->
 <!-- ============================================================ -->
 
-<div id="screen-onboarding" class="screen" style="background:linear-gradient(160deg,#f0f4ff 0%,#ffffff 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;">
-  <div style="max-width:480px;width:100%;text-align:center;">
-    <!-- Slides container -->
-    <div id="ob-slides" style="overflow:hidden;position:relative;">
-
-      <!-- Slide 1 -->
-      <div class="ob-slide" id="ob-1" style="transition:opacity .4s;">
-        <div style="font-size:72px;margin-bottom:20px;">🧠</div>
-        <h2 style="font-family:Manrope,sans-serif;font-size:28px;font-weight:800;color:#002147;letter-spacing:-0.02em;margin-bottom:12px;line-height:1.2;">El cerebro aprende<br>mientras dormís</h2>
-        <p style="color:#64748b;font-size:16px;line-height:1.6;max-width:380px;margin:0 auto;">Cada sesión corta activa un proceso de consolidación que ocurre durante el sueño. Por eso <strong style="color:#002147;">10 minutos todos los días</strong> es más poderoso que 2 horas los sábados.</p>
-      </div>
-
-      <!-- Slide 2 (hidden) -->
-      <div class="ob-slide" id="ob-2" style="display:none;transition:opacity .4s;">
-        <div style="font-size:72px;margin-bottom:20px;">🔁</div>
-        <h2 style="font-family:Manrope,sans-serif;font-size:28px;font-weight:800;color:#002147;letter-spacing:-0.02em;margin-bottom:12px;line-height:1.2;">La frecuencia<br>supera a la duración</h2>
-        <p style="color:#64748b;font-size:16px;line-height:1.6;max-width:380px;margin:0 auto;">El lingüista Paul Nation estudió esto durante 30 años. Su conclusión: <strong style="color:#002147;">la repetición diaria</strong> construye conexiones neuronales permanentes. La maratón semanal no lo hace.</p>
-      </div>
-
-      <!-- Slide 3 (hidden) -->
-      <div class="ob-slide" id="ob-3" style="display:none;transition:opacity .4s;">
-        <div style="font-size:72px;margin-bottom:20px;">🎯</div>
-        <h2 style="font-family:Manrope,sans-serif;font-size:28px;font-weight:800;color:#002147;letter-spacing:-0.02em;margin-bottom:12px;line-height:1.2;">Tu plan diario<br>son solo 3 pasos</h2>
-        <div style="display:flex;flex-direction:column;gap:10px;text-align:left;max-width:340px;margin:0 auto 4px;">
-          <div style="background:white;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
-            <span style="font-size:24px;">📚</span>
-            <div><p style="font-weight:700;font-size:14px;color:#002147;">Completá una clase</p><p style="font-size:12px;color:#64748b;">Video + vocabulario + shadowing</p></div>
-            <span style="margin-left:auto;font-size:12px;font-weight:700;color:#1d4ed8;">~4 min</span>
-          </div>
-          <div style="background:white;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
-            <span style="font-size:24px;">🎧</span>
-            <div><p style="font-weight:700;font-size:14px;color:#002147;">Escuchá el audio del día</p><p style="font-size:12px;color:#64748b;">Conversación real en inglés</p></div>
-            <span style="margin-left:auto;font-size:12px;font-weight:700;color:#1d4ed8;">~3 min</span>
-          </div>
-          <div style="background:white;border:1.5px solid #e2e8f0;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
-            <span style="font-size:24px;">🎤</span>
-            <div><p style="font-weight:700;font-size:14px;color:#002147;">Practicá con un simulador</p><p style="font-size:12px;color:#64748b;">Cliente real con IA</p></div>
-            <span style="margin-left:auto;font-size:12px;font-weight:700;color:#1d4ed8;">~3 min</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Dots -->
-    <div style="display:flex;justify-content:center;gap:8px;margin:28px 0 24px;">
-      <div class="ob-dot" id="dot-1" style="width:28px;height:6px;border-radius:3px;background:#002147;transition:all .3s;"></div>
-      <div class="ob-dot" id="dot-2" style="width:8px;height:6px;border-radius:3px;background:#cbd5e1;transition:all .3s;"></div>
-      <div class="ob-dot" id="dot-3" style="width:8px;height:6px;border-radius:3px;background:#cbd5e1;transition:all .3s;"></div>
-    </div>
-
-    <!-- Buttons -->
-    <button id="ob-next-btn" onclick="obNext()" style="width:100%;padding:16px;background:#002147;color:white;border:none;border-radius:14px;font-family:Manrope,sans-serif;font-weight:700;font-size:16px;cursor:pointer;margin-bottom:12px;">Siguiente →</button>
-    <button onclick="obSkip()" style="width:100%;padding:12px;background:transparent;border:none;color:#94a3b8;font-size:14px;cursor:pointer;">Saltar introducción</button>
-  </div>
-</div>
-
 <div id="screen-welcome" class="screen">
   <div class="min-h-screen flex flex-col items-center justify-center px-6 bg-gradient-to-b from-white to-surface-container-low">
     <div class="w-full max-w-sm">
@@ -546,7 +490,7 @@
           <span class="text-sm font-bold text-primary" id="user-name-audios"></span>
           <span class="text-[10px] uppercase font-bold text-secondary" id="audio-streak">0 dias racha</span>
         </div>
-        <button class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full">account_circle</button>
+        <button onclick="openProfile()" class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full">account_circle</button>
       </div>
     </div>
   </header>
@@ -624,7 +568,7 @@
           <span class="text-sm font-bold text-primary" id="user-name-sims"></span>
           <span class="text-[10px] uppercase font-bold text-secondary" id="user-progress-sims"></span>
         </div>
-        <button class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full">account_circle</button>
+        <button onclick="openProfile()" class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full">account_circle</button>
       </div>
     </div>
   </header>
@@ -694,7 +638,7 @@
           <span class="text-sm font-bold text-primary" id="user-name-prog"></span>
           <span class="text-[10px] uppercase font-bold text-secondary" id="user-progress-prog"></span>
         </div>
-        <button class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full">account_circle</button>
+        <button onclick="openProfile()" class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full">account_circle</button>
       </div>
     </div>
   </header>
@@ -6567,13 +6511,11 @@ function showScreen(id) {
   window.scrollTo(0, 0);
   // Mobile nav: hide on class/celebration/welcome, show elsewhere
   var mNav = document.getElementById('mobile-nav-global');
-  var hideNavOn = ['screen-class','screen-celebration','screen-welcome','screen-onboarding'];
+  var hideNavOn = ['screen-class','screen-celebration','screen-welcome'];
   if (mNav) { var isMobile = window.innerWidth < 768; mNav.style.display = (hideNavOn.indexOf(id) >= 0 || !isMobile) ? 'none' : 'flex'; }
   // Help button: hide on class/celebration/onboarding/welcome
   var hBtn = document.getElementById('help-btn');
-  if (hBtn && localStorage.getItem('ob_seen')) {
-    hBtn.style.display = ['screen-class','screen-celebration','screen-onboarding','screen-welcome'].indexOf(id) >= 0 ? 'none' : 'flex';
-  }
+  if (hBtn) hBtn.style.display = ['screen-class','screen-celebration','screen-welcome'].indexOf(id) >= 0 ? 'none' : 'flex';
   // Highlight active mobile nav button
   var navMap = {'screen-dashboard':'mnav-dashboard','screen-progress':'mnav-progreso','screen-audios':'mnav-audios','screen-simulators':'mnav-sims'};
   ['mnav-dashboard','mnav-progreso','mnav-audios','mnav-sims'].forEach(function(bid) {
@@ -7590,59 +7532,6 @@ window.addEventListener('resize', function() {
   mNav.style.display = (hideOn.indexOf(activeScreen.id) >= 0 || !isMobile) ? 'none' : 'flex';
 });
 
-// ── ONBOARDING ────────────────────────────────────────────────
-var obCurrentSlide = 1;
-
-function obNext() {
-  if (obCurrentSlide < 3) {
-    document.getElementById('ob-' + obCurrentSlide).style.display = 'none';
-    obCurrentSlide++;
-    document.getElementById('ob-' + obCurrentSlide).style.display = 'block';
-    // Update dots
-    [1,2,3].forEach(function(i) {
-      var dot = document.getElementById('dot-' + i);
-      if (!dot) return;
-      dot.style.width = i === obCurrentSlide ? '28px' : '8px';
-      dot.style.background = i === obCurrentSlide ? '#002147' : '#cbd5e1';
-    });
-    // Change button text on last slide
-    if (obCurrentSlide === 3) {
-      var btn = document.getElementById('ob-next-btn');
-      if (btn) { btn.textContent = 'Comenzar el curso →'; btn.onclick = obSkip; }
-    }
-  } else {
-    obSkip();
-  }
-}
-
-function resetOnboarding() {
-  obCurrentSlide = 1;
-  [1,2,3].forEach(function(i) {
-    var s = document.getElementById('ob-' + i);
-    if (s) s.style.display = i === 1 ? 'block' : 'none';
-    var d = document.getElementById('dot-' + i);
-    if (d) { d.style.width = i === 1 ? '28px' : '8px'; d.style.background = i === 1 ? '#002147' : '#cbd5e1'; }
-  });
-  var btn = document.getElementById('ob-next-btn');
-  if (btn) { btn.textContent = 'Siguiente →'; btn.onclick = obNext; }
-}
-
-function obSkip() {
-  localStorage.setItem('ob_seen', '1');
-  // Show help button from now on
-  var hb = document.getElementById('help-btn');
-  if (hb) hb.style.display = 'flex';
-  // Go to dashboard if already has name, else welcome
-  var savedName = localStorage.getItem('user_name');
-  if (savedName) {
-    applyName(savedName);
-    buildProgressMap();
-    showScreen('screen-dashboard');
-  } else {
-    showScreen('screen-welcome');
-  }
-}
-
 // ── HELP MODAL ────────────────────────────────────────────────
 function openHelpModal() {
   document.getElementById('help-modal').style.display = 'flex';
@@ -7652,13 +7541,43 @@ function closeHelpModal() {
 }
 
 
+// ── PERFIL DE USUARIO ─────────────────────────────────────────
+function openProfile() {
+  // Fill stats
+  document.getElementById('prof-name').textContent = localStorage.getItem('user_name') || 'Usuario';
+  document.getElementById('prof-name-input').value = localStorage.getItem('user_name') || '';
+  document.getElementById('prof-clases').textContent = completedClasses.length;
+  document.getElementById('prof-xp').textContent = totalXP;
+  document.getElementById('prof-streak').textContent = currentStreak;
+  // Count total audios listened
+  var totalAudios = Object.values(listenedAudios).reduce(function(a,b){return a+b;}, 0);
+  document.getElementById('prof-audios').textContent = totalAudios;
+  document.getElementById('profile-panel').style.display = 'block';
+}
+
+function closeProfile() {
+  document.getElementById('profile-panel').style.display = 'none';
+}
+
+function saveProfileName() {
+  var input = document.getElementById('prof-name-input');
+  var newName = input.value.trim();
+  if (newName) {
+    localStorage.setItem('user_name', newName);
+    applyName(newName);
+    document.getElementById('prof-name').textContent = newName;
+    input.style.borderColor = '#16a34a';
+    setTimeout(function() { input.style.borderColor = '#e2e8f0'; }, 1500);
+  }
+}
+
 function initApp() {
   // Show mobile nav if on mobile screen
   var mNav = document.getElementById('mobile-nav-global');
   if (mNav && window.innerWidth < 768) mNav.style.display = 'flex';
   // Show help button if onboarding already seen
   var hb = document.getElementById('help-btn');
-  if (hb && localStorage.getItem('ob_seen')) hb.style.display = 'flex';
+  if (hb) hb.style.display = 'flex';
   // Hide help button on small mobile (has bottom nav already)
   const savedName = localStorage.getItem('user_name');
   if (savedName) {
@@ -7666,15 +7585,7 @@ function initApp() {
     buildProgressMap();
     showScreen('screen-dashboard');
   } else {
-    // First time? Show onboarding
-    if (!localStorage.getItem('ob_seen')) {
-      resetOnboarding();
-      showScreen('screen-onboarding');
-    } else {
-      showScreen('screen-welcome');
-    }
-    // Reset onboarding slide state
-    obCurrentSlide = 1;
+    showScreen('screen-welcome');
     // Focus en el input
     setTimeout(() => {
       const input = document.getElementById('name-input');
@@ -7744,6 +7655,97 @@ initApp();
     </div>
 
     <button onclick="closeHelpModal()" style="width:100%;padding:14px;background:#002147;color:white;border:none;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;margin-top:20px;">Entendido 👍</button>
+  </div>
+</div>
+
+
+<!-- PROFILE PANEL -->
+<div id="profile-panel" style="display:none;position:fixed;inset:0;z-index:300;">
+  <!-- Backdrop -->
+  <div onclick="closeProfile()" style="position:absolute;inset:0;background:rgba(0,0,0,0.4);"></div>
+  <!-- Panel -->
+  <div style="position:absolute;top:0;right:0;height:100%;width:100%;max-width:360px;background:white;overflow-y:auto;box-shadow:-8px 0 40px rgba(0,0,0,0.12);display:flex;flex-direction:column;">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#002147,#1d4ed8);padding:32px 24px 28px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;">
+          <span class="material-symbols-outlined" style="color:white;font-size:32px;">account_circle</span>
+        </div>
+        <button onclick="closeProfile()" style="background:rgba(255,255,255,0.15);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;color:white;font-size:16px;">✕</button>
+      </div>
+      <p style="color:white;font-weight:800;font-size:20px;font-family:Manrope,sans-serif;" id="prof-name">Usuario</p>
+      <p style="color:rgba(255,255,255,0.65);font-size:13px;margin-top:2px;">Nissei English for Sales</p>
+    </div>
+
+    <!-- Stats -->
+    <div style="padding:20px 24px;border-bottom:1px solid #f1f5f9;">
+      <p style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">Tu progreso</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:#f8faff;border-radius:12px;padding:12px;">
+          <p style="font-family:Manrope,sans-serif;font-size:24px;font-weight:800;color:#1d4ed8;" id="prof-clases">0</p>
+          <p style="font-size:11px;color:#64748b;">Clases completadas</p>
+        </div>
+        <div style="background:#f8faff;border-radius:12px;padding:12px;">
+          <p style="font-family:Manrope,sans-serif;font-size:24px;font-weight:800;color:#1d4ed8;" id="prof-xp">0</p>
+          <p style="font-size:11px;color:#64748b;">XP total</p>
+        </div>
+        <div style="background:#f8faff;border-radius:12px;padding:12px;">
+          <p style="font-family:Manrope,sans-serif;font-size:24px;font-weight:800;color:#f59e0b;" id="prof-streak">0</p>
+          <p style="font-size:11px;color:#64748b;">Días de racha 🔥</p>
+        </div>
+        <div style="background:#f8faff;border-radius:12px;padding:12px;">
+          <p style="font-family:Manrope,sans-serif;font-size:24px;font-weight:800;color:#16a34a;" id="prof-audios">0</p>
+          <p style="font-size:11px;color:#64748b;">Audios escuchados</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Change name -->
+    <div style="padding:16px 24px;border-bottom:1px solid #f1f5f9;">
+      <p style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Cambiar nombre</p>
+      <div style="display:flex;gap:8px;">
+        <input id="prof-name-input" type="text" placeholder="Tu nombre" style="flex:1;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:Manrope,sans-serif;">
+        <button onclick="saveProfileName()" style="padding:10px 16px;background:#002147;color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px;">Guardar</button>
+      </div>
+    </div>
+
+    <!-- Why it works -->
+    <div style="padding:20px 24px;flex:1;">
+      <p style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;">¿Por qué funciona este método?</p>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="background:#f0f4ff;border-radius:14px;padding:14px;">
+          <p style="font-size:18px;margin-bottom:6px;">🧠</p>
+          <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">El cerebro aprende mientras dormís</p>
+          <p style="color:#64748b;font-size:13px;line-height:1.55;"><strong style="color:#002147;">10 minutos diarios</strong> es más poderoso que 2 horas los sábados. Cada sesión activa la consolidación nocturna.</p>
+        </div>
+        <div style="background:#f0fdf4;border-radius:14px;padding:14px;">
+          <p style="font-size:18px;margin-bottom:6px;">🔁</p>
+          <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">La frecuencia supera a la duración</p>
+          <p style="color:#64748b;font-size:13px;line-height:1.55;">El lingüista Paul Nation estudió esto 30 años: <strong style="color:#002147;">la repetición diaria</strong> construye conexiones neuronales permanentes.</p>
+        </div>
+        <div style="background:#fff7ed;border-radius:14px;padding:14px;">
+          <p style="font-size:18px;margin-bottom:6px;">📥</p>
+          <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">Input comprensible — método Krashen</p>
+          <p style="color:#64748b;font-size:13px;line-height:1.55;">Primero escuchás, luego repetís, luego hablás. Igual que aprendiste español de chico.</p>
+        </div>
+        <div style="background:#fdf4ff;border-radius:14px;padding:14px;">
+          <p style="font-size:18px;margin-bottom:6px;">🎯</p>
+          <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">Contexto real de Nissei</p>
+          <p style="color:#64748b;font-size:13px;line-height:1.55;">Todas las frases son de la tienda real. El cerebro retiene mejor lo que es <strong style="color:#002147;">útil para su vida diaria.</strong></p>
+        </div>
+      </div>
+
+      <!-- Daily plan reminder -->
+      <div style="background:#f0f9ff;border-radius:14px;padding:14px;margin-top:12px;text-align:center;">
+        <p style="font-weight:700;color:#002147;font-size:13px;margin-bottom:10px;">Tu plan diario · solo 10 minutos</p>
+        <div style="display:flex;justify-content:center;gap:20px;">
+          <div style="text-align:center;"><span style="font-size:22px;">📚</span><p style="font-size:11px;color:#64748b;margin-top:4px;">1 clase<br><strong>~4 min</strong></p></div>
+          <div style="text-align:center;"><span style="font-size:22px;">🎧</span><p style="font-size:11px;color:#64748b;margin-top:4px;">1 audio<br><strong>~3 min</strong></p></div>
+          <div style="text-align:center;"><span style="font-size:22px;">🎤</span><p style="font-size:11px;color:#64748b;margin-top:4px;">1 sim<br><strong>~3 min</strong></p></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
