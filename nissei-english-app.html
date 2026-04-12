@@ -199,26 +199,27 @@
 
   </main>
 
-  <!-- Nav móvil -->
-  <nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 backdrop-blur-xl z-50 rounded-t-3xl shadow-lg">
-    <button onclick="goToDashboard()" class="flex flex-col items-center text-white bg-[#002147] rounded-full px-5 py-2">
-      <span class="material-symbols-outlined text-[20px]">dashboard</span>
-      <span class="text-[10px] uppercase tracking-wider mt-0.5">Inicio</span>
-    </button>
-    <button onclick="showProgressScreen()" class="flex flex-col items-center text-slate-400">
-      <span class="material-symbols-outlined text-[20px]">query_stats</span>
-      <span class="text-[10px] uppercase tracking-wider mt-0.5">Progreso</span>
-    </button>
-    <button onclick="showAudios()" class="flex flex-col items-center text-slate-400">
-      <span class="material-symbols-outlined text-[20px]">headphones</span>
-      <span class="text-[10px] uppercase tracking-wider mt-0.5">Audios</span>
-    </button>
-    <button onclick="showSimulators()" class="flex flex-col items-center text-slate-400">
-      <span class="material-symbols-outlined text-[20px]">record_voice_over</span>
-      <span class="text-[10px] uppercase tracking-wider mt-0.5">Sims</span>
-    </button>
-  </nav>
 </div>
+
+<!-- Nav móvil GLOBAL - siempre visible excepto en clase/celebracion -->
+<nav id="mobile-nav-global" class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 backdrop-blur-xl z-50 rounded-t-3xl shadow-lg">
+  <button onclick="goToDashboard()" id="mnav-dashboard" class="flex flex-col items-center text-white bg-[#002147] rounded-full px-5 py-2">
+    <span class="material-symbols-outlined text-[20px]">dashboard</span>
+    <span class="text-[10px] uppercase tracking-wider mt-0.5">Inicio</span>
+  </button>
+  <button onclick="showProgressScreen()" id="mnav-progreso" class="flex flex-col items-center text-slate-400">
+    <span class="material-symbols-outlined text-[20px]">query_stats</span>
+    <span class="text-[10px] uppercase tracking-wider mt-0.5">Progreso</span>
+  </button>
+  <button onclick="showAudios()" id="mnav-audios" class="flex flex-col items-center text-slate-400">
+    <span class="material-symbols-outlined text-[20px]">headphones</span>
+    <span class="text-[10px] uppercase tracking-wider mt-0.5">Audios</span>
+  </button>
+  <button onclick="showSimulators()" id="mnav-sims" class="flex flex-col items-center text-slate-400">
+    <span class="material-symbols-outlined text-[20px]">record_voice_over</span>
+    <span class="text-[10px] uppercase tracking-wider mt-0.5">Sims</span>
+  </button>
+</nav>
 
 <!-- ============================================================ -->
 <!-- PANTALLA 2: VISTA DE CLASE -->
@@ -622,13 +623,26 @@
 
 
 <div id="screen-progress" class="screen">
-  <div class="max-w-2xl mx-auto px-6 pt-10 pb-32">
-    <div class="flex items-center gap-3 mb-8">
-      <button onclick="showScreen('screen-dashboard')" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center hover:bg-surface-variant transition-all">
-        <span class="material-symbols-outlined text-base">arrow_back</span>
-      </button>
-      <h2 class="font-headline font-bold text-xl text-primary-container">Mi Progreso</h2>
+  <header class="bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
+    <div class="flex justify-between items-center px-6 py-4 w-full max-w-5xl mx-auto">
+      <span class="text-lg font-extrabold text-[#002147] font-['Manrope'] tracking-tight">Nissei English for Sales</span>
+      <div class="hidden md:flex items-center gap-8">
+        <button class="text-[#002147] font-bold" onclick="goToDashboard()">Dashboard</button>
+        <button class="text-slate-700 font-semibold bg-slate-100 px-3 py-1 rounded-lg">Progreso</button>
+        <button class="text-slate-500 hover:text-slate-700 px-3 py-1 rounded-lg" onclick="showAudios()">Audios</button>
+        <button class="text-slate-500 hover:text-slate-700 px-3 py-1 rounded-lg" onclick="showSimulators()">Simuladores</button>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex flex-col items-end">
+          <span class="text-sm font-bold text-primary" id="user-name-prog"></span>
+          <span class="text-[10px] uppercase font-bold text-secondary" id="user-progress-prog"></span>
+        </div>
+        <button class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full">account_circle</button>
+      </div>
     </div>
+  </header>
+  <div class="max-w-2xl mx-auto px-6 pt-6 pb-32">
+    <h2 class="font-headline font-bold text-xl text-primary-container mb-6">Mi Progreso</h2>
     <div class="grid grid-cols-2 gap-4 mb-6">
       <div class="bg-white rounded-2xl border border-surface-variant p-5">
         <p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Clases completadas</p>
@@ -6487,6 +6501,26 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
+  // Mobile nav: hide on class/celebration/welcome, show elsewhere
+  var mNav = document.getElementById('mobile-nav-global');
+  var hideOn = ['screen-class','screen-celebration','screen-welcome'];
+  if (mNav) mNav.style.display = hideOn.indexOf(id) >= 0 ? 'none' : 'flex';
+  // Highlight active mobile nav button
+  var navMap = {'screen-dashboard':'mnav-dashboard','screen-progress':'mnav-progreso','screen-audios':'mnav-audios','screen-simulators':'mnav-sims'};
+  ['mnav-dashboard','mnav-progreso','mnav-audios','mnav-sims'].forEach(function(bid) {
+    var btn = document.getElementById(bid);
+    if (!btn) return;
+    if (navMap[id] === bid) {
+      btn.className = 'flex flex-col items-center text-white bg-[#002147] rounded-full px-5 py-2';
+    } else {
+      btn.className = 'flex flex-col items-center text-slate-400';
+    }
+  });
+  // Sync name/progress in secondary nav bars
+  var name = localStorage.getItem('user_name') || '';
+  var pct = Math.round((completedClasses.length / 60) * 100) + '% Completado (' + completedClasses.length + '/60)';
+  ['user-name-audios','user-name-sims','user-name-prog'].forEach(function(eid) { var e = document.getElementById(eid); if(e) e.textContent = name; });
+  ['user-progress-sims','user-progress-prog'].forEach(function(eid) { var e = document.getElementById(eid); if(e) e.textContent = pct; });
 }
 
 function goToDashboard() {
@@ -7090,6 +7124,7 @@ function saveName() {
 function applyName(name) {
   // Aplicar nombre en todos los lugares donde aparece
   document.querySelectorAll('#user-name,#user-name-audios,#user-name-sims,#user-name-prog').forEach(el => el.textContent = name);
+  updateNavInfo();
   const pct = Math.round((completedClasses.length / 60) * 100) + '% Completado (' + completedClasses.length + '/60)';
   document.querySelectorAll('#user-progress-sims,#user-progress-prog').forEach(el => el.textContent = pct);
   document.querySelectorAll('#celebration-name').forEach(el => el.textContent = name.split(' ')[0]);
