@@ -6553,6 +6553,10 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
+  // Push state so back button works
+  if (id !== 'screen-dashboard') {
+    history.pushState({ screen: id }, '', '');
+  }
   // Mobile nav: hide on class/celebration/welcome, show elsewhere
   var mNav = document.getElementById('mobile-nav-global');
   var hideNavOn = ['screen-class','screen-celebration','screen-welcome','screen-profile'];
@@ -7618,6 +7622,24 @@ window.addEventListener('resize', function() {
   if (!active) return;
   var hideOn = ['screen-class','screen-celebration','screen-welcome','screen-profile'];
   mNav.style.display = (hideOn.indexOf(active.id) >= 0 || window.innerWidth >= 768) ? 'none' : 'flex';
+});
+
+// Intercept browser/mobile back button
+window.addEventListener('popstate', function(e) {
+  // Always go to dashboard when back is pressed
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-dashboard').classList.add('active');
+  window.scrollTo(0, 0);
+  buildProgressMap();
+  // Mobile nav
+  var mNav = document.getElementById('mobile-nav-global');
+  if (mNav && window.innerWidth < 768) mNav.style.display = 'flex';
+  var btn = document.getElementById('mnav-dashboard');
+  if (btn) btn.className = 'flex flex-col items-center text-white bg-[#002147] rounded-full px-5 py-2';
+  ['mnav-audios','mnav-sims','mnav-progreso'].forEach(function(id) {
+    var b = document.getElementById(id);
+    if (b) b.className = 'flex flex-col items-center text-slate-400';
+  });
 });
 
 function initApp() {
