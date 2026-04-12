@@ -202,7 +202,7 @@
 </div>
 
 <!-- Nav móvil GLOBAL - siempre visible excepto en clase/celebracion -->
-<nav id="mobile-nav-global" class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 backdrop-blur-xl z-50 rounded-t-3xl shadow-lg">
+<nav id="mobile-nav-global" class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 backdrop-blur-xl z-50 rounded-t-3xl shadow-lg" style="display:none;">
   <button onclick="goToDashboard()" id="mnav-dashboard" class="flex flex-col items-center text-white bg-[#002147] rounded-full px-5 py-2">
     <span class="material-symbols-outlined text-[20px]">dashboard</span>
     <span class="text-[10px] uppercase tracking-wider mt-0.5">Inicio</span>
@@ -6511,7 +6511,7 @@ function showScreen(id) {
   // Mobile nav: hide on class/celebration/welcome, show elsewhere
   var mNav = document.getElementById('mobile-nav-global');
   var hideOn = ['screen-class','screen-celebration','screen-welcome'];
-  if (mNav) mNav.style.display = hideOn.indexOf(id) >= 0 ? 'none' : 'flex';
+  if (mNav) { var isMobile = window.innerWidth < 768; mNav.style.display = (hideOn.indexOf(id) >= 0 || !isMobile) ? 'none' : 'flex'; }
   // Highlight active mobile nav button
   var navMap = {'screen-dashboard':'mnav-dashboard','screen-progress':'mnav-progreso','screen-audios':'mnav-audios','screen-simulators':'mnav-sims'};
   ['mnav-dashboard','mnav-progreso','mnav-audios','mnav-sims'].forEach(function(bid) {
@@ -7517,7 +7517,21 @@ function openExam(examNum) {
 
 
 
+// Show mobile nav on small screens, hide on desktop
+window.addEventListener('resize', function() {
+  var mNav = document.getElementById('mobile-nav-global');
+  if (!mNav) return;
+  var activeScreen = document.querySelector('.screen.active');
+  if (!activeScreen) return;
+  var hideOn = ['screen-class','screen-celebration','screen-welcome'];
+  var isMobile = window.innerWidth < 768;
+  mNav.style.display = (hideOn.indexOf(activeScreen.id) >= 0 || !isMobile) ? 'none' : 'flex';
+});
+
 function initApp() {
+  // Show mobile nav if on mobile screen
+  var mNav = document.getElementById('mobile-nav-global');
+  if (mNav && window.innerWidth < 768) mNav.style.display = 'flex';
   const savedName = localStorage.getItem('user_name');
   if (savedName) {
     applyName(savedName);
