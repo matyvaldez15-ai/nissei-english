@@ -153,6 +153,7 @@
       <div class="hidden md:flex items-center gap-8">
         <button class="text-[#002147] font-bold" onclick="goToDashboard()">Dashboard</button>
         <button class="text-slate-500 hover:text-slate-700 px-3 py-1 rounded-lg" onclick="showProgressScreen()">Progreso</button>
+        <button class="text-slate-500 hover:text-slate-700 px-3 py-1 rounded-lg" onclick="showAudios()">Audios</button>
         <button class="text-slate-500 hover:text-slate-700 px-3 py-1 rounded-lg" onclick="showSimulators()">Simuladores</button>
       </div>
       <div class="flex items-center gap-3">
@@ -207,9 +208,13 @@
       <span class="material-symbols-outlined text-[20px]">query_stats</span>
       <span class="text-[10px] uppercase tracking-wider mt-0.5">Progreso</span>
     </button>
+    <button onclick="showAudios()" class="flex flex-col items-center text-slate-400">
+      <span class="material-symbols-outlined text-[20px]">headphones</span>
+      <span class="text-[10px] uppercase tracking-wider mt-0.5">Audios</span>
+    </button>
     <button onclick="showSimulators()" class="flex flex-col items-center text-slate-400">
       <span class="material-symbols-outlined text-[20px]">record_voice_over</span>
-      <span class="text-[10px] uppercase tracking-wider mt-0.5">Simuladores</span>
+      <span class="text-[10px] uppercase tracking-wider mt-0.5">Sims</span>
     </button>
   </nav>
 </div>
@@ -466,6 +471,80 @@
 </div>
 
 
+
+<div id="screen-audios" class="screen">
+  <header class="bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
+    <div class="flex items-center gap-4 px-6 py-4 max-w-5xl mx-auto">
+      <button onclick="goToDashboard()" class="material-symbols-outlined text-on-surface-variant hover:bg-slate-100 p-2 rounded-full">arrow_back</button>
+      <div class="flex-1">
+        <h2 class="font-headline font-bold text-lg text-primary-container">Input diario</h2>
+        <p class="text-xs text-on-surface-variant">Escucha conversaciones reales todos los dias</p>
+      </div>
+      <div style="text-align:right">
+        <p class="text-xs text-on-surface-variant">Racha actual</p>
+        <p class="font-headline font-bold text-secondary text-lg" id="audio-streak">0 dias</p>
+      </div>
+    </div>
+  </header>
+  <main class="max-w-3xl mx-auto px-6 pt-6 pb-32">
+    <!-- XP Banner -->
+    <div class="bg-gradient-to-r from-secondary to-primary-container rounded-2xl p-4 mb-6 flex items-center gap-4">
+      <div class="text-3xl">🎧</div>
+      <div class="flex-1">
+        <p class="text-white font-bold text-sm">Sistema de XP por escucha</p>
+        <p class="text-white/70 text-xs">1ra escucha: +15 XP · 2da: +8 XP · 3ra+: +3 XP · Maximo 30 XP por dia</p>
+      </div>
+      <div style="text-align:right">
+        <p class="text-white/70 text-xs">Tu XP total</p>
+        <p class="text-white font-bold text-xl" id="audio-xp-total">0</p>
+      </div>
+    </div>
+    <!-- Streak badges -->
+    <div class="grid grid-cols-2 gap-3 mb-6">
+      <div class="bg-white border border-surface-variant rounded-xl p-3 flex items-center gap-3">
+        <span style="font-size:28px">🔥</span>
+        <div><p class="text-xs text-on-surface-variant">Racha actual</p><p class="font-bold text-secondary" id="audio-streak2">0 dias</p></div>
+      </div>
+      <div class="bg-white border border-surface-variant rounded-xl p-3 flex items-center gap-3">
+        <span style="font-size:28px">🏆</span>
+        <div><p class="text-xs text-on-surface-variant">Mejor racha</p><p class="font-bold text-amber-500" id="audio-best-streak">0 dias</p></div>
+      </div>
+    </div>
+    <!-- Audio list -->
+    <div id="audio-list" class="flex flex-col gap-4"></div>
+  </main>
+</div>
+
+<!-- AUDIO PLAYER MODAL -->
+<div id="audio-modal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.75);align-items:center;justify-content:center;padding:16px;">
+  <div style="background:white;border-radius:24px;width:100%;max-width:440px;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#1e3a8a,#1d4ed8);padding:24px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:8px;">🎧</div>
+      <p style="color:white;font-weight:700;font-size:17px;" id="audio-modal-title">Audio 1</p>
+      <p style="color:rgba(255,255,255,0.7);font-size:12px;" id="audio-modal-context">Contexto del audio</p>
+    </div>
+    <div style="padding:20px;">
+      <!-- Player -->
+      <div style="background:#f8f9ff;border-radius:16px;padding:16px;margin-bottom:16px;">
+        <audio id="audio-player" style="width:100%;margin-bottom:8px;" controls></audio>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:12px;color:#666;" id="audio-listen-count">Escuchado: 0 veces hoy</span>
+          <span style="font-size:12px;font-weight:700;color:#1d4ed8;" id="audio-xp-earned">+15 XP disponible</span>
+        </div>
+      </div>
+      <!-- Context in Spanish -->
+      <div style="background:#eff6ff;border-radius:12px;padding:12px;margin-bottom:16px;">
+        <p style="font-size:11px;font-weight:700;color:#1e3a8a;margin-bottom:4px;">CONTEXTO EN ESPANOL</p>
+        <p style="font-size:13px;color:#374151;" id="audio-modal-desc">Descripcion</p>
+      </div>
+      <!-- XP button -->
+      <button id="audio-earn-xp-btn" onclick="earnAudioXP()" style="width:100%;padding:14px;background:#1d4ed8;color:white;border:none;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;margin-bottom:10px;">
+        Gane mis XP
+      </button>
+      <button onclick="closeAudioModal()" style="width:100%;padding:11px;border:1.5px solid #ddd;border-radius:14px;background:white;font-weight:600;cursor:pointer;font-size:13px;">Cerrar</button>
+    </div>
+  </div>
+</div>
 <div id="screen-simulators" class="screen">
   <header class="bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
     <div class="flex items-center gap-4 px-6 py-4 max-w-5xl mx-auto">
@@ -6379,6 +6458,12 @@ const PROMPTS = {
 let currentClass = 1;
 let currentStep = 1;
 let completedClasses = JSON.parse(localStorage.getItem('completed') || '[]');
+let totalXP = parseInt(localStorage.getItem('totalXP') || '0');
+let listenedAudios = JSON.parse(localStorage.getItem('listenedAudios') || '{}'); // {audioId: count}
+let lastListenDate = localStorage.getItem('lastListenDate') || '';
+let currentStreak = parseInt(localStorage.getItem('currentStreak') || '0');
+let longestStreak = parseInt(localStorage.getItem('longestStreak') || '0');
+let passedExams = JSON.parse(localStorage.getItem('passedExams') || '[]'); // [1,2,3,'final']
 let voiceMode = 'shadowing';
 let apiKey = localStorage.getItem('gemini_api_key') || '';
 
@@ -6431,8 +6516,11 @@ function buildProgressMap() {
 
     week.classes.forEach((cls, ci) => {
       const isCompleted = completedClasses.includes(classNum);
-      const isActive = classNum === getFirstUnlocked();
-      const isLocked = classNum > getFirstUnlocked();
+      const classWeek = Math.ceil(classNum / 5);
+      const unlockedWeek = getWeekUnlocked();
+      const isUnlockedWeek = classWeek <= unlockedWeek;
+      const isActive = !isCompleted && isUnlockedWeek && classNum === getFirstUnlocked();
+      const isLocked = !isUnlockedWeek;
 
       const btn = document.createElement('div');
       btn.className = 'flex flex-col items-center group relative';
@@ -6467,6 +6555,27 @@ function buildProgressMap() {
     });
 
     weekDiv.appendChild(grid);
+
+    // Exam button after weeks 4, 8, 12
+    const wi1 = wi + 1;
+    if (wi1 === 4 || wi1 === 8 || wi1 === 12) {
+      const examNum = wi1 === 4 ? 1 : wi1 === 8 ? 2 : 'final';
+      const examLabel = examNum === 1 ? 'Examen 1 — Cliente Basico' : examNum === 2 ? 'Examen 2 — Cliente Intermedio' : 'Examen Final — Venta Completa';
+      const weekStart = wi * 5 + 1;
+      const weeksDone = [weekStart,weekStart+1,weekStart+2,weekStart+3,weekStart+4].every(c => completedClasses.includes(c));
+      const examPassed = passedExams.includes(examNum);
+      const examDiv = document.createElement('div');
+      examDiv.className = 'flex flex-col items-center w-full my-6';
+      if (examPassed) {
+        examDiv.innerHTML = '<div style="background:#dcfce7;border:2px solid #16a34a;border-radius:16px;padding:14px 28px;text-align:center;"><span class=\'material-symbols-outlined\' style=\'color:#16a34a;font-size:28px;\'>verified</span><p style=\"font-weight:700;color:#15803d;font-size:14px;margin-top:4px;\">' + examLabel + '</p><p style=\"font-size:11px;color:#16a34a;\">Aprobado ✓</p></div>';
+      } else if (weeksDone) {
+        examDiv.innerHTML = '<button onclick=\"openExam(\'' + examNum + '\')\"><div style=\"background:linear-gradient(135deg,#1d4ed8,#7c3aed);border:none;border-radius:16px;padding:14px 28px;cursor:pointer;text-align:center;box-shadow:0 4px 20px rgba(29,78,216,0.3);\"><span class=\'material-symbols-outlined\' style=\'color:white;font-size:28px;\'>school</span><p style=\"font-weight:700;color:white;font-size:14px;margin-top:4px;\">' + examLabel + '</p><p style=\"font-size:11px;color:rgba(255,255,255,0.8);\">Toca para rendir</p></div></button>';
+      } else {
+        examDiv.innerHTML = '<div style=\"background:#f1f5f9;border:2px dashed #cbd5e1;border-radius:16px;padding:14px 28px;text-align:center;opacity:0.5;\"><span class=\'material-symbols-outlined\' style=\'color:#94a3b8;font-size:28px;\'>lock</span><p style=\"font-weight:600;color:#94a3b8;font-size:13px;margin-top:4px;\">' + examLabel + '</p><p style=\"font-size:11px;color:#94a3b8;\">Completa las semanas primero</p></div>';
+      }
+      map.appendChild(examDiv);
+    }
+
     map.appendChild(weekDiv);
   });
 
@@ -6477,10 +6586,38 @@ function buildProgressMap() {
   document.getElementById('user-progress').textContent = pct + '% Completado (' + completedClasses.length + '/60)';
 }
 
+function getWeekUnlocked() {
+  // Returns the highest week number that is unlocked (1-12)
+  // Week 1 always unlocked. Next weeks unlock when prev week complete + exam passed
+  for (let w = 1; w <= 12; w++) {
+    const start = (w - 1) * 5 + 1;
+    const end = start + 4;
+    const weekDone = [start,start+1,start+2,start+3,end].every(c => completedClasses.includes(c));
+    // Check if exam required before next week
+    // Exams: after week 4 (exam 1), after week 8 (exam 2), after week 12 (exam final)
+    if (!weekDone) return w; // current week not done yet
+    // Week done - check if exam blocks next week
+    if (w === 4 && !passedExams.includes(1)) return 4; // blocked by exam 1
+    if (w === 8 && !passedExams.includes(2)) return 8; // blocked by exam 2
+  }
+  return 12;
+}
+
+function isClassUnlocked(classNum) {
+  const classWeek = Math.ceil(classNum / 5);
+  const unlockedWeek = getWeekUnlocked();
+  if (classWeek < unlockedWeek) return true;
+  if (classWeek === unlockedWeek) return true;
+  return false;
+}
+
 function getFirstUnlocked() {
   for (let i = 1; i <= 60; i++) {
-    if (!completedClasses.includes(i)) return i;
+    if (!completedClasses.includes(i) && isClassUnlocked(i)) return i;
   }
+  // All unlocked classes done
+  const uw = getWeekUnlocked();
+  if (uw < 12) return uw * 5 + 1; // next week locked
   return 61;
 }
 
@@ -6561,8 +6698,12 @@ function showCelebration() {
     localStorage.setItem('completed', JSON.stringify(completedClasses));
   }
 
+  const xpEarned = 10 + (currentClass * 2);
+  totalXP += xpEarned;
+  localStorage.setItem('totalXP', totalXP);
   document.getElementById('celebration-class').textContent = 'Clase ' + currentClass;
-  document.getElementById('celebration-xp').textContent = '+' + (currentClass * 10) + ' XP';
+  document.getElementById('celebration-xp').textContent = '+' + xpEarned + ' XP';
+  updateXPDisplay();
 
   launchConfetti();
   showScreen('screen-celebration');
@@ -7096,6 +7237,227 @@ function openSimulator(sim) {
 function closeSimModal() {
   document.getElementById('sim-modal').style.display = 'none';
   stopVoiceSession();
+}
+
+
+// ── XP SYSTEM ─────────────────────────────────────────────────
+function updateXPDisplay() {
+  document.querySelectorAll('#xp-display').forEach(el => el.textContent = totalXP + ' XP');
+  const streakEls = document.querySelectorAll('#audio-streak,#audio-streak2');
+  streakEls.forEach(el => { if(el) el.textContent = currentStreak + ' dias'; });
+  const bestEl = document.getElementById('audio-best-streak');
+  if (bestEl) bestEl.textContent = longestStreak + ' dias';
+  const xpEl = document.getElementById('audio-xp-total');
+  if (xpEl) xpEl.textContent = totalXP;
+}
+
+// ── AUDIO SYSTEM ──────────────────────────────────────────────
+var AUDIOS = [
+  {id:1, classes:"1-3", title:"Audio 1 — Primeros contactos", context:"John entra a Nissei, un vendedor lo saluda y le pregunta si habla ingles. John pregunta por el precio de un telefono.", desc:"Un turista americano entra a la tienda. El vendedor lo saluda y descubre que habla ingles. Le muestra un telefono y le dice el precio.", src:""},
+  {id:2, classes:"4-6", title:"Audio 2 — Orientacion y regalo", context:"Sofia pregunta donde esta el bano. Luego Mei busca un regalo para su hija.", desc:"Dos situaciones basicas: una turista italiana pregunta por el bano y una turista china busca un regalo para su hija de 12 anos.", src:""},
+  {id:3, classes:"7-9", title:"Audio 3 — Pagos y direcciones", context:"Andre pregunta por formas de pago. Tom quiere saber como llegar al shopping.", desc:"Un empresario brasilero pregunta si aceptan tarjetas internacionales. Luego un turista aleman pide indicaciones para ir al shopping.", src:""},
+  {id:4, classes:"10-12", title:"Audio 4 — Colores y numeros", context:"James quiere saber los colores disponibles de un telefono. El vendedor le muestra opciones y le dice el precio.", desc:"Un australiano elige el color de su telefono mientras el vendedor le explica las opciones disponibles y los precios.", src:""},
+  {id:5, classes:"13-15", title:"Audio 5 — Dias y horarios", context:"Una turista pregunta que dias abren y hasta que hora. Luego pregunta si pueden reservar un producto.", desc:"Conversacion sobre el horario de la tienda y la posibilidad de reservar un producto para retirar despues.", src:""},
+  {id:6, classes:"16-18", title:"Audio 6 — Productos de tecnologia", context:"El vendedor le muestra al cliente la seccion de telefonos, laptops y tablets explicando cada categoria.", desc:"Tour por las secciones de la tienda: smartphones, laptops, tablets y accesorios. El cliente pregunta sobre cada producto.", src:""},
+  {id:7, classes:"19-21", title:"Audio 7 — Camaras y gaming", context:"Un turista quiere ver la seccion de gaming. Pregunta por la PlayStation y los juegos disponibles.", desc:"Un cliente entusiasta busca la seccion de gaming, pregunta por la PlayStation 5, los juegos disponibles y la garantia.", src:""},
+  {id:8, classes:"22-24", title:"Audio 8 — Descripcion de productos", context:"El vendedor describe las caracteristicas de dos telefonos y recomienda el mejor segun las necesidades del cliente.", desc:"Comparacion entre dos modelos de telefono. El vendedor explica camara, bateria y precio para ayudar a decidir.", src:""},
+  {id:9, classes:"25-27", title:"Audio 9 — Precios y stock", context:"Una cliente pregunta el precio de una laptop. El vendedor verifica el stock y explica las opciones disponibles.", desc:"Conversacion completa sobre precio y disponibilidad de un producto. El vendedor revisa el sistema y ofrece alternativas.", src:""},
+  {id:10, classes:"28-30", title:"Audio 10 — Ofertas y tax free", context:"Kenji muestra su pasaporte y pregunta sobre el beneficio de tax free. El vendedor explica como funciona.", desc:"Un turista japones descubre el beneficio del tax free. El vendedor explica el descuento, la forma de pago y donde cobrar.", src:""},
+  {id:11, classes:"31-33", title:"Audio 11 — Orientacion en la tienda", context:"El vendedor guia a un cliente hacia la caja, el area de delivery y el sector de prueba de productos.", desc:"Tour completo por la tienda: como llegar a la caja, donde retirar los productos comprados y donde probarlos.", src:""},
+  {id:12, classes:"34-36", title:"Audio 12 — Cierre de venta", context:"Una cliente elige una laptop. El vendedor la acompana por todo el proceso: caja, delivery y prueba del producto.", desc:"Venta completa paso a paso: eleccion del producto, pago en caja, espera en delivery y activacion del producto.", src:""},
+  {id:13, classes:"37-39", title:"Audio 13 — Situaciones dificiles", context:"Un cliente no entendio algo. El vendedor le pide que repita mas despacio y busca a un colega para ayudar.", desc:"Como manejar cuando no entiendes: pedir que repitan, hablar mas despacio y buscar ayuda de un colega.", src:""},
+  {id:14, classes:"40-42", title:"Audio 14 — Pedidos y garantia", context:"Amara quiere pedir un producto desde CDE. El vendedor explica los tiempos y la garantia.", desc:"El producto no esta en stock pero puede pedirse desde otra sucursal. El vendedor explica plazos y condiciones de garantia.", src:""},
+  {id:15, classes:"43-45", title:"Audio 15 — Post venta y reclamos", context:"David vuelve con un telefono con problemas. El vendedor lo atiende con calma y lo dirige al servicio tecnico.", desc:"Un cliente con un reclamo es atendido profesionalmente. El vendedor escucha, pide disculpas y ofrece una solucion clara.", src:""},
+  {id:16, classes:"46-48", title:"Audio 16 — Pedidos y reservas", context:"Fatima quiere reservar una MacBook. El vendedor explica el proceso y los requisitos de la reserva.", desc:"Como reservar un producto: deposito, tiempo de reserva, forma de pago al retirar y que pasa si no podes venir.", src:""},
+  {id:17, classes:"49-51", title:"Audio 17 — Pagos y lugares cercanos", context:"El vendedor explica como funciona la caja y recomienda un restaurante cercano al cliente.", desc:"Proceso completo de pago: nombre para la compra, moneda en guaranies, tarjeta internacional. Luego recomendaciones de donde comer.", src:""},
+  {id:18, classes:"52-54", title:"Audio 18 — Proceso de caja", context:"Nina completa su compra. El vendedor le explica cada paso del proceso: nombre, pago, retiro y prueba.", desc:"El proceso completo de cierre de una venta real: nombre del cliente, pago con tarjeta extranjera, area de delivery y prueba.", src:""},
+  {id:19, classes:"55-57", title:"Audio 19 — Examenes de practica", context:"Ryan quiere comprar un regalo para su esposa. La venta completa incluye tax free, caja y delivery.", desc:"Venta completa de nivel avanzado: descubrir necesidades, recomendar producto, tax free, proceso de caja y despedida calida.", src:""},
+  {id:20, classes:"58-60", title:"Audio 20 — Venta avanzada completa", context:"Alex combina multiples situaciones: comparacion, reclamo menor, tax free, caja y recomendacion de restaurante.", desc:"La situacion mas completa del curso: un cliente exigente que compara, negocia, usa tax free y termina pidiendo recomendaciones.", src:""}
+];
+
+var currentAudio = null;
+var todayListenCounts = {}; // audioId -> count today
+var dailyXPEarned = parseInt(localStorage.getItem('dailyXP_' + new Date().toDateString()) || '0');
+
+function showAudios() {
+  updateAudioStreak();
+  buildAudioList();
+  updateXPDisplay();
+  showScreen('screen-audios');
+}
+
+function updateAudioStreak() {
+  const today = new Date().toDateString();
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  // Load today listen counts
+  const savedToday = JSON.parse(localStorage.getItem('audioToday_' + today) || '{}');
+  todayListenCounts = savedToday;
+  // Check streak
+  if (lastListenDate === today) {
+    // Already listened today - streak maintained
+  } else if (lastListenDate === yesterday) {
+    // Listened yesterday - streak continues (will increment on first listen)
+  } else if (lastListenDate !== '') {
+    // Missed a day - reset streak
+    currentStreak = 0;
+    localStorage.setItem('currentStreak', 0);
+  }
+}
+
+function buildAudioList() {
+  const list = document.getElementById('audio-list');
+  if (!list) return;
+  list.innerHTML = '';
+  const today = new Date().toDateString();
+  AUDIOS.forEach(function(audio) {
+    const timesHeard = (listenedAudios[audio.id] || 0);
+    const todayCount = todayListenCounts[audio.id] || 0;
+    const xpAvail = todayCount === 0 ? 15 : todayCount === 1 ? 8 : todayCount < 4 ? 3 : 0;
+    const div = document.createElement('div');
+    div.style.cssText = 'background:white;border:1.5px solid #e2e8f0;border-radius:18px;padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:box-shadow .2s;';
+    div.onmouseover = function() { this.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)'; };
+    div.onmouseout = function() { this.style.boxShadow = 'none'; };
+    div.innerHTML = '<div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#7c3aed);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="color:white;font-size:22px;">🎧</span></div>'
+      + '<div style="flex:1;min-width:0;">'
+      + '<p style="font-weight:700;font-size:13px;color:#1e293b;">' + audio.title + '</p>'
+      + '<p style="font-size:11px;color:#64748b;margin-top:2px;">Clases ' + audio.classes + ' · Escuchado ' + timesHeard + ' veces</p>'
+      + '</div>'
+      + (xpAvail > 0 ? '<div style="background:#eff6ff;border-radius:10px;padding:4px 10px;text-align:center;"><p style="font-size:10px;font-weight:700;color:#1d4ed8;">+' + xpAvail + ' XP</p></div>' : '<div style="background:#f1f5f9;border-radius:10px;padding:4px 10px;"><p style="font-size:10px;color:#94a3b8;">Max hoy</p></div>');
+    div.onclick = (function(a) { return function() { openAudioModal(a); }; })(audio);
+    list.appendChild(div);
+  });
+}
+
+function openAudioModal(audio) {
+  currentAudio = audio;
+  document.getElementById('audio-modal-title').textContent = audio.title;
+  document.getElementById('audio-modal-context').textContent = 'Clases ' + audio.classes;
+  document.getElementById('audio-modal-desc').textContent = audio.desc;
+  const todayCount = todayListenCounts[audio.id] || 0;
+  const xpAvail = todayCount === 0 ? 15 : todayCount === 1 ? 8 : todayCount < 4 ? 3 : 0;
+  document.getElementById('audio-listen-count').textContent = 'Escuchado hoy: ' + todayCount + ' veces';
+  document.getElementById('audio-xp-earned').textContent = xpAvail > 0 ? '+' + xpAvail + ' XP disponible' : 'Max XP por hoy alcanzado';
+  const btn = document.getElementById('audio-earn-xp-btn');
+  btn.textContent = xpAvail > 0 ? 'Gane mis ' + xpAvail + ' XP' : 'Escuchar (sin XP adicional)';
+  btn.style.opacity = xpAvail > 0 ? '1' : '0.6';
+  // Set audio source (placeholder for now - user will add real audio files)
+  const player = document.getElementById('audio-player');
+  if (audio.src) {
+    player.src = audio.src;
+  } else {
+    player.src = '';
+  }
+  document.getElementById('audio-modal').style.display = 'flex';
+}
+
+function earnAudioXP() {
+  if (!currentAudio) return;
+  const today = new Date().toDateString();
+  const todayCount = todayListenCounts[currentAudio.id] || 0;
+  const xpToEarn = todayCount === 0 ? 15 : todayCount === 1 ? 8 : todayCount < 4 ? 3 : 0;
+  // Update counts
+  todayListenCounts[currentAudio.id] = todayCount + 1;
+  localStorage.setItem('audioToday_' + today, JSON.stringify(todayListenCounts));
+  // Update total listens
+  listenedAudios[currentAudio.id] = (listenedAudios[currentAudio.id] || 0) + 1;
+  localStorage.setItem('listenedAudios', JSON.stringify(listenedAudios));
+  // Daily XP cap of 30
+  if (xpToEarn > 0) {
+    const dailyKey = 'dailyXP_' + today;
+    const alreadyToday = parseInt(localStorage.getItem(dailyKey) || '0');
+    const canEarn = Math.max(0, Math.min(xpToEarn, 30 - alreadyToday));
+    if (canEarn > 0) {
+      totalXP += canEarn;
+      localStorage.setItem('totalXP', totalXP);
+      localStorage.setItem(dailyKey, alreadyToday + canEarn);
+    }
+  }
+  // Streak
+  if (lastListenDate !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if (lastListenDate === yesterday || lastListenDate === '') {
+      currentStreak++;
+    } else {
+      currentStreak = 1;
+    }
+    if (currentStreak > longestStreak) {
+      longestStreak = currentStreak;
+      localStorage.setItem('longestStreak', longestStreak);
+      // Badge check
+      if (currentStreak === 7) { showBadge('Oido de Oro 🥇', '+50 XP bonus por 7 dias seguidos!'); totalXP += 50; localStorage.setItem('totalXP', totalXP); }
+      if (currentStreak === 30) { showBadge('Maestro del Input 🏆', '+200 XP bonus por 30 dias!'); totalXP += 200; localStorage.setItem('totalXP', totalXP); }
+    }
+    lastListenDate = today;
+    localStorage.setItem('lastListenDate', today);
+    localStorage.setItem('currentStreak', currentStreak);
+  }
+  // Update UI
+  const newCount = todayListenCounts[currentAudio.id];
+  const newXP = newCount === 1 ? 8 : newCount < 4 ? 3 : 0;
+  document.getElementById('audio-listen-count').textContent = 'Escuchado hoy: ' + newCount + ' veces';
+  document.getElementById('audio-xp-earned').textContent = newXP > 0 ? '+' + newXP + ' XP disponible' : 'Max XP por hoy alcanzado';
+  const btn = document.getElementById('audio-earn-xp-btn');
+  btn.textContent = newXP > 0 ? 'Gane mis ' + newXP + ' XP' : 'Escuchar (sin XP adicional)';
+  btn.style.opacity = newXP > 0 ? '1' : '0.6';
+  updateXPDisplay();
+  buildAudioList();
+}
+
+function showBadge(title, msg) {
+  const badge = document.createElement('div');
+  badge.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f59e0b,#d97706);color:white;padding:12px 24px;border-radius:16px;font-weight:700;font-size:14px;z-index:999;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.2);';
+  badge.innerHTML = title + '<br><span style="font-size:11px;opacity:0.9;">' + msg + '</span>';
+  document.body.appendChild(badge);
+  setTimeout(() => badge.remove(), 3500);
+}
+
+function closeAudioModal() {
+  document.getElementById('audio-modal').style.display = 'none';
+  currentAudio = null;
+}
+
+// ── EXAM SYSTEM ───────────────────────────────────────────────
+var EXAM_PROMPTS = {
+  1: "You are playing the role of a friendly American tourist named Mark visiting Nissei electronics store in Paraguay. You ONLY speak English. This is Exam 1 - Basic level. Keep the conversation simple and clear. Your goal: 1) Ask if the seller speaks English. 2) Ask the price of a phone you like. 3) Ask if they have it in blue. 4) Ask how you can pay. 5) Say goodbye. Speak slowly and clearly. After 5-6 exchanges, evaluate the seller in Spanish with a score from 1 to 10 and specific feedback.",
+  2: "You are playing the role of a businesswoman named Sarah from Canada visiting Nissei in Paraguay. You ONLY speak English. This is Exam 2 - Intermediate level. Your goal: 1) Ask to compare two phones. 2) Ask about tax free with your passport. 3) Ask about warranty. 4) Complete the purchase at the cashier. 5) Ask for a restaurant recommendation. Speak at normal pace. After 8-10 exchanges, evaluate the seller in Spanish with a score from 1 to 10 and detailed feedback.",
+  final: "You are playing the role of Alex, an experienced American business traveler visiting Nissei Paraguay. You ONLY speak English. This is the FINAL EXAM - Maximum difficulty. Combine everything: 1) Enter and browse, comparing 2-3 products in detail. 2) Ask about tax free with passport. 3) Try to negotiate a small discount. 4) Make a minor complaint about a previous visit, accept the apology. 5) Complete the full purchase: cashier, delivery, testing. 6) Ask for restaurant recommendations as you leave. Speak naturally at normal pace. Be realistic - sometimes understand quickly, sometimes ask for clarification. After 15-20 exchanges, give a complete final evaluation in Spanish: score 1-10, 3 specific strengths, 1 area to improve, and overall certification level (Basic/Intermediate/Advanced)."
+};
+
+function openExam(examNum) {
+  const labels = {1:'Examen 1 — Cliente Basico', 2:'Examen 2 — Cliente Intermedio', final:'Examen Final — Venta Completa'};
+  if (confirm('Vas a comenzar el ' + labels[examNum] + '. Cuando termines, la IA te dara una nota del 1 al 10. Necesitas 7 o mas para aprobar (8 en el examen final). Lista?')) {
+    currentSystemPrompt = EXAM_PROMPTS[examNum];
+    voiceMode = 'simulation';
+    // Open sim modal reusing it
+    document.getElementById('sim-modal-avatar').innerHTML = '<div style="font-size:48px;text-align:center;padding:8px;">📝</div>';
+    document.getElementById('sim-modal-name').textContent = labels[examNum];
+    document.getElementById('sim-modal-topic').textContent = 'Examen oficial del curso';
+    document.getElementById('sim-transcript').textContent = 'La conversacion del examen aparecera aca...';
+    document.getElementById('sim-status').textContent = 'Conectando...';
+    // Override finalize button to mark exam as passed
+    const finBtn = document.querySelector('#sim-modal button:last-child');
+    if (finBtn) {
+      finBtn.onclick = function() {
+        const score = parseInt(prompt('Cual fue tu nota segun la IA? (1-10)') || '0');
+        const minScore = examNum === 'final' ? 8 : 7;
+        if (score >= minScore) {
+          if (!passedExams.includes(examNum)) {
+            passedExams.push(examNum);
+            localStorage.setItem('passedExams', JSON.stringify(passedExams));
+            totalXP += 100;
+            localStorage.setItem('totalXP', totalXP);
+            showBadge('Examen aprobado! +100 XP', 'Nota: ' + score + '/10');
+          }
+          buildProgressMap();
+        } else {
+          alert('Necesitas ' + minScore + ' o mas para aprobar. Obtuviste ' + score + '. Podes intentarlo de nuevo cuando quieras.');
+        }
+        closeSimModal();
+      };
+    }
+    document.getElementById('sim-modal').style.display = 'flex';
+    connectDirect();
+  }
 }
 
 
