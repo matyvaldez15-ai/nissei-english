@@ -6497,6 +6497,13 @@ let voiceMode = 'shadowing';
 let apiKey = localStorage.getItem('gemini_api_key') || '';
 
 // ── NAVEGACIÓN ────────────────────────────────────────────────
+function updateNavInfo() {
+  var name = localStorage.getItem('user_name') || '';
+  var pct = Math.round((completedClasses.length / 60) * 100) + '% Completado (' + completedClasses.length + '/60)';
+  ['user-name-audios','user-name-sims','user-name-prog'].forEach(function(eid) { var e = document.getElementById(eid); if(e) e.textContent = name; });
+  ['user-progress-sims','user-progress-prog'].forEach(function(eid) { var e = document.getElementById(eid); if(e) e.textContent = pct; });
+}
+
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -6516,11 +6523,7 @@ function showScreen(id) {
       btn.className = 'flex flex-col items-center text-slate-400';
     }
   });
-  // Sync name/progress in secondary nav bars
-  var name = localStorage.getItem('user_name') || '';
-  var pct = Math.round((completedClasses.length / 60) * 100) + '% Completado (' + completedClasses.length + '/60)';
-  ['user-name-audios','user-name-sims','user-name-prog'].forEach(function(eid) { var e = document.getElementById(eid); if(e) e.textContent = name; });
-  ['user-progress-sims','user-progress-prog'].forEach(function(eid) { var e = document.getElementById(eid); if(e) e.textContent = pct; });
+  updateNavInfo();
 }
 
 function goToDashboard() {
