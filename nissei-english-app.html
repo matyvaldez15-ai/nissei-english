@@ -261,7 +261,7 @@
           </div>
           <div class="flex-1">
             <p class="font-bold text-primary-container">Paso 1 — Ver conversación</p>
-            <p class="text-sm text-on-surface-variant">Escuchá el diálogo del día. Solo observá.</p>
+            <p class="text-sm text-on-surface-variant">Mirá el diálogo del día. Solo observá.</p>
           </div>
           <span class="material-symbols-outlined text-secondary" id="step-1-check">chevron_right</span>
         </div>
@@ -270,54 +270,37 @@
         </button>
       </div>
 
-      <!-- Paso 2: Shadowing -->
+      <!-- Paso 2: Vocabulario visual -->
       <div class="step-btn locked p-5 bg-white rounded-2xl border-2 border-surface-variant" id="step-2">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-on-surface-variant">image</span>
+          </div>
+          <div class="flex-1">
+            <p class="font-bold text-on-surface-variant">Paso 2 — Vocabulario visual</p>
+            <p class="text-sm text-on-surface-variant">Asociá las palabras clave con imágenes reales.</p>
+          </div>
+          <span class="material-symbols-outlined text-on-surface-variant">lock</span>
+        </div>
+        <button onclick="completeStep(2)" class="mt-4 w-full py-3 bg-secondary text-white rounded-xl font-bold hover:brightness-110 active:scale-95 transition-all">
+          Ver vocabulario
+        </button>
+      </div>
+
+      <!-- Paso 3: Shadowing -->
+      <div class="step-btn locked p-5 bg-white rounded-2xl border-2 border-surface-variant" id="step-3">
         <div class="flex items-center gap-4">
           <div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center flex-shrink-0">
             <span class="material-symbols-outlined text-on-surface-variant">mic</span>
           </div>
           <div class="flex-1">
-            <p class="font-bold text-on-surface-variant">Paso 2 — Practicar pronunciación</p>
+            <p class="font-bold text-on-surface-variant">Paso 3 — Shadowing con IA</p>
             <p class="text-sm text-on-surface-variant">La IA te guía a repetir frase por frase.</p>
           </div>
           <span class="material-symbols-outlined text-on-surface-variant">lock</span>
         </div>
         <button onclick="openVoiceModal('shadowing')" class="mt-4 w-full py-3 bg-secondary text-white rounded-xl font-bold hover:brightness-110 active:scale-95 transition-all">
           Iniciar shadowing
-        </button>
-      </div>
-
-      <!-- Paso 3: Vocabulario -->
-      <div class="step-btn locked p-5 bg-white rounded-2xl border-2 border-surface-variant" id="step-3">
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center flex-shrink-0">
-            <span class="material-symbols-outlined text-on-surface-variant">image</span>
-          </div>
-          <div class="flex-1">
-            <p class="font-bold text-on-surface-variant">Paso 3 — Vocabulario visual</p>
-            <p class="text-sm text-on-surface-variant">Asociá palabras con imágenes reales.</p>
-          </div>
-          <span class="material-symbols-outlined text-on-surface-variant">lock</span>
-        </div>
-        <button onclick="completeStep(3)" class="mt-4 w-full py-3 bg-secondary text-white rounded-xl font-bold hover:brightness-110 active:scale-95 transition-all">
-          Ver vocabulario
-        </button>
-      </div>
-
-      <!-- Paso 4: Simulación -->
-      <div class="step-btn locked p-5 bg-white rounded-2xl border-2 border-surface-variant" id="step-4">
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center flex-shrink-0">
-            <span class="material-symbols-outlined text-on-surface-variant">smart_toy</span>
-          </div>
-          <div class="flex-1">
-            <p class="font-bold text-on-surface-variant">Paso 4 — Simular venta</p>
-            <p class="text-sm text-on-surface-variant">Practicá con un cliente IA en tiempo real.</p>
-          </div>
-          <span class="material-symbols-outlined text-on-surface-variant">lock</span>
-        </div>
-        <button onclick="openVoiceModal('simulation')" class="mt-4 w-full py-3 bg-secondary text-white rounded-xl font-bold hover:brightness-110 active:scale-95 transition-all">
-          Iniciar simulación
         </button>
       </div>
 
@@ -6756,7 +6739,7 @@ function loadClassScreen(classNum) {
 }
 
 function resetSteps() {
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 3; i++) {
     const el = document.getElementById('step-' + i);
     el.classList.remove('active', 'completed', 'locked');
     const icon = el.querySelector('.material-symbols-outlined:last-child');
@@ -6786,9 +6769,9 @@ function completeStep(stepNum) {
   const icon = el.querySelector('.material-symbols-outlined:last-child');
   if (icon) icon.textContent = 'check_circle';
 
-  updateStepsProgress(stepNum * 25);
+  updateStepsProgress(Math.round(stepNum * 100 / 3));
 
-  if (stepNum < 4) {
+  if (stepNum < 3) {
     const next = document.getElementById('step-' + (stepNum + 1));
     next.classList.remove('locked');
     next.classList.add('active');
