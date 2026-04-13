@@ -11099,21 +11099,9 @@ function switchSimTab(tab) {
 
 // Generate prompt for class practice simulator (accumulative i+1)
 function getPracticaPrompt(classNum) {
-  // Build accumulated phrases from all classes up to classNum
-  var phrases = [];
-  for (var i = 1; i <= classNum; i++) {
-    var wIdx = Math.floor((i-1)/5);
-    var cIdx = (i-1)%5;
-    if (WEEKS[wIdx] && WEEKS[wIdx].classes[cIdx]) {
-      phrases.push(WEEKS[wIdx].classes[cIdx].title);
-    }
-  }
-  var accumulated = phrases.join(', ');
-  return 'You are a customer at Nissei electronics store in Paraguay. ONLY speak English. This is a practice simulation for Class ' + classNum + '. ' +
-    'Start as a tourist entering the store. The conversation must naturally include these topics in order, accumulating from previous classes: ' + accumulated + '. ' +
-    'Start simple - greet and ask about the FIRST topic. As the seller responds correctly, move to the NEXT topic. ' +
-    'Speak at a pace appropriate for Level ' + classNum + '/60 (slower for lower levels, more natural for higher). ' +
-    'Be patient and encouraging. After completing all topics, evaluate the seller in Spanish: score 1-10, what they did well, one tip to improve.';
+  // Use the SIMULATION array which has the strict i+1 scripts
+  var idx = Math.max(0, Math.min(classNum - 1, SIMULATION.length - 1));
+  return SIMULATION[idx];
 }
 
 function buildPracticaGrid() {
