@@ -394,8 +394,11 @@
       </div>
     </div>
 
-    <button onclick="goToNextClass()" class="w-full max-w-sm py-4 bg-secondary text-white rounded-2xl font-bold text-lg hover:brightness-110 active:scale-95 transition-all shadow-lg mb-4">
+    <button onclick="goToNextClass()" class="w-full max-w-sm py-4 bg-secondary text-white rounded-2xl font-bold text-lg hover:brightness-110 active:scale-95 transition-all shadow-lg mb-3">
       Siguiente clase →
+    </button>
+    <button onclick="openPracticaClase(currentClass)" class="w-full max-w-sm py-3 bg-white border-2 border-secondary text-secondary rounded-2xl font-bold text-base hover:bg-blue-50 active:scale-95 transition-all mb-4">
+      🎤 Practicar esta clase
     </button>
     <button onclick="goToDashboard()" class="text-on-surface-variant text-sm hover:underline">
       Volver al inicio
@@ -615,30 +618,56 @@
       </div>
     </div>
   </header>
-  <main class="max-w-5xl mx-auto px-6 pt-8 pb-32">
-    <div class="mb-10">
-      <div class="flex items-center gap-3 mb-5">
-        <div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white text-xs font-bold">1</div>
-        <div><p class="font-bold text-primary-container">Mes 1 - Basico</p><p class="text-xs text-on-surface-variant">Conversaciones simples y directas</p></div>
-        <span class="ml-auto text-xs font-bold text-secondary" id="month1-status">Disponible</span>
-      </div>
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="sim-grid-1"></div>
+  <main class="max-w-5xl mx-auto px-6 pt-6 pb-32">
+    <!-- Tabs -->
+    <div style="display:flex;gap:8px;margin-bottom:24px;background:#f1f5f9;border-radius:14px;padding:4px;">
+      <button id="tab-practica" onclick="switchSimTab('practica')" style="flex:1;padding:10px 16px;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;background:#002147;color:white;transition:all .2s;">
+        📚 Práctica de clase
+      </button>
+      <button id="tab-libres" onclick="switchSimTab('libres')" style="flex:1;padding:10px 16px;border:none;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;background:transparent;color:#64748b;transition:all .2s;">
+        🎭 Simuladores libres
+      </button>
     </div>
-    <div class="mb-10">
-      <div class="flex items-center gap-3 mb-5">
-        <div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant text-xs font-bold">2</div>
-        <div><p class="font-bold text-on-surface-variant">Mes 2 - Intermedio</p><p class="text-xs text-on-surface-variant">Situaciones mas complejas</p></div>
-        <span class="ml-auto text-xs font-bold text-on-surface-variant" id="month2-status">Completa 20 clases para desbloquear</span>
+
+    <!-- Tab: Práctica de clase -->
+    <div id="tab-content-practica">
+      <div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:14px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:20px;">💡</span>
+        <p style="font-size:13px;color:#1e40af;line-height:1.5;">Practicá lo aprendido en cada clase. Cada simulador acumula las frases de todas las clases anteriores. Se desbloquea al completar cada clase.</p>
       </div>
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="sim-grid-2"></div>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="practica-grid"></div>
     </div>
-    <div class="mb-10">
-      <div class="flex items-center gap-3 mb-5">
-        <div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant text-xs font-bold">3</div>
-        <div><p class="font-bold text-on-surface-variant">Mes 3 - Avanzado</p><p class="text-xs text-on-surface-variant">Clientes dificiles y situaciones complejas</p></div>
-        <span class="ml-auto text-xs font-bold text-on-surface-variant" id="month3-status">Completa 40 clases para desbloquear</span>
+
+    <!-- Tab: Simuladores libres -->
+    <div id="tab-content-libres" style="display:none;">
+      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:14px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:20px;">🎭</span>
+        <p style="font-size:13px;color:#166534;line-height:1.5;">Practicá con clientes reales de todo el mundo en cualquier momento. Sin restricciones, disponibles cuando quieras.</p>
       </div>
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="sim-grid-3"></div>
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white text-xs font-bold">1</div>
+          <div><p class="font-bold text-primary-container">Mes 1 - Basico</p><p class="text-xs text-on-surface-variant">Conversaciones simples y directas</p></div>
+          <span class="ml-auto text-xs font-bold text-secondary" id="month1-status">Disponible</span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="sim-grid-1"></div>
+      </div>
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant text-xs font-bold">2</div>
+          <div><p class="font-bold text-on-surface-variant">Mes 2 - Intermedio</p><p class="text-xs text-on-surface-variant">Situaciones mas complejas</p></div>
+          <span class="ml-auto text-xs font-bold text-on-surface-variant" id="month2-status">Completa 20 clases para desbloquear</span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="sim-grid-2"></div>
+      </div>
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant text-xs font-bold">3</div>
+          <div><p class="font-bold text-on-surface-variant">Mes 3 - Avanzado</p><p class="text-xs text-on-surface-variant">Clientes dificiles y situaciones complejas</p></div>
+          <span class="ml-auto text-xs font-bold text-on-surface-variant" id="month3-status">Completa 40 clases para desbloquear</span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="sim-grid-3"></div>
+      </div>
     </div>
   </main>
 </div>
@@ -7396,9 +7425,13 @@ function getAvatar(sim) {
     + '</svg>';
 }
 
-function showSimulators() {
+function showSimulators(tab) {
   buildSimulatorGrids();
+  buildPracticaGrid();
   showScreen('screen-simulators');
+  if (tab === 'practica') {
+    switchSimTab('practica');
+  }
 }
 
 function buildSimulatorGrids() {
@@ -7770,6 +7803,90 @@ window.addEventListener('popstate', function(e) {
     if (b) b.className = 'flex flex-col items-center text-slate-400';
   });
 });
+
+// ── PRÁCTICA DE CLASE (60 simuladores acumulativos) ───────────
+var currentSimTab = 'practica';
+
+function switchSimTab(tab) {
+  currentSimTab = tab;
+  var isPractica = tab === 'practica';
+  document.getElementById('tab-content-practica').style.display = isPractica ? 'block' : 'none';
+  document.getElementById('tab-content-libres').style.display = isPractica ? 'none' : 'block';
+  document.getElementById('tab-practica').style.background = isPractica ? '#002147' : 'transparent';
+  document.getElementById('tab-practica').style.color = isPractica ? 'white' : '#64748b';
+  document.getElementById('tab-libres').style.background = isPractica ? 'transparent' : '#002147';
+  document.getElementById('tab-libres').style.color = isPractica ? '#64748b' : 'white';
+}
+
+// Generate prompt for class practice simulator (accumulative i+1)
+function getPracticaPrompt(classNum) {
+  // Build accumulated phrases from all classes up to classNum
+  var phrases = [];
+  for (var i = 1; i <= classNum; i++) {
+    var wIdx = Math.floor((i-1)/5);
+    var cIdx = (i-1)%5;
+    if (WEEKS[wIdx] && WEEKS[wIdx].classes[cIdx]) {
+      phrases.push(WEEKS[wIdx].classes[cIdx].title);
+    }
+  }
+  var accumulated = phrases.join(', ');
+  return 'You are a customer at Nissei electronics store in Paraguay. ONLY speak English. This is a practice simulation for Class ' + classNum + '. ' +
+    'Start as a tourist entering the store. The conversation must naturally include these topics in order, accumulating from previous classes: ' + accumulated + '. ' +
+    'Start simple - greet and ask about the FIRST topic. As the seller responds correctly, move to the NEXT topic. ' +
+    'Speak at a pace appropriate for Level ' + classNum + '/60 (slower for lower levels, more natural for higher). ' +
+    'Be patient and encouraging. After completing all topics, evaluate the seller in Spanish: score 1-10, what they did well, one tip to improve.';
+}
+
+function buildPracticaGrid() {
+  var grid = document.getElementById('practica-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  for (var cn = 1; cn <= 60; cn++) {
+    var wIdx = Math.floor((cn-1)/5);
+    var cIdx = (cn-1)%5;
+    var cls = WEEKS[wIdx] ? WEEKS[wIdx].classes[cIdx] : null;
+    if (!cls) continue;
+
+    var isUnlocked = completedClasses.includes(cn);
+    var div = document.createElement('div');
+    div.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:6px;' + (isUnlocked ? 'cursor:pointer;' : '');
+
+    if (isUnlocked) {
+      div.innerHTML = '<div style="width:54px;height:54px;border-radius:50%;background:#1d4ed8;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(29,78,216,0.3);">'
+        + '<span class="material-symbols-outlined" style="color:white;font-size:20px;">mic</span></div>'
+        + '<span style="font-size:10px;font-weight:700;color:#1d4ed8;">' + String(cn).padStart(2,'0') + '</span>'
+        + '<span style="font-size:9px;text-align:center;color:#475569;line-height:1.3;max-width:64px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">' + cls.title + '</span>';
+      (function(num) {
+        div.onclick = function() { openPracticaClase(num); };
+      })(cn);
+    } else {
+      div.innerHTML = '<div style="width:54px;height:54px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;opacity:0.5;">'
+        + '<span class="material-symbols-outlined" style="color:#94a3b8;font-size:18px;">lock</span></div>'
+        + '<span style="font-size:10px;font-weight:600;color:#94a3b8;opacity:0.6;">' + String(cn).padStart(2,'0') + '</span>'
+        + '<span style="font-size:9px;text-align:center;color:#94a3b8;opacity:0.5;line-height:1.3;max-width:64px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">' + cls.title + '</span>';
+    }
+    grid.appendChild(div);
+  }
+}
+
+function openPracticaClase(classNum) {
+  var wIdx = Math.floor((classNum-1)/5);
+  var cIdx = (classNum-1)%5;
+  var cls = WEEKS[wIdx] ? WEEKS[wIdx].classes[cIdx] : null;
+  var title = cls ? cls.title : 'Clase ' + classNum;
+
+  document.getElementById('sim-modal-avatar').innerHTML = '<div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#7c3aed);display:flex;align-items:center;justify-content:center;"><span class=\"material-symbols-outlined\" style=\"color:white;font-size:28px;\">school</span></div>';
+  document.getElementById('sim-modal-name').textContent = 'Practica de Clase ' + classNum;
+  document.getElementById('sim-modal-topic').textContent = title;
+  document.getElementById('sim-transcript').textContent = 'La conversacion aparecera aca...';
+  document.getElementById('sim-status').textContent = 'Conectando...';
+  document.getElementById('sim-modal').style.display = 'flex';
+  currentSystemPrompt = getPracticaPrompt(classNum);
+  voiceMode = 'simulation';
+  connectDirect();
+}
+
 
 function initApp() {
   // Show mobile nav if on mobile screen
