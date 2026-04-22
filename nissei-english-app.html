@@ -435,6 +435,11 @@
     <p class="text-xs text-on-surface-variant mb-1" id="voice-substatus">Esperá unos segundos</p>
     <p class="text-sm font-bold text-secondary mb-5" id="voice-hint" style="display:none">Di <span style="background:#E6F1FB;padding:2px 8px;border-radius:6px;color:#185FA5">"Hello"</span> para comenzar</p>
 
+    <!-- Comenzar button — only for simulation mode -->
+    <button id="voice-start-btn" onclick="voiceSimSendHello()" style="display:none;width:100%;padding:15px;background:#16a34a;color:white;border:none;border-radius:14px;font-weight:800;cursor:pointer;font-size:16px;align-items:center;justify-content:center;gap:10px;margin-bottom:14px;font-family:Manrope,sans-serif;">
+      <span style="font-size:20px;">▶</span> Presioná para comenzar
+    </button>
+
     <!-- Transcript -->
     <div class="bg-surface-container-low rounded-xl p-4 mb-6 text-left min-h-[80px] max-h-[120px] overflow-y-auto">
       <p class="text-xs text-on-surface-variant" id="transcript-text">La conversación aparecerá acá...</p>
@@ -674,8 +679,8 @@
       </div>
     </div>
     <div style="padding:12px 20px 20px;display:flex;flex-direction:column;gap:8px;">
-      <button id="sim-start-btn" onclick="simSendHello()" style="width:100%;padding:13px;background:#16a34a;color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;">
-        <span class="material-symbols-outlined" style="font-size:18px;">play_arrow</span> Comenzar
+      <button id="sim-start-btn" onclick="simSendHello()" style="width:100%;padding:16px;background:#16a34a;color:white;border:none;border-radius:14px;font-weight:800;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;gap:10px;letter-spacing:-0.01em;font-family:Manrope,sans-serif;">
+        <span class="material-symbols-outlined" style="font-size:22px;">play_arrow</span> Presioná para comenzar
       </button>
       <div style="display:flex;gap:8px;">
         <button onclick="closeSimModal()" style="flex:1;padding:11px;border:1.5px solid #ddd;border-radius:12px;background:white;font-weight:600;cursor:pointer;font-size:13px;">Cerrar</button>
@@ -16886,6 +16891,9 @@ function openVoiceModal(mode) {
 
   document.getElementById('transcript-text').textContent = 'La conversación aparecerá acá...';
   document.getElementById('finish-btn').style.display = 'none';
+  // Show comenzar button only for simulation mode
+  var vStartBtn = document.getElementById('voice-start-btn');
+  if (vStartBtn) vStartBtn.style.display = (mode === 'simulation') ? 'flex' : 'none';
 
   if (apiKey) {
     document.getElementById('api-key-section').style.display = 'none';
@@ -17586,6 +17594,12 @@ function showBadge(title, msg) {
 }
 
 function closeAudioModal() {
+  // Stop audio player
+  var player = document.getElementById('audio-player');
+  if (player) {
+    player.pause();
+    player.currentTime = 0;
+  }
   document.getElementById('audio-modal').style.display = 'none';
   currentAudio = null;
 }
@@ -17779,6 +17793,8 @@ function openPracticaClase(classNum) {
   document.getElementById('sim-modal').style.display = 'flex';
   currentSystemPrompt = getPracticaPrompt(classNum);
   voiceMode = 'simulation';
+  var startBtn = document.getElementById('sim-start-btn');
+  if (startBtn) startBtn.style.display = 'flex';
   connectDirect();
 }
 
@@ -17805,6 +17821,19 @@ You ONLY help with:
 You NEVER respond to questions about: food recipes, news, weather, politics, sports, entertainment, or anything unrelated to English language or this course. If asked, say: "Eso está fuera de lo que puedo ayudarte. Preguntame algo sobre inglés o el curso."
 
 When demonstrating English phrases, always speak them clearly and slowly so the student can follow.`;
+
+function voiceSimSendHello() {
+  var btn = document.getElementById('voice-start-btn');
+  if (btn) btn.style.display = 'none';
+  if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
+    wsConnection.send(JSON.stringify({
+      client_content: {
+        turns: [{ role: 'user', parts: [{ text: 'Hello' }] }],
+        turn_complete: true
+      }
+    }));
+  }
+}
 
 function simSendHello() {
   // Hide start button after clicking
@@ -17980,8 +18009,8 @@ initApp();
 
 </script>
 
-<button id="help-btn" onclick="openAlexAssistant()" style="position:fixed;bottom:24px;left:20px;z-index:150;display:flex;align-items:center;gap:8px;background:#002147;color:white;border:none;border-radius:100px;padding:10px 16px 10px 12px;cursor:pointer;box-shadow:0 4px 20px rgba(0,33,71,0.3);font-family:Manrope,sans-serif;font-weight:700;font-size:13px;">
-  <span style="font-size:22px;line-height:1;">🧑‍🏫</span>
+<button id="help-btn" onclick="openAlexAssistant()" style="position:fixed;bottom:90px;right:16px;z-index:150;display:flex;align-items:center;gap:7px;background:#002147;color:white;border:none;border-radius:100px;padding:9px 14px 9px 10px;cursor:pointer;box-shadow:0 4px 20px rgba(0,33,71,0.3);font-family:Manrope,sans-serif;font-weight:700;font-size:13px;">
+  <span style="font-size:20px;line-height:1;">🧑‍🏫</span>
   <span>Alex</span>
 </button>
 
