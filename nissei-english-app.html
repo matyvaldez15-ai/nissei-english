@@ -16981,14 +16981,14 @@ function connectDirect() {
     console.log('WebSocket abierto, enviando setup...');
     const setupMsg = {
       setup: {
-        model: 'models/gemini-2.0-flash-live-001',
-        generation_config: {
-          response_modalities: ['AUDIO'],
-          speech_config: {
-            voice_config: { prebuilt_voice_config: { voice_name: 'Charon' } }
+        model: 'models/gemini-3.1-flash-live-preview',
+        generationConfig: {
+          responseModalities: ['AUDIO'],
+          speechConfig: {
+            voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Charon' } }
           }
         },
-        system_instruction: { parts: [{ text: currentSystemPrompt }] }
+        systemInstruction: { parts: [{ text: currentSystemPrompt }] }
       }
     };
     wsConnection.send(JSON.stringify(setupMsg));
