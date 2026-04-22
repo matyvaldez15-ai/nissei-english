@@ -330,7 +330,7 @@
           </div>
           <span class="material-symbols-outlined text-on-surface-variant">lock</span>
         </div>
-        <button onclick="completeStep(2)" class="mt-4 w-full py-3 bg-secondary text-white rounded-xl font-bold hover:brightness-110 active:scale-95 transition-all">
+        <button onclick="openVocabModal(currentClass)" class="mt-4 w-full py-3 bg-secondary text-white rounded-xl font-bold hover:brightness-110 active:scale-95 transition-all">
           Ver vocabulario
         </button>
       </div>
@@ -18316,6 +18316,258 @@ async function playAlexAudio(b64) {
   alexNextStartTime += buf.duration;
 }
 
+
+// ── VOCABULARIO VISUAL ────────────────────────────────────────
+var vocabClassIdx = 0;
+var matchSelected = null;
+var matchCompleted = 0;
+var cardIdx = 0;
+var cardShuffled = [];
+
+function openVocabModal(classNum) {
+  vocabClassIdx = Math.min(classNum - 1, VOCAB_DATA.length - 1);
+  document.getElementById('vocab-class-title').textContent = 'Clase ' + classNum;
+  document.getElementById('vocab-modal').style.display = 'flex';
+  switchVocabActivity('match');
+}
+
+function closeVocabModal() {
+  document.getElementById('vocab-modal').style.display = 'none';
+}
+
+function switchVocabActivity(tab) {
+  document.getElementById('vocab-activity-match').style.display = tab === 'match' ? 'block' : 'none';
+  document.getElementById('vocab-activity-cards').style.display = tab === 'cards' ? 'block' : 'none';
+  document.getElementById('vocab-tab-match').style.background = tab === 'match' ? 'white' : 'transparent';
+  document.getElementById('vocab-tab-match').style.color = tab === 'match' ? '#002147' : 'rgba(255,255,255,0.7)';
+  document.getElementById('vocab-tab-cards').style.background = tab === 'cards' ? 'white' : 'transparent';
+  document.getElementById('vocab-tab-cards').style.color = tab === 'cards' ? '#002147' : 'rgba(255,255,255,0.7)';
+  if (tab === 'match') buildMatchGrid();
+  if (tab === 'cards') buildCardActivity();
+}
+
+function buildMatchGrid() {
+  var vocab = VOCAB_DATA[vocabClassIdx];
+  var pairs = vocab.pairs;
+  matchSelected = null;
+  matchCompleted = 0;
+
+  var grid = document.getElementById('match-grid');
+  grid.innerHTML = '';
+  document.getElementById('match-result').style.display = 'none';
+
+  // Shuffle right column
+  var rights = pairs.map(function(p) { return p[1]; });
+  var shuffled = rights.slice().sort(function() { return Math.random() - 0.5; });
+
+  pairs.forEach(function(pair, i) {
+    // Left (Spanish)
+    var leftBtn = document.createElement('button');
+    leftBtn.textContent = pair[0];
+    leftBtn.dataset.side = 'left';
+    leftBtn.dataset.idx = i;
+    leftBtn.dataset.answer = pair[1];
+    leftBtn.style.cssText = 'padding:12px 8px;background:#f0f4ff;border:2px solid #c7d7f9;border-radius:12px;font-size:13px;font-weight:600;color:#002147;cursor:pointer;text-align:center;transition:all .2s;';
+    leftBtn.onclick = function() { handleMatchClick(this, 'left'); };
+    grid.appendChild(leftBtn);
+
+    // Right (English) - shuffled
+    var rightBtn = document.createElement('button');
+    rightBtn.textContent = shuffled[i];
+    rightBtn.dataset.side = 'right';
+    rightBtn.dataset.word = shuffled[i];
+    rightBtn.style.cssText = 'padding:12px 8px;background:#f0fdf4;border:2px solid #bbf7d0;border-radius:12px;font-size:13px;font-weight:600;color:#166534;cursor:pointer;text-align:center;transition:all .2s;';
+    rightBtn.onclick = function() { handleMatchClick(this, 'right'); };
+    grid.appendChild(rightBtn);
+  });
+}
+
+function handleMatchClick(btn, side) {
+  if (btn.disabled) return;
+
+  if (side === 'left') {
+    // Deselect previous left
+    var prevLeft = document.querySelector('[data-side="left"].selected');
+    if (prevLeft) {
+      prevLeft.classList.remove('selected');
+      prevLeft.style.borderColor = '#c7d7f9';
+      prevLeft.style.background = '#f0f4ff';
+    }
+    btn.classList.add('selected');
+    btn.style.borderColor = '#1d4ed8';
+    btn.style.background = '#dbeafe';
+    matchSelected = btn;
+  } else if (side === 'right') {
+    if (!matchSelected) return; // No left selected
+
+    var correctAnswer = matchSelected.dataset.answer;
+    var chosen = btn.dataset.word;
+
+    if (chosen === correctAnswer) {
+      // Correct!
+      matchSelected.style.background = '#dcfce7';
+      matchSelected.style.borderColor = '#16a34a';
+      matchSelected.style.color = '#15803d';
+      matchSelected.disabled = true;
+      btn.style.background = '#dcfce7';
+      btn.style.borderColor = '#16a34a';
+      btn.style.color = '#15803d';
+      btn.disabled = true;
+      matchSelected = null;
+      matchCompleted++;
+      if (matchCompleted === VOCAB_DATA[vocabClassIdx].pairs.length) {
+        setTimeout(function() {
+          document.getElementById('match-result').style.display = 'block';
+        }, 400);
+      }
+    } else {
+      // Wrong!
+      btn.style.background = '#fee2e2';
+      btn.style.borderColor = '#ef4444';
+      matchSelected.style.background = '#fee2e2';
+      matchSelected.style.borderColor = '#ef4444';
+      setTimeout(function() {
+        btn.style.background = '#f0fdf4';
+        btn.style.borderColor = '#bbf7d0';
+        if (matchSelected) {
+          matchSelected.style.background = '#dbeafe';
+          matchSelected.style.borderColor = '#1d4ed8';
+        }
+      }, 600);
+    }
+  }
+}
+
+function buildCardActivity() {
+  var vocab = VOCAB_DATA[vocabClassIdx];
+  cardShuffled = vocab.cards.slice().sort(function() { return Math.random() - 0.5; });
+  cardIdx = 0;
+  showCard();
+}
+
+function showCard() {
+  var vocab = VOCAB_DATA[vocabClassIdx];
+  var cards = cardShuffled;
+  if (cardIdx >= cards.length) {
+    // All done
+    document.getElementById('card-display').innerHTML = '<div style="text-align:center;padding:20px;"><p style="font-size:48px;margin-bottom:8px;">🎉</p><p style="font-weight:700;color:#16a34a;font-size:16px;">Completaste las tarjetas</p><button onclick="completeVocabAndClose()" style="margin-top:12px;padding:10px 24px;background:#002147;color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;">Terminar vocabulario ✓</button></div>';
+    document.getElementById('card-options').innerHTML = '';
+    document.getElementById('card-progress').textContent = '';
+    return;
+  }
+
+  var card = cards[cardIdx];
+  document.getElementById('card-emoji').textContent = card.emoji;
+  document.getElementById('card-hint').textContent = card.hint;
+  document.getElementById('card-progress').textContent = 'Tarjeta ' + (cardIdx + 1) + ' de ' + cards.length;
+  document.getElementById('card-result-msg').textContent = '';
+
+  // Generate 4 options: correct + 3 wrong
+  var allWords = vocab.cards.map(function(c) { return c.word; });
+  var wrong = allWords.filter(function(w) { return w !== card.word; })
+    .sort(function() { return Math.random() - 0.5; }).slice(0, 3);
+  var options = [card.word].concat(wrong).sort(function() { return Math.random() - 0.5; });
+
+  var optGrid = document.getElementById('card-options');
+  optGrid.innerHTML = '';
+  options.forEach(function(opt) {
+    var btn = document.createElement('button');
+    btn.textContent = opt;
+    btn.style.cssText = 'padding:12px 8px;background:#f8faff;border:2px solid #e2e8f0;border-radius:12px;font-size:13px;font-weight:600;color:#002147;cursor:pointer;transition:all .2s;';
+    btn.onclick = (function(o) { return function() { checkCard(o, card.word, this); }; })(opt);
+    optGrid.appendChild(btn);
+  });
+}
+
+function checkCard(chosen, correct, btn) {
+  // Disable all buttons
+  document.querySelectorAll('#card-options button').forEach(function(b) { b.disabled = true; });
+
+  if (chosen === correct) {
+    btn.style.background = '#dcfce7';
+    btn.style.borderColor = '#16a34a';
+    document.getElementById('card-result-msg').innerHTML = '<span style="color:#16a34a;">✓ Correcto!</span>';
+    setTimeout(function() { cardIdx++; showCard(); }, 800);
+  } else {
+    btn.style.background = '#fee2e2';
+    btn.style.borderColor = '#ef4444';
+    // Show correct answer
+    document.querySelectorAll('#card-options button').forEach(function(b) {
+      if (b.textContent === correct) { b.style.background = '#dcfce7'; b.style.borderColor = '#16a34a'; }
+    });
+    document.getElementById('card-result-msg').innerHTML = '<span style="color:#ef4444;">✗ Era: ' + correct + '</span>';
+    setTimeout(function() { cardIdx++; showCard(); }, 1200);
+  }
+}
+
+function completeVocabAndClose() {
+  closeVocabModal();
+  completeStep(2);
+}
+
+const VOCAB_DATA = [
+  {pairs:[["Hablas", "Speak"], ["Si, hablo", "Yes, I do"], ["Como puedo", "How can I"], ["Ayudarte", "Help you"], ["Ingles", "English"]],cards:[{"emoji": "🗣️", "word": "Speak", "hint": "Hablar"}, {"emoji": "✅", "word": "Yes, I do", "hint": "Sí, hablo"}, {"emoji": "🤝", "word": "Help", "hint": "Ayudar"}, {"emoji": "🇺🇸", "word": "English", "hint": "Inglés"}]},
+  {pairs:[["Bienvenido", "Welcome"], ["Buenos dias", "Good morning"], ["Como puedo", "How can I"], ["Ayudarte", "Help you"], ["Hoy", "Today"]],cards:[{"emoji": "👋", "word": "Welcome", "hint": "Bienvenido"}, {"emoji": "🌅", "word": "Good morning", "hint": "Buenos días"}, {"emoji": "🤝", "word": "Help", "hint": "Ayudar"}, {"emoji": "☀️", "word": "Today", "hint": "Hoy"}]},
+  {pairs:[["Primera vez", "First time"], ["Bienvenido de vuelta", "Welcome back"], ["Aqui", "Here"], ["Nuestra tienda", "Our store"], ["Visita", "Visit"]],cards:[{"emoji": "🆕", "word": "First time", "hint": "Primera vez"}, {"emoji": "🔄", "word": "Welcome back", "hint": "Bienvenido de vuelta"}, {"emoji": "📍", "word": "Here", "hint": "Aquí"}, {"emoji": "🏪", "word": "Store", "hint": "Tienda"}]},
+  {pairs:[["Contraseña", "Password"], ["Columnas", "Columns"], ["Agua", "Water"], ["Mientras navegas", "While you browse"], ["Wifi", "Wifi"]],cards:[{"emoji": "📶", "word": "Wifi", "hint": "Wifi"}, {"emoji": "🔑", "word": "Password", "hint": "Contraseña"}, {"emoji": "🏛️", "word": "Columns", "hint": "Columnas"}, {"emoji": "💧", "word": "Water", "hint": "Agua"}]},
+  {pairs:[["Factura", "Invoice"], ["Empresa", "Company"], ["Personal", "Personal"], ["Nombre", "Name"], ["Compra", "Purchase"]],cards:[{"emoji": "🧾", "word": "Invoice", "hint": "Factura"}, {"emoji": "🏢", "word": "Company", "hint": "Empresa"}, {"emoji": "👤", "word": "Personal", "hint": "Personal"}, {"emoji": "🛒", "word": "Purchase", "hint": "Compra"}]},
+  {pairs:[["Telefonos", "Phones"], ["Centro", "Center"], ["Computadoras", "Notebooks"], ["Izquierda", "Left"], ["Tienda", "Store"]],cards:[{"emoji": "📱", "word": "Phones", "hint": "Teléfonos"}, {"emoji": "⬅️", "word": "Left", "hint": "Izquierda"}, {"emoji": "💻", "word": "Notebooks", "hint": "Notebooks"}, {"emoji": "🏪", "word": "Center", "hint": "Centro"}]},
+  {pairs:[["Caja", "Cashier"], ["Atras", "Back"], ["Izquierda", "Left"], ["Por favor", "Please"], ["Ir a", "Go to"]],cards:[{"emoji": "💳", "word": "Cashier", "hint": "Caja"}, {"emoji": "⬅️", "word": "Left", "hint": "Izquierda"}, {"emoji": "🔙", "word": "Back", "hint": "Atrás"}, {"emoji": "➡️", "word": "Go to", "hint": "Ir a"}]},
+  {pairs:[["Entrega", "Delivery"], ["Centro", "Center"], ["Testeo", "Testing"], ["Derecha", "Right"], ["Atras", "Back"]],cards:[{"emoji": "📦", "word": "Delivery", "hint": "Entrega"}, {"emoji": "➡️", "word": "Right", "hint": "Derecha"}, {"emoji": "🔬", "word": "Testing", "hint": "Testeo"}, {"emoji": "🏪", "word": "Center", "hint": "Centro"}]},
+  {pairs:[["Baño", "Bathroom"], ["Cerca", "Near"], ["Puerta trasera", "Back door"], ["Al lado", "Next to"], ["Seguime", "Follow me"]],cards:[{"emoji": "🚻", "word": "Bathroom", "hint": "Baño"}, {"emoji": "🚪", "word": "Back door", "hint": "Puerta trasera"}, {"emoji": "📍", "word": "Near", "hint": "Cerca"}, {"emoji": "🚶", "word": "Follow me", "hint": "Seguime"}]},
+  {pairs:[["Arriba", "Upstairs"], ["Camaras", "Cameras"], ["Gaming", "Gaming"], ["Escalera", "Stairs"], ["Derecha", "Right"]],cards:[{"emoji": "⬆️", "word": "Upstairs", "hint": "Arriba"}, {"emoji": "📷", "word": "Cameras", "hint": "Cámaras"}, {"emoji": "🎮", "word": "Gaming", "hint": "Gaming"}, {"emoji": "🪜", "word": "Stairs", "hint": "Escalera"}]},
+  {pairs:[["Uno", "One"], ["Diez", "Ten"], ["Veinte", "Twenty"], ["Cincuenta", "Fifty"], ["Cien", "One hundred"]],cards:[{"emoji": "1️⃣", "word": "One", "hint": "Uno"}, {"emoji": "🔟", "word": "Ten", "hint": "Diez"}, {"emoji": "2️⃣0️⃣", "word": "Twenty", "hint": "Veinte"}, {"emoji": "💯", "word": "One hundred", "hint": "Cien"}]},
+  {pairs:[["Mil", "One thousand"], ["Diez mil", "Ten thousand"], ["Millon", "One million"], ["Precio", "Price"], ["Guaranies", "Guaranies"]],cards:[{"emoji": "💰", "word": "Thousand", "hint": "Mil"}, {"emoji": "💵", "word": "Million", "hint": "Millón"}, {"emoji": "🏷️", "word": "Price", "hint": "Precio"}, {"emoji": "🇵🇾", "word": "Guaranies", "hint": "Guaraníes"}]},
+  {pairs:[["Cuanto cuesta", "How much"], ["Este", "This"], ["El precio es", "The price is"], ["Guaranies", "Guaranies"], ["Dolares", "Dollars"]],cards:[{"emoji": "🤔", "word": "How much", "hint": "Cuánto cuesta"}, {"emoji": "👆", "word": "This", "hint": "Este"}, {"emoji": "💲", "word": "Price", "hint": "Precio"}, {"emoji": "💵", "word": "Dollars", "hint": "Dólares"}]},
+  {pairs:[["Guaranies", "Guaranies"], ["Dolares", "Dollars"], ["Aproximadamente", "Approximately"], ["Tipo de cambio", "Exchange rate"], ["Hoy", "Today"]],cards:[{"emoji": "🇵🇾", "word": "Guaranies", "hint": "Guaraníes"}, {"emoji": "🇺🇸", "word": "Dollars", "hint": "Dólares"}, {"emoji": "≈", "word": "Approximately", "hint": "Aproximadamente"}, {"emoji": "💱", "word": "Exchange rate", "hint": "Tipo de cambio"}]},
+  {pairs:[["Un momento", "One moment"], ["Supervisor", "Supervisor"], ["Verificar", "Check"], ["Precio", "Price"], ["Espera", "Wait"]],cards:[{"emoji": "⏱️", "word": "One moment", "hint": "Un momento"}, {"emoji": "👔", "word": "Supervisor", "hint": "Supervisor"}, {"emoji": "✅", "word": "Check", "hint": "Verificar"}, {"emoji": "⏳", "word": "Wait", "hint": "Espera"}]},
+  {pairs:[["Pasaporte", "Passport"], ["Extranjero", "Foreign"], ["Descuento", "Tax free"], ["Tenes", "Do you have"], ["Cliente", "Customer"]],cards:[{"emoji": "📕", "word": "Passport", "hint": "Pasaporte"}, {"emoji": "🌍", "word": "Foreign", "hint": "Extranjero"}, {"emoji": "🏷️", "word": "Tax free", "hint": "Descuento especial"}, {"emoji": "👤", "word": "Customer", "hint": "Cliente"}]},
+  {pairs:[["Diez por ciento", "Ten percent"], ["Descuento", "Off"], ["Todos los productos", "All products"], ["Sistema", "System"], ["Automatico", "Automatic"]],cards:[{"emoji": "🔟", "word": "Ten percent", "hint": "Diez por ciento"}, {"emoji": "🏷️", "word": "Discount", "hint": "Descuento"}, {"emoji": "🛍️", "word": "All products", "hint": "Todos los productos"}, {"emoji": "⚡", "word": "Automatic", "hint": "Automático"}]},
+  {pairs:[["Efectivo", "Cash"], ["Dolares", "Dollars"], ["Guaranies", "Guaranies"], ["Tarjeta", "Card"], ["Internacional", "International"]],cards:[{"emoji": "💵", "word": "Cash", "hint": "Efectivo"}, {"emoji": "💳", "word": "Card", "hint": "Tarjeta"}, {"emoji": "🇺🇸", "word": "Dollars", "hint": "Dólares"}, {"emoji": "🌍", "word": "International", "hint": "Internacional"}]},
+  {pairs:[["Cuotas", "Installments"], ["Solo", "Only"], ["Tarjeta local", "Local card"], ["Total", "Full amount"], ["Paraguaya", "Paraguayan"]],cards:[{"emoji": "📅", "word": "Installments", "hint": "Cuotas"}, {"emoji": "💳", "word": "Local card", "hint": "Tarjeta local"}, {"emoji": "💰", "word": "Full amount", "hint": "Total completo"}, {"emoji": "🇵🇾", "word": "Paraguayan", "hint": "Paraguaya"}]},
+  {pairs:[["Total", "Total"], ["Con descuento", "With tax free"], ["Ochocientos", "Eight hundred"], ["Dolares", "Dollars"], ["Diez por ciento", "Ten percent"]],cards:[{"emoji": "🧮", "word": "Total", "hint": "Total"}, {"emoji": "✅", "word": "With tax free", "hint": "Con descuento"}, {"emoji": "💵", "word": "Eight hundred", "hint": "Ochocientos"}, {"emoji": "🏷️", "word": "Discount", "hint": "Descuento"}]},
+  {pairs:[["Que buscas", "What are you looking for"], ["Hoy", "Today"], ["Algo especifico", "Something specific"], ["Mirando", "Browsing"], ["Puedo ayudar", "Can I help"]],cards:[{"emoji": "🔍", "word": "Looking for", "hint": "Buscás"}, {"emoji": "🛍️", "word": "Browsing", "hint": "Mirando"}, {"emoji": "💡", "word": "Specific", "hint": "Específico"}, {"emoji": "🤝", "word": "Help", "hint": "Ayudar"}]},
+  {pairs:[["Camara", "Camera"], ["Bateria", "Battery"], ["Excelente", "Excellent"], ["Todo el dia", "All day"], ["Modelo", "Model"]],cards:[{"emoji": "📷", "word": "Camera", "hint": "Cámara"}, {"emoji": "🔋", "word": "Battery", "hint": "Batería"}, {"emoji": "⭐", "word": "Excellent", "hint": "Excelente"}, {"emoji": "🌞", "word": "All day", "hint": "Todo el día"}]},
+  {pairs:[["Mejor", "Better"], ["Mas liviano", "Lighter"], ["Mas nuevo", "Newer"], ["Este", "This one"], ["Fotografia", "Photography"]],cards:[{"emoji": "🏆", "word": "Better", "hint": "Mejor"}, {"emoji": "🪶", "word": "Lighter", "hint": "Más liviano"}, {"emoji": "✨", "word": "Newer", "hint": "Más nuevo"}, {"emoji": "📸", "word": "Photography", "hint": "Fotografía"}]},
+  {pairs:[["Negro", "Black"], ["Blanco", "White"], ["Azul", "Blue"], ["Dorado", "Gold"], ["Plateado", "Silver"]],cards:[{"emoji": "⚫", "word": "Black", "hint": "Negro"}, {"emoji": "⚪", "word": "White", "hint": "Blanco"}, {"emoji": "🔵", "word": "Blue", "hint": "Azul"}, {"emoji": "🟡", "word": "Gold", "hint": "Dorado"}]},
+  {pairs:[["Mas vendido", "Best seller"], ["Ahora", "Right now"], ["Popular", "Popular"], ["Este mes", "This month"], ["Recomendar", "Recommend"]],cards:[{"emoji": "🏆", "word": "Best seller", "hint": "Más vendido"}, {"emoji": "🔥", "word": "Popular", "hint": "Popular"}, {"emoji": "📅", "word": "This month", "hint": "Este mes"}, {"emoji": "⭐", "word": "Recommend", "hint": "Recomendar"}]},
+  {pairs:[["Memoria RAM", "RAM"], ["Almacenamiento", "Storage"], ["Gigabytes", "Gigabytes"], ["Rapida", "Fast"], ["Liviana", "Lightweight"]],cards:[{"emoji": "🧠", "word": "RAM", "hint": "Memoria RAM"}, {"emoji": "💾", "word": "Storage", "hint": "Almacenamiento"}, {"emoji": "⚡", "word": "Fast", "hint": "Rápida"}, {"emoji": "🪶", "word": "Lightweight", "hint": "Liviana"}]},
+  {pairs:[["Trabajo", "Work"], ["Gaming", "Gaming"], ["Uso diario", "Everyday use"], ["Para que", "What for"], ["Usar", "Use"]],cards:[{"emoji": "💼", "word": "Work", "hint": "Trabajo"}, {"emoji": "🎮", "word": "Gaming", "hint": "Gaming"}, {"emoji": "🏠", "word": "Everyday", "hint": "Uso diario"}, {"emoji": "❓", "word": "What for", "hint": "Para qué"}]},
+  {pairs:[["Diseño", "Design"], ["Gaming", "Gaming"], ["Tarjeta grafica", "Graphics card"], ["Ideal para", "Ideal for"], ["Dedicada", "Dedicated"]],cards:[{"emoji": "🎨", "word": "Design", "hint": "Diseño"}, {"emoji": "🎮", "word": "Gaming", "hint": "Gaming"}, {"emoji": "🖥️", "word": "Graphics card", "hint": "Tarjeta gráfica"}, {"emoji": "⚡", "word": "Dedicated", "hint": "Dedicada"}]},
+  {pairs:[["Procesador", "Processor"], ["Intel", "Intel"], ["AMD", "AMD"], ["Poderoso", "Powerful"], ["Precio", "Price"]],cards:[{"emoji": "🔧", "word": "Processor", "hint": "Procesador"}, {"emoji": "💙", "word": "Intel", "hint": "Intel"}, {"emoji": "❤️", "word": "AMD", "hint": "AMD"}, {"emoji": "💪", "word": "Powerful", "hint": "Poderoso"}]},
+  {pairs:[["Escritorio", "Desktop"], ["Componentes", "Components"], ["Procesador", "Processor"], ["Elegir", "Choose"], ["Separado", "Separately"]],cards:[{"emoji": "🖥️", "word": "Desktop", "hint": "Escritorio"}, {"emoji": "🔩", "word": "Components", "hint": "Componentes"}, {"emoji": "🔧", "word": "Choose", "hint": "Elegir"}, {"emoji": "📦", "word": "Separately", "hint": "Por separado"}]},
+  {pairs:[["Televisores", "Smart TVs"], ["Derecha", "Right side"], ["Tienda", "Store"], ["Seccion", "Section"], ["Seguime", "Follow me"]],cards:[{"emoji": "📺", "word": "Smart TV", "hint": "Televisor"}, {"emoji": "➡️", "word": "Right side", "hint": "Lado derecho"}, {"emoji": "🏪", "word": "Store", "hint": "Tienda"}, {"emoji": "🚶", "word": "Follow me", "hint": "Seguime"}]},
+  {pairs:[["Pulgadas", "Inches"], ["Resolucion", "Resolution"], ["OLED", "OLED"], ["Negro perfecto", "Perfect blacks"], ["Contraste", "Contrast"]],cards:[{"emoji": "📏", "word": "Inches", "hint": "Pulgadas"}, {"emoji": "4️⃣", "word": "4K", "hint": "4K resolución"}, {"emoji": "⬛", "word": "OLED", "hint": "Tecnología OLED"}, {"emoji": "✨", "word": "Contrast", "hint": "Contraste"}]},
+  {pairs:[["Parlante", "Speaker"], ["JBL", "JBL"], ["Sony", "Sony"], ["Exterior", "Outdoors"], ["Hogar", "Home"]],cards:[{"emoji": "🔊", "word": "Speaker", "hint": "Parlante"}, {"emoji": "🏕️", "word": "Outdoors", "hint": "Exterior"}, {"emoji": "🏠", "word": "Home", "hint": "Hogar"}, {"emoji": "🎵", "word": "Sound", "hint": "Sonido"}]},
+  {pairs:[["Teclado", "Keyboard"], ["Mouse", "Mouse"], ["Cable", "Cable"], ["Cargador", "Charger"], ["Adaptador", "Adapter"]],cards:[{"emoji": "⌨️", "word": "Keyboard", "hint": "Teclado"}, {"emoji": "🖱️", "word": "Mouse", "hint": "Mouse"}, {"emoji": "🔌", "word": "Cable", "hint": "Cable"}, {"emoji": "🔋", "word": "Charger", "hint": "Cargador"}]},
+  {pairs:[["Auriculares", "Headphones"], ["Con cable", "Wired"], ["Inalambrico", "Wireless"], ["Cancelacion de ruido", "Noise cancelling"], ["Tecnologia", "Technology"]],cards:[{"emoji": "🎧", "word": "Headphones", "hint": "Auriculares"}, {"emoji": "🔌", "word": "Wired", "hint": "Con cable"}, {"emoji": "📡", "word": "Wireless", "hint": "Inalámbrico"}, {"emoji": "🔇", "word": "Noise cancelling", "hint": "Cancela ruido"}]},
+  {pairs:[["Stock", "Stock"], ["iPad", "iPad"], ["Un momento", "One moment"], ["Verificar", "Check"], ["Disponible", "Available"]],cards:[{"emoji": "📦", "word": "Stock", "hint": "Stock"}, {"emoji": "📱", "word": "iPad", "hint": "iPad"}, {"emoji": "✅", "word": "Available", "hint": "Disponible"}, {"emoji": "🔍", "word": "Check", "hint": "Verificar"}]},
+  {pairs:[["No tenemos", "We don't have"], ["Traer", "Bring"], ["Ciudad del Este", "CDE"], ["Otra sucursal", "Main branch"], ["Pedir", "Order"]],cards:[{"emoji": "🏙️", "word": "Ciudad del Este", "hint": "Ciudad del Este"}, {"emoji": "🚚", "word": "Bring", "hint": "Traer"}, {"emoji": "🏪", "word": "Branch", "hint": "Sucursal"}, {"emoji": "📋", "word": "Order", "hint": "Pedir"}]},
+  {pairs:[["Antes de", "Before"], ["Tres de la tarde", "Three PM"], ["Llega", "Arrives"], ["Manana", "Tomorrow"], ["Dos dias", "Two days"]],cards:[{"emoji": "🕒", "word": "3 PM", "hint": "Tres de la tarde"}, {"emoji": "📅", "word": "Tomorrow", "hint": "Mañana"}, {"emoji": "🚚", "word": "Arrives", "hint": "Llega"}, {"emoji": "⏰", "word": "Before", "hint": "Antes de"}]},
+  {pairs:[["Deposito", "Warehouse"], ["Cercano", "Nearby"], ["Dos horas", "Two hours"], ["Organizar", "Arrange"], ["Ya mismo", "Right now"]],cards:[{"emoji": "🏭", "word": "Warehouse", "hint": "Depósito"}, {"emoji": "📍", "word": "Nearby", "hint": "Cercano"}, {"emoji": "⏱️", "word": "Two hours", "hint": "Dos horas"}, {"emoji": "✅", "word": "Arrange", "hint": "Organizar"}]},
+  {pairs:[["Seña", "Deposit"], ["Pedir", "Order"], ["Cincuenta por ciento", "Fifty percent"], ["Valor", "Value"], ["Necesitamos", "We need"]],cards:[{"emoji": "💰", "word": "Deposit", "hint": "Seña"}, {"emoji": "📋", "word": "Order", "hint": "Pedir"}, {"emoji": "5️⃣0️⃣", "word": "Fifty percent", "hint": "Cincuenta por ciento"}, {"emoji": "💎", "word": "Value", "hint": "Valor"}]},
+  {pairs:[["Excelente eleccion", "Great choice"], ["Puedo ver", "May I see"], ["Pasaporte", "Passport"], ["Datos", "Details"], ["Por favor", "Please"]],cards:[{"emoji": "🏆", "word": "Great choice", "hint": "Excelente elección"}, {"emoji": "📕", "word": "Passport", "hint": "Pasaporte"}, {"emoji": "👁️", "word": "May I see", "hint": "Puedo ver"}, {"emoji": "📝", "word": "Details", "hint": "Datos"}]},
+  {pairs:[["Factura", "Invoice"], ["Nombre", "Name"], ["Deletrear", "Spell"], ["Documento", "Document"], ["Bajo el nombre", "Under the name"]],cards:[{"emoji": "🧾", "word": "Invoice", "hint": "Factura"}, {"emoji": "👤", "word": "Name", "hint": "Nombre"}, {"emoji": "🔤", "word": "Spell", "hint": "Deletrear"}, {"emoji": "🪪", "word": "Document", "hint": "Documento"}]},
+  {pairs:[["Ir a", "Go to"], ["Caja", "Cashier"], ["Cualquier", "Any"], ["Dar tu nombre", "Give your name"], ["Van a encontrar", "They will find"]],cards:[{"emoji": "💳", "word": "Cashier", "hint": "Caja"}, {"emoji": "👆", "word": "Any", "hint": "Cualquier"}, {"emoji": "📛", "word": "Give name", "hint": "Dar tu nombre"}, {"emoji": "🔍", "word": "Find", "hint": "Encontrar"}]},
+  {pairs:[["Esperar", "Wait"], ["Area de entrega", "Delivery area"], ["Van a llamar", "They will call"], ["Tu nombre", "Your name"], ["Listo", "Ready"]],cards:[{"emoji": "📦", "word": "Delivery area", "hint": "Área de entrega"}, {"emoji": "⏳", "word": "Wait", "hint": "Esperar"}, {"emoji": "📢", "word": "Call your name", "hint": "Llamar tu nombre"}, {"emoji": "✅", "word": "Ready", "hint": "Listo"}]},
+  {pairs:[["Probar", "Test"], ["Producto", "Product"], ["Antes de ir", "Before you leave"], ["Obligatorio", "Required"], ["Pantallas", "Screens"]],cards:[{"emoji": "🔬", "word": "Test", "hint": "Probar"}, {"emoji": "📱", "word": "Product", "hint": "Producto"}, {"emoji": "🚪", "word": "Before leaving", "hint": "Antes de ir"}, {"emoji": "🖥️", "word": "Screens", "hint": "Pantallas"}]},
+  {pairs:[["Compra online", "Web order"], ["Retirar", "Pick up"], ["Area de entrega", "Delivery area"], ["Confirmacion", "Confirmation"], ["Directamente", "Directly"]],cards:[{"emoji": "🌐", "word": "Web order", "hint": "Compra online"}, {"emoji": "📦", "word": "Pick up", "hint": "Retirar"}, {"emoji": "📱", "word": "Confirmation", "hint": "Confirmación"}, {"emoji": "➡️", "word": "Directly", "hint": "Directamente"}]},
+  {pairs:[["Empresa", "Company"], ["Factura", "Invoice"], ["Corporativo", "Corporate"], ["Emitir", "Issue"], ["Ventas", "Sales"]],cards:[{"emoji": "🏢", "word": "Company", "hint": "Empresa"}, {"emoji": "🧾", "word": "Corporate invoice", "hint": "Factura empresa"}, {"emoji": "📋", "word": "Issue", "hint": "Emitir"}, {"emoji": "💼", "word": "Corporate sales", "hint": "Ventas corporativas"}]},
+  {pairs:[["Cuantas", "How many"], ["Unidades", "Units"], ["Necesitas", "Do you need"], ["Cantidad", "Quantity"], ["Pedido", "Bulk order"]],cards:[{"emoji": "🔢", "word": "How many", "hint": "Cuántas"}, {"emoji": "📦", "word": "Units", "hint": "Unidades"}, {"emoji": "📊", "word": "Quantity", "hint": "Cantidad"}, {"emoji": "🏭", "word": "Bulk order", "hint": "Pedido grande"}]},
+  {pairs:[["Lo siento", "I'm sorry"], ["Tarjeta local", "Local card"], ["Elimina", "Removes"], ["Beneficio", "Benefit"], ["Solo aplica", "Only applies"]],cards:[{"emoji": "😔", "word": "Sorry", "hint": "Lo siento"}, {"emoji": "💳", "word": "Local card", "hint": "Tarjeta local"}, {"emoji": "❌", "word": "Removes", "hint": "Elimina"}, {"emoji": "✅", "word": "Benefit", "hint": "Beneficio"}]},
+  {pairs:[["Un momento", "One moment"], ["Buscar", "Get"], ["Alguien", "Someone"], ["Ayudarte mejor", "Help you better"], ["Especialista", "Specialist"]],cards:[{"emoji": "⏱️", "word": "One moment", "hint": "Un momento"}, {"emoji": "🔍", "word": "Find", "hint": "Buscar"}, {"emoji": "👥", "word": "Someone", "hint": "Alguien"}, {"emoji": "🎓", "word": "Specialist", "hint": "Especialista"}]},
+  {pairs:[["Garantia", "Warranty"], ["Tres meses", "Three months"], ["Un año", "One year"], ["Marca", "Brand"], ["Depende", "Depending"]],cards:[{"emoji": "🛡️", "word": "Warranty", "hint": "Garantía"}, {"emoji": "3️⃣", "word": "Three months", "hint": "Tres meses"}, {"emoji": "1️⃣", "word": "One year", "hint": "Un año"}, {"emoji": "🏷️", "word": "Brand", "hint": "Marca"}]},
+  {pairs:[["Cubre", "Covers"], ["Defectos de fabrica", "Factory defects"], ["Solo", "Only"], ["Daño fisico", "Physical damage"], ["No cubre", "Does not cover"]],cards:[{"emoji": "🛡️", "word": "Covers", "hint": "Cubre"}, {"emoji": "🏭", "word": "Factory defects", "hint": "Defectos de fábrica"}, {"emoji": "💥", "word": "Physical damage", "hint": "Daño físico"}, {"emoji": "❌", "word": "Not covered", "hint": "No cubierto"}]},
+  {pairs:[["Guarda", "Keep"], ["Recibo", "Receipt"], ["Necesitaras", "You will need"], ["Reclamo", "Claim"], ["Garantia", "Warranty"]],cards:[{"emoji": "🧾", "word": "Receipt", "hint": "Recibo"}, {"emoji": "💾", "word": "Keep", "hint": "Guardar"}, {"emoji": "📋", "word": "Claim", "hint": "Reclamo"}, {"emoji": "🛡️", "word": "Warranty", "hint": "Garantía"}]},
+  {pairs:[["Puerta trasera", "Back door"], ["Cruzar", "Cross"], ["Estacionamiento", "Parking lot"], ["Post venta", "After-sales"], ["Centro de servicio", "Service center"]],cards:[{"emoji": "🚪", "word": "Back door", "hint": "Puerta trasera"}, {"emoji": "🚶", "word": "Cross", "hint": "Cruzar"}, {"emoji": "🅿️", "word": "Parking lot", "hint": "Estacionamiento"}, {"emoji": "🔧", "word": "Service center", "hint": "Centro de servicio"}]},
+  {pairs:[["Reparando", "Being repaired"], ["Quince dias", "Fifteen days"], ["Sesenta dias", "Sixty days"], ["Contactaremos", "We will contact"], ["Listo", "Ready"]],cards:[{"emoji": "🔧", "word": "Being repaired", "hint": "En reparación"}, {"emoji": "📅", "word": "15-60 days", "hint": "15 a 60 días"}, {"emoji": "📞", "word": "We will contact", "hint": "Te contactaremos"}, {"emoji": "✅", "word": "Ready", "hint": "Listo"}]},
+  {pairs:[["Lo siento", "I'm sorry"], ["Escucharte", "Hear that"], ["Ayudarte", "Help you"], ["Enseguida", "Right away"], ["Entiendo", "I understand"]],cards:[{"emoji": "😔", "word": "I'm sorry", "hint": "Lo siento"}, {"emoji": "🤝", "word": "Help", "hint": "Ayudar"}, {"emoji": "⚡", "word": "Right away", "hint": "Enseguida"}, {"emoji": "💙", "word": "Understand", "hint": "Entiendo"}]},
+  {pairs:[["Seguridad", "Security"], ["Lentes", "Glasses"], ["Retirar", "Remove"], ["Politica", "Policy"], ["Todos", "Everyone"]],cards:[{"emoji": "🔒", "word": "Security", "hint": "Seguridad"}, {"emoji": "👓", "word": "Glasses", "hint": "Lentes"}, {"emoji": "❌", "word": "Remove", "hint": "Retirar"}, {"emoji": "📋", "word": "Policy", "hint": "Política"}]},
+  {pairs:[["Entiendo", "I understand"], ["Frustracion", "Frustration"], ["Aqui esta", "Here is"], ["Lo que podemos", "What we can do"], ["Disculpa", "Apologize"]],cards:[{"emoji": "💙", "word": "Understand", "hint": "Entiendo"}, {"emoji": "😤", "word": "Frustration", "hint": "Frustración"}, {"emoji": "💡", "word": "Solution", "hint": "Solución"}, {"emoji": "🙏", "word": "Apologize", "hint": "Disculpa"}]},
+  {pairs:[["Gracias", "Thank you"], ["Visitar", "Visiting"], ["Buen dia", "Great day"], ["Placer", "Pleasure"], ["Vuelve pronto", "Come back soon"]],cards:[{"emoji": "🙏", "word": "Thank you", "hint": "Gracias"}, {"emoji": "😊", "word": "Pleasure", "hint": "Placer"}, {"emoji": "☀️", "word": "Great day", "hint": "Buen día"}, {"emoji": "👋", "word": "Come back", "hint": "Vuelve pronto"}]},
+  {pairs:[["Bienvenido", "Welcome"], ["Tax free", "Tax free"], ["Caja", "Cashier"], ["Entrega", "Delivery"], ["Hasta pronto", "Goodbye"]],cards:[{"emoji": "👋", "word": "Welcome", "hint": "Bienvenido"}, {"emoji": "🏷️", "word": "Tax free", "hint": "Tax free"}, {"emoji": "💳", "word": "Cashier", "hint": "Caja"}, {"emoji": "📦", "word": "Delivery", "hint": "Entrega"}]},
+];
+
 function initApp() {
   // Show mobile nav if on mobile screen
   var mNav = document.getElementById('mobile-nav-global');
@@ -18584,6 +18836,57 @@ initApp();
     </div>
     <p style="font-size:13px;color:#94a3b8;text-align:center;margin-bottom:16px;">💡 Consejo: escuchá el audio de tu clase del día para multiplicar el aprendizaje</p>
     <button onclick="document.getElementById('xp-how-modal').style.display='none'" style="width:100%;padding:14px;background:#002147;color:white;border:none;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;">Entendido 👍</button>
+  </div>
+</div>
+
+
+<!-- VOCABULARIO MODAL -->
+<div id="vocab-modal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.75);align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
+  <div style="background:white;border-radius:24px;width:100%;max-width:480px;overflow:hidden;max-height:90vh;overflow-y:auto;">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#002147,#1d4ed8);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <p style="color:rgba(255,255,255,0.7);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Vocabulario visual</p>
+        <p style="color:white;font-weight:800;font-size:16px;font-family:Manrope,sans-serif;" id="vocab-class-title">Clase 1</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div style="background:rgba(255,255,255,0.15);border-radius:100px;padding:4px 12px;display:flex;gap:12px;">
+          <button onclick="switchVocabActivity('match')" id="vocab-tab-match" style="background:white;color:#002147;border:none;border-radius:100px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer;">Unir</button>
+          <button onclick="switchVocabActivity('cards')" id="vocab-tab-cards" style="background:transparent;color:rgba(255,255,255,0.7);border:none;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;">Tarjetas</button>
+        </div>
+        <button onclick="closeVocabModal()" style="background:rgba(255,255,255,0.2);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;color:white;font-size:16px;">✕</button>
+      </div>
+    </div>
+
+    <!-- Activity: Match -->
+    <div id="vocab-activity-match" style="padding:20px;">
+      <p style="font-size:13px;color:#64748b;margin-bottom:16px;text-align:center;">Tocá una palabra en español, luego su traducción en inglés</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="match-grid"></div>
+      <div id="match-result" style="display:none;text-align:center;padding:16px;margin-top:12px;background:#f0fdf4;border-radius:14px;">
+        <p style="font-size:32px;margin-bottom:6px;">🎉</p>
+        <p style="font-weight:700;color:#16a34a;font-size:16px;">¡Perfecto! Todas las palabras completadas</p>
+        <button onclick="switchVocabActivity('cards')" style="margin-top:10px;padding:10px 24px;background:#002147;color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;">Siguiente actividad →</button>
+      </div>
+    </div>
+
+    <!-- Activity: Image Cards -->
+    <div id="vocab-activity-cards" style="display:none;padding:20px;">
+      <p style="font-size:13px;color:#64748b;margin-bottom:16px;text-align:center;">¿Cuál es la palabra correcta en inglés?</p>
+      <div id="card-display" style="text-align:center;margin-bottom:20px;">
+        <div style="font-size:72px;margin-bottom:12px;" id="card-emoji">📱</div>
+        <p style="font-size:14px;color:#64748b;" id="card-hint">Teléfono</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="card-options"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;">
+        <p style="font-size:12px;color:#94a3b8;" id="card-progress">Tarjeta 1 de 4</p>
+        <div id="card-result-msg" style="font-size:13px;font-weight:700;"></div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="padding:0 20px 20px;">
+      <button onclick="closeVocabModal()" style="width:100%;padding:13px;background:#002147;color:white;border:none;border-radius:14px;font-weight:700;font-size:14px;cursor:pointer;">Cerrar vocabulario</button>
+    </div>
   </div>
 </div>
 
