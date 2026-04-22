@@ -16891,9 +16891,16 @@ function openVoiceModal(mode) {
 
   document.getElementById('transcript-text').textContent = 'La conversación aparecerá acá...';
   document.getElementById('finish-btn').style.display = 'none';
-  // Show comenzar button only for simulation mode
+  // Show comenzar button for both shadowing and simulation
   var vStartBtn = document.getElementById('voice-start-btn');
-  if (vStartBtn) vStartBtn.style.display = (mode === 'simulation') ? 'flex' : 'none';
+  if (vStartBtn) vStartBtn.style.display = 'flex';
+  // Update button label based on mode
+  if (vStartBtn) {
+    vStartBtn.innerHTML = mode === 'shadowing'
+      ? '<span style="font-size:20px;">▶</span> Presioná para comenzar el shadowing'
+      : '<span style="font-size:20px;">▶</span> Presioná para comenzar';
+    vStartBtn.onclick = voiceSimSendHello;
+  }
 
   if (apiKey) {
     document.getElementById('api-key-section').style.display = 'none';
@@ -16964,18 +16971,8 @@ function connectDirect() {
     document.getElementById('finish-btn').style.display = 'block';
     startMicrophone();
 
-    // Send silence after mic starts to trigger Alex to speak first
-    setTimeout(() => {
-      if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
-        const silentPcm = new Int16Array(1600);
-        const b64 = btoa(String.fromCharCode(...new Uint8Array(silentPcm.buffer)));
-        wsConnection.send(JSON.stringify({
-          realtime_input: {
-            audio: { data: b64, mimeType: 'audio/pcm;rate=16000' }
-          }
-        }));
-      }
-    }, 2000);
+    // Connection ready — update status
+    setStatus('Listo', 'Presioná el botón verde para comenzar');
   };
 
   wsConnection.onmessage = async (event) => {
@@ -17822,31 +17819,30 @@ You NEVER respond to questions about: food recipes, news, weather, politics, spo
 
 When demonstrating English phrases, always speak them clearly and slowly so the student can follow.`;
 
+
+function simSendHello() {
+  var btn = document.getElementById('sim-start-btn');
+  if (btn) btn.style.display = 'none';
+  sendHelloWhenReady(wsConnection, 0);
+}
+
 function voiceSimSendHello() {
   var btn = document.getElementById('voice-start-btn');
   if (btn) btn.style.display = 'none';
-  if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
-    wsConnection.send(JSON.stringify({
-      client_content: {
-        turns: [{ role: 'user', parts: [{ text: 'Hello' }] }],
-        turn_complete: true
-      }
-    }));
-  }
+  sendHelloWhenReady(wsConnection, 0);
 }
 
-function simSendHello() {
-  // Hide start button after clicking
-  var btn = document.getElementById('sim-start-btn');
-  if (btn) btn.style.display = 'none';
-  // Send hello to trigger Alex to start
-  if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
-    wsConnection.send(JSON.stringify({
+function sendHelloWhenReady(ws, attempts) {
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({
       client_content: {
         turns: [{ role: 'user', parts: [{ text: 'Hello' }] }],
         turn_complete: true
       }
     }));
+  } else if (attempts < 20) {
+    // Retry every 300ms up to 6 seconds
+    setTimeout(function() { sendHelloWhenReady(wsConnection, attempts + 1); }, 300);
   }
 }
 
