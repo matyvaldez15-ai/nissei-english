@@ -200,12 +200,13 @@
       }
     </style>
     <!-- Desktop version -->
-    <div class="gold-card-desktop" style="background:linear-gradient(135deg,#002147 0%,#1d4ed8 100%);border-radius:20px;padding:20px 24px;margin-bottom:32px;align-items:center;gap:16px;">
+    <div class="gold-card-desktop" onclick="openMotivacionModal()" style="background:linear-gradient(135deg,#002147 0%,#1d4ed8 100%);border-radius:20px;padding:20px 24px;margin-bottom:32px;align-items:center;gap:16px;cursor:pointer;transition:opacity .2s;" onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">
       <div style="font-size:36px;flex-shrink:0;">⚡</div>
       <div style="flex:1;">
         <p style="color:rgba(255,255,255,0.75);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:4px;">Tu regla de oro</p>
         <p style="color:white;font-weight:800;font-size:16px;font-family:Manrope,sans-serif;line-height:1.3;margin-bottom:4px;">La frecuencia importa más que la duración.</p>
         <p style="color:rgba(255,255,255,0.65);font-size:13px;line-height:1.5;">10 minutos todos los días supera a 2 horas los sábados.</p>
+        <p style="color:rgba(255,255,255,0.5);font-size:11px;margin-top:6px;">👆 Tocá para saber más</p>
       </div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;">
         <div style="display:flex;gap:5px;">
@@ -219,12 +220,12 @@
       </div>
     </div>
     <!-- Mobile version -->
-    <div class="gold-card-mobile" style="background:linear-gradient(135deg,#002147 0%,#1d4ed8 100%);border-radius:16px;padding:12px 16px;margin-bottom:24px;align-items:center;gap:12px;">
+    <div class="gold-card-mobile" onclick="openMotivacionModal()" style="background:linear-gradient(135deg,#002147 0%,#1d4ed8 100%);border-radius:16px;padding:12px 16px;margin-bottom:24px;align-items:center;gap:12px;cursor:pointer;">
       <div style="font-size:24px;flex-shrink:0;">⚡</div>
       <div style="flex:1;min-width:0;">
         <p style="color:rgba(255,255,255,0.7);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:2px;">Tu regla de oro</p>
         <p style="color:white;font-weight:800;font-size:13px;font-family:Manrope,sans-serif;line-height:1.3;margin-bottom:1px;">La frecuencia importa más que la duración.</p>
-        <p style="color:rgba(255,255,255,0.6);font-size:11px;line-height:1.4;">10 min diarios supera 2 horas los sábados.</p>
+        <p style="color:rgba(255,255,255,0.5);font-size:10px;">👆 Tocá para saber más</p>
       </div>
       <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;background:rgba(255,255,255,0.12);border-radius:10px;padding:6px 8px;">
         <span style="font-size:14px;">📚</span>
@@ -541,11 +542,12 @@
   </header>
   <main class="max-w-3xl mx-auto px-6 pt-6 pb-32">
     <!-- XP Banner -->
-    <div class="bg-gradient-to-r from-secondary to-primary-container rounded-2xl p-4 mb-6 flex items-center gap-4">
+    <div class="bg-gradient-to-r from-secondary to-primary-container rounded-2xl p-4 mb-4 flex items-center gap-4">
       <div class="text-3xl">🎧</div>
       <div class="flex-1">
         <p class="text-white font-bold text-sm">Sistema de XP por escucha</p>
-        <p class="text-white/70 text-xs">1ra escucha: +15 XP · 2da: +8 XP · 3ra+: +3 XP · Maximo 30 XP por dia</p>
+        <p class="text-white/70 text-xs">1ra escucha: +15 XP · 2da: +8 XP · 3ra+: +3 XP · Máximo 30 XP por día</p>
+        <button onclick="document.getElementById('xp-how-modal').style.display='flex'" style="margin-top:6px;background:rgba(255,255,255,0.18);border:none;border-radius:100px;padding:3px 12px;color:white;font-size:11px;font-weight:700;cursor:pointer;">Cómo funciona →</button>
       </div>
       <div style="text-align:right">
         <p class="text-white/70 text-xs">Tu XP total</p>
@@ -619,31 +621,14 @@
     </div>
   </header>
   <main class="max-w-5xl mx-auto px-6 pt-6 pb-32">
-    <!-- Tabs -->
-    <div style="display:flex;gap:8px;margin-bottom:24px;background:#f1f5f9;border-radius:14px;padding:4px;">
-      <button id="tab-practica" onclick="switchSimTab('practica')" style="flex:1;padding:10px 16px;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;background:#002147;color:white;transition:all .2s;">
-        📚 Práctica de clase
-      </button>
-      <button id="tab-libres" onclick="switchSimTab('libres')" style="flex:1;padding:10px 16px;border:none;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;background:transparent;color:#64748b;transition:all .2s;">
-        🎭 Simuladores libres
-      </button>
-    </div>
-
-    <!-- Tab: Práctica de clase -->
-    <div id="tab-content-practica">
-      <div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:14px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
-        <span style="font-size:20px;">💡</span>
-        <p style="font-size:13px;color:#1e40af;line-height:1.5;">Practicá lo aprendido en cada clase. Cada simulador acumula las frases de todas las clases anteriores. Se desbloquea al completar cada clase.</p>
+    <!-- Info card -->
+    <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:14px;padding:14px 16px;margin-bottom:24px;display:flex;align-items:flex-start;gap:12px;">
+      <span style="font-size:22px;flex-shrink:0;">🎭</span>
+      <div>
+        <p style="font-size:14px;font-weight:700;color:#166534;margin-bottom:4px;">Simuladores de práctica libre</p>
+        <p style="font-size:13px;color:#166534;line-height:1.5;">Practicá con clientes reales de todo el mundo en cualquier momento. Elegí un cliente, presioná <strong>Comenzar</strong> y Alex arranca la conversación. Disponibles siempre, sin restricciones.</p>
       </div>
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="practica-grid"></div>
     </div>
-
-    <!-- Tab: Simuladores libres -->
-    <div id="tab-content-libres" style="display:none;">
-      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:14px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
-        <span style="font-size:20px;">🎭</span>
-        <p style="font-size:13px;color:#166534;line-height:1.5;">Practicá con clientes reales de todo el mundo en cualquier momento. Sin restricciones, disponibles cuando quieras.</p>
-      </div>
       <div class="mb-10">
         <div class="flex items-center gap-3 mb-5">
           <div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white text-xs font-bold">1</div>
@@ -679,17 +664,23 @@
       <div><p style="font-size:15px;font-weight:700;color:#002147;" id="sim-modal-name">John</p><p style="font-size:12px;color:#666;" id="sim-modal-topic">Consulta</p></div>
       <button onclick="closeSimModal()" style="margin-left:auto;background:#f5f5f5;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1;">x</button>
     </div>
-    <div style="padding:20px;text-align:center;">
-      <div style="width:72px;height:72px;border-radius:50%;background:#1B4FD8;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;"><span class="material-symbols-outlined" style="color:white;font-size:32px;">mic</span></div>
+    <div style="padding:16px 20px 8px;text-align:center;">
+      <div style="width:64px;height:64px;border-radius:50%;background:#1B4FD8;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;"><span class="material-symbols-outlined" style="color:white;font-size:30px;">mic</span></div>
       <p style="font-size:13px;font-weight:600;color:#002147;" id="sim-status">Conectando...</p>
-      <p style="font-size:11px;color:#666;margin-top:4px;" id="sim-substatus">Di Hello para comenzar</p>
-      <div style="background:#f8f9ff;border-radius:12px;padding:10px;margin-top:14px;min-height:50px;max-height:90px;overflow-y:auto;text-align:left;">
-        <p style="font-size:12px;color:#444;line-height:1.5;" id="sim-transcript">La conversacion aparecera aca...</p>
+      <!-- Transcript — bigger and more visible -->
+      <div style="background:#f0f4ff;border:1.5px solid #c7d7f9;border-radius:14px;padding:14px;margin-top:12px;min-height:120px;max-height:200px;overflow-y:auto;text-align:left;">
+        <p style="font-size:9px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">CONVERSACIÓN</p>
+        <p style="font-size:14px;color:#1e293b;line-height:1.7;font-family:Manrope,sans-serif;" id="sim-transcript">La conversación aparecerá acá...</p>
       </div>
     </div>
-    <div style="padding:0 20px 20px;display:flex;gap:10px;">
-      <button onclick="closeSimModal()" style="flex:1;padding:11px;border:1.5px solid #ddd;border-radius:12px;background:white;font-weight:600;cursor:pointer;font-size:13px;">Cerrar</button>
-      <button onclick="closeSimModal()" style="flex:1;padding:11px;background:#1B4FD8;color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:13px;">Finalizar</button>
+    <div style="padding:12px 20px 20px;display:flex;flex-direction:column;gap:8px;">
+      <button id="sim-start-btn" onclick="simSendHello()" style="width:100%;padding:13px;background:#16a34a;color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <span class="material-symbols-outlined" style="font-size:18px;">play_arrow</span> Comenzar
+      </button>
+      <div style="display:flex;gap:8px;">
+        <button onclick="closeSimModal()" style="flex:1;padding:11px;border:1.5px solid #ddd;border-radius:12px;background:white;font-weight:600;cursor:pointer;font-size:13px;">Cerrar</button>
+        <button onclick="closeSimModal()" style="flex:1;padding:11px;background:#1B4FD8;color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:13px;">Finalizar</button>
+      </div>
     </div>
   </div>
 </div>
@@ -17379,7 +17370,9 @@ function openSimulator(sim) {
   document.getElementById('sim-modal-avatar').innerHTML = getAvatar(sim);
   document.getElementById('sim-modal-name').textContent = sim.name + ' - ' + sim.country;
   document.getElementById('sim-modal-topic').textContent = sim.topic;
-  document.getElementById('sim-transcript').textContent = 'La conversacion aparecera aca...';
+  document.getElementById('sim-transcript').textContent = 'La conversación aparecerá acá...';
+  var startBtn = document.getElementById('sim-start-btn');
+  if (startBtn) startBtn.style.display = 'flex';
   document.getElementById('sim-status').textContent = 'Conectando...';
   document.getElementById('sim-modal').style.display = 'flex';
   currentSystemPrompt = sim.prompt;
@@ -17779,7 +17772,9 @@ function openPracticaClase(classNum) {
   document.getElementById('sim-modal-avatar').innerHTML = '<div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#7c3aed);display:flex;align-items:center;justify-content:center;"><span class=\"material-symbols-outlined\" style=\"color:white;font-size:28px;\">school</span></div>';
   document.getElementById('sim-modal-name').textContent = 'Practica de Clase ' + classNum;
   document.getElementById('sim-modal-topic').textContent = title;
-  document.getElementById('sim-transcript').textContent = 'La conversacion aparecera aca...';
+  document.getElementById('sim-transcript').textContent = 'La conversación aparecerá acá...';
+  var startBtn = document.getElementById('sim-start-btn');
+  if (startBtn) startBtn.style.display = 'flex';
   document.getElementById('sim-status').textContent = 'Conectando...';
   document.getElementById('sim-modal').style.display = 'flex';
   currentSystemPrompt = getPracticaPrompt(classNum);
@@ -17787,6 +17782,174 @@ function openPracticaClase(classNum) {
   connectDirect();
 }
 
+
+// ── ALEX ASSISTANT ────────────────────────────────────────────
+var alexWsConnection = null;
+var alexAudioStream = null;
+var alexAudioContext = null;
+var alexAudioProcessor = null;
+var alexAudioCtxOutput = null;
+var alexNextStartTime = 0;
+
+var ALEX_SYSTEM_PROMPT = `You are Alex, an English language assistant for Nissei Paraguay store sellers. You speak in a warm, encouraging tone. Answer ONLY in Spanish (your explanations) and English (demonstrations/examples).
+
+You ONLY help with:
+- How to say things in English (phrases, words, sentences for the store)
+- English pronunciation guidance
+- English grammar questions
+- How to use this course and app
+- Study tips and strategies for learning English
+- Months, days, numbers, store vocabulary in English
+- How to sound natural in English
+
+You NEVER respond to questions about: food recipes, news, weather, politics, sports, entertainment, or anything unrelated to English language or this course. If asked, say: "Eso está fuera de lo que puedo ayudarte. Preguntame algo sobre inglés o el curso."
+
+When demonstrating English phrases, always speak them clearly and slowly so the student can follow.`;
+
+function simSendHello() {
+  // Hide start button after clicking
+  var btn = document.getElementById('sim-start-btn');
+  if (btn) btn.style.display = 'none';
+  // Send hello to trigger Alex to start
+  if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
+    wsConnection.send(JSON.stringify({
+      client_content: {
+        turns: [{ role: 'user', parts: [{ text: 'Hello' }] }],
+        turn_complete: true
+      }
+    }));
+  }
+}
+
+function openMotivacionModal() {
+  document.getElementById('motivacion-modal').style.display = 'flex';
+  motivTab('habitos');
+}
+function closeMotivacionModal() {
+  document.getElementById('motivacion-modal').style.display = 'none';
+}
+function motivTab(tab) {
+  ['habitos','aprendizaje','guia','exitosos'].forEach(function(t) {
+    document.getElementById('mcontent-' + t).style.display = t === tab ? 'block' : 'none';
+    var btn = document.getElementById('mtab-' + t);
+    if (btn) {
+      btn.style.background = t === tab ? '#002147' : 'transparent';
+      btn.style.color = t === tab ? 'white' : '#64748b';
+      btn.style.fontWeight = t === tab ? '700' : '600';
+    }
+  });
+}
+
+function openAlexAssistant() {
+  document.getElementById('alex-intro-modal').style.display = 'flex';
+}
+
+function closeAlexIntro() {
+  document.getElementById('alex-intro-modal').style.display = 'none';
+}
+
+function startAlexAssistant() {
+  document.getElementById('alex-intro-modal').style.display = 'none';
+  document.getElementById('alex-voice-modal').style.display = 'flex';
+  document.getElementById('alex-status').textContent = 'Conectando con Alex...';
+  document.getElementById('alex-transcript').textContent = 'La conversación aparecerá acá...';
+  connectAlex();
+}
+
+function closeAlexVoice() {
+  document.getElementById('alex-voice-modal').style.display = 'none';
+  stopAlexSession();
+}
+
+function stopAlexSession() {
+  if (alexWsConnection) { try { alexWsConnection.close(); } catch(e) {} alexWsConnection = null; }
+  if (alexAudioStream) { alexAudioStream.getTracks().forEach(t => t.stop()); alexAudioStream = null; }
+  if (alexAudioProcessor) { try { alexAudioProcessor.disconnect(); } catch(e) {} alexAudioProcessor = null; }
+  if (alexAudioContext) { try { alexAudioContext.close(); } catch(e) {} alexAudioContext = null; }
+  if (alexAudioCtxOutput) { try { alexAudioCtxOutput.close(); } catch(e) {} alexAudioCtxOutput = null; }
+  alexNextStartTime = 0;
+}
+
+async function connectAlex() {
+  stopAlexSession();
+  const wsUrl = 'wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=AIzaSyBm3EXTzFXBFNX5RYTO5OigtXf5w5h7UfA';
+  alexWsConnection = new WebSocket(wsUrl);
+
+  alexWsConnection.onopen = () => {
+    const setup = {
+      setup: {
+        model: 'models/gemini-2.0-flash-live-001',
+        generation_config: { response_modalities: ['AUDIO'], speech_config: { voice_config: { prebuilt_voice_config: { voice_name: 'Puck' } } } },
+        system_instruction: { parts: [{ text: ALEX_SYSTEM_PROMPT }] }
+      }
+    };
+    alexWsConnection.send(JSON.stringify(setup));
+  };
+
+  alexWsConnection.onmessage = async (event) => {
+    const data = JSON.parse(event.data);
+    if (data.setupComplete !== undefined) {
+      document.getElementById('alex-status').textContent = '🎤 Alex listo — hablá cuando quieras';
+      await startAlexMic();
+      // Send greeting
+      if (alexWsConnection && alexWsConnection.readyState === WebSocket.OPEN) {
+        alexWsConnection.send(JSON.stringify({
+          client_content: { turns: [{ role: 'user', parts: [{ text: 'Hola Alex, estoy listo.' }] }], turn_complete: true }
+        }));
+      }
+    }
+    if (data.serverContent?.modelTurn?.parts) {
+      for (const part of data.serverContent.modelTurn.parts) {
+        if (part.inlineData?.mimeType?.startsWith('audio/')) {
+          await playAlexAudio(part.inlineData.data);
+        }
+        if (part.text) {
+          const t = document.getElementById('alex-transcript');
+          if (t) { t.textContent += (t.textContent === 'La conversación aparecerá acá...' ? '' : '
+') + 'Alex: ' + part.text; t.scrollTop = t.scrollHeight; }
+        }
+      }
+    }
+  };
+
+  alexWsConnection.onerror = () => { document.getElementById('alex-status').textContent = 'Error de conexión'; };
+  alexWsConnection.onclose = () => { document.getElementById('alex-status').textContent = 'Sesión finalizada'; };
+}
+
+async function startAlexMic() {
+  alexAudioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
+  alexAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const source = alexAudioContext.createMediaStreamSource(alexAudioStream);
+  alexAudioProcessor = alexAudioContext.createScriptProcessor(4096, 1, 1);
+  alexAudioProcessor.onaudioprocess = (e) => {
+    if (alexWsConnection?.readyState === WebSocket.OPEN) {
+      const input = e.inputBuffer.getChannelData(0);
+      const pcm = new Int16Array(input.length);
+      for (let i = 0; i < input.length; i++) pcm[i] = Math.max(-32768, Math.min(32767, input[i] * 32768));
+      const b64 = btoa(String.fromCharCode(...new Uint8Array(pcm.buffer)));
+      alexWsConnection.send(JSON.stringify({ realtime_input: { media_chunks: [{ mime_type: 'audio/pcm;rate=24000', data: b64 }] } }));
+    }
+  };
+  source.connect(alexAudioProcessor);
+  alexAudioProcessor.connect(alexAudioContext.destination);
+}
+
+async function playAlexAudio(b64) {
+  if (!alexAudioCtxOutput) alexAudioCtxOutput = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
+  const raw = atob(b64);
+  const pcm = new Int16Array(raw.length / 2);
+  for (let i = 0; i < pcm.length; i++) pcm[i] = (raw.charCodeAt(i*2)) | (raw.charCodeAt(i*2+1) << 8);
+  const buf = alexAudioCtxOutput.createBuffer(1, pcm.length, 24000);
+  const ch = buf.getChannelData(0);
+  for (let i = 0; i < pcm.length; i++) ch[i] = pcm[i] / 32768;
+  const src = alexAudioCtxOutput.createBufferSource();
+  src.buffer = buf;
+  src.connect(alexAudioCtxOutput.destination);
+  const now = alexAudioCtxOutput.currentTime;
+  if (alexNextStartTime < now) alexNextStartTime = now;
+  src.start(alexNextStartTime);
+  alexNextStartTime += buf.duration;
+}
 
 function initApp() {
   // Show mobile nav if on mobile screen
@@ -17818,21 +17981,244 @@ initApp();
 
 </script>
 
-<button id="help-btn" onclick="openHelpModal()" style="position:fixed;bottom:90px;right:20px;width:44px;height:44px;border-radius:50%;background:#002147;color:white;border:none;font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,33,71,0.25);z-index:150;display:flex;align-items:center;justify-content:center;">?</button>
+<button id="help-btn" onclick="openAlexAssistant()" style="position:fixed;bottom:24px;left:20px;z-index:150;display:flex;align-items:center;gap:8px;background:#002147;color:white;border:none;border-radius:100px;padding:10px 16px 10px 12px;cursor:pointer;box-shadow:0 4px 20px rgba(0,33,71,0.3);font-family:Manrope,sans-serif;font-weight:700;font-size:13px;">
+  <span style="font-size:22px;line-height:1;">🧑‍🏫</span>
+  <span>Alex</span>
+</button>
 
-<div id="help-modal" style="display:none;position:fixed;inset:0;z-index:210;background:rgba(0,0,0,0.6);align-items:flex-end;justify-content:center;padding:0;">
-  <div style="background:white;border-radius:24px 24px 0 0;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;padding:32px 24px 40px;margin:0 auto;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-      <h3 style="font-family:Manrope,sans-serif;font-size:20px;font-weight:800;color:#002147;">¿Por qué funciona este método?</h3>
-      <button onclick="closeHelpModal()" style="background:#f1f5f9;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">✕</button>
+<!-- ALEX INTRO MODAL -->
+<div id="alex-intro-modal" style="display:none;position:fixed;inset:0;z-index:220;background:rgba(0,0,0,0.6);align-items:flex-end;justify-content:center;">
+  <div style="background:white;border-radius:24px 24px 0 0;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;padding:28px 24px 36px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:64px;margin-bottom:8px;">🧑‍🏫</div>
+      <h3 style="font-family:Manrope,sans-serif;font-size:22px;font-weight:800;color:#002147;margin-bottom:6px;">Hola, soy Alex</h3>
+      <p style="color:#64748b;font-size:14px;line-height:1.5;">Tu asistente de inglés para el curso Nissei. Hablo con vos por voz y puedo ayudarte con todo lo relacionado al idioma y al curso.</p>
     </div>
-    <div style="display:flex;flex-direction:column;gap:14px;">
-      <div style="background:#f0f4ff;border-radius:14px;padding:16px;"><p style="font-size:20px;margin-bottom:6px;">🧠</p><p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">El cerebro aprende mientras dormís</p><p style="color:#64748b;font-size:13px;line-height:1.6;"><strong style="color:#002147;">10 minutos diarios</strong> activan la consolidación nocturna. Más poderoso que 2 horas los sábados.</p></div>
-      <div style="background:#f0fdf4;border-radius:14px;padding:16px;"><p style="font-size:20px;margin-bottom:6px;">🔁</p><p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">La frecuencia supera a la duración</p><p style="color:#64748b;font-size:13px;line-height:1.6;">Paul Nation (30 años): <strong style="color:#002147;">la repetición diaria</strong> construye conexiones permanentes.</p></div>
-      <div style="background:#fff7ed;border-radius:14px;padding:16px;"><p style="font-size:20px;margin-bottom:6px;">📥</p><p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">Método Krashen</p><p style="color:#64748b;font-size:13px;line-height:1.6;">Primero escuchás, luego repetís, luego hablás.</p></div>
-      <div style="background:#fdf4ff;border-radius:14px;padding:16px;"><p style="font-size:20px;margin-bottom:6px;">🎯</p><p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">Contexto real de Nissei</p><p style="color:#64748b;font-size:13px;line-height:1.6;">Frases reales de la tienda. El cerebro retiene mejor lo útil.</p></div>
+    <div style="background:#f0f4ff;border-radius:16px;padding:16px;margin-bottom:12px;">
+      <p style="font-weight:700;color:#002147;font-size:13px;margin-bottom:10px;">✅ Podés preguntarme:</p>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:flex-start;gap:8px;"><span style="font-size:16px;">🗣️</span><p style="font-size:13px;color:#374151;">¿Cómo se dice "necesito un cargador" en inglés?</p></div>
+        <div style="display:flex;align-items:flex-start;gap:8px;"><span style="font-size:16px;">📅</span><p style="font-size:13px;color:#374151;">¿Cómo se dicen los meses y los días en inglés?</p></div>
+        <div style="display:flex;align-items:flex-start;gap:8px;"><span style="font-size:16px;">🏪</span><p style="font-size:13px;color:#374151;">¿Cómo le digo a un cliente que el producto está en garantía?</p></div>
+        <div style="display:flex;align-items:flex-start;gap:8px;"><span style="font-size:16px;">🎯</span><p style="font-size:13px;color:#374151;">¿Cómo puedo sonar más natural cuando hablo inglés?</p></div>
+        <div style="display:flex;align-items:flex-start;gap:8px;"><span style="font-size:16px;">📚</span><p style="font-size:13px;color:#374151;">¿Cómo estudio mejor este curso? ¿Qué me recomendás?</p></div>
+        <div style="display:flex;align-items:flex-start;gap:8px;"><span style="font-size:16px;">🔤</span><p style="font-size:13px;color:#374151;">¿Cómo pronuncio correctamente "warranty"?</p></div>
+      </div>
     </div>
-    <button onclick="closeHelpModal()" style="width:100%;padding:14px;background:#002147;color:white;border:none;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;margin-top:20px;">Entendido 👍</button>
+    <div style="background:#fff1f1;border-radius:16px;padding:14px;margin-bottom:20px;">
+      <p style="font-weight:700;color:#dc2626;font-size:13px;margin-bottom:6px;">❌ No puedo ayudarte con:</p>
+      <p style="font-size:13px;color:#6b7280;">Recetas, noticias, clima, política, ni nada fuera del inglés y el curso.</p>
+    </div>
+    <button onclick="startAlexAssistant()" style="width:100%;padding:15px;background:#002147;color:white;border:none;border-radius:14px;font-family:Manrope,sans-serif;font-weight:700;font-size:16px;cursor:pointer;margin-bottom:10px;">🎤 Hablar con Alex</button>
+    <button onclick="closeAlexIntro()" style="width:100%;padding:11px;border:1.5px solid #e2e8f0;border-radius:14px;background:white;font-weight:600;cursor:pointer;font-size:14px;color:#64748b;">Cerrar</button>
+  </div>
+</div>
+
+<!-- ALEX VOICE MODAL -->
+<div id="alex-voice-modal" style="display:none;position:fixed;inset:0;z-index:220;background:rgba(0,0,0,0.75);align-items:center;justify-content:center;padding:16px;">
+  <div style="background:white;border-radius:24px;width:100%;max-width:400px;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#002147,#1d4ed8);padding:24px;text-align:center;">
+      <div style="font-size:56px;margin-bottom:8px;">🧑‍🏫</div>
+      <p style="color:white;font-weight:800;font-size:18px;font-family:Manrope,sans-serif;">Alex — Asistente de inglés</p>
+      <p style="color:rgba(255,255,255,0.65);font-size:12px;margin-top:4px;">Podés preguntarle cualquier cosa sobre inglés y el curso</p>
+    </div>
+    <div style="padding:20px;text-align:center;">
+      <div style="width:72px;height:72px;border-radius:50%;background:#1B4FD8;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+        <span class="material-symbols-outlined" style="color:white;font-size:32px;">mic</span>
+      </div>
+      <p style="font-size:13px;font-weight:600;color:#002147;" id="alex-status">Conectando...</p>
+      <div style="background:#f8f9ff;border-radius:12px;padding:12px;margin-top:14px;min-height:80px;max-height:160px;overflow-y:auto;text-align:left;">
+        <p style="font-size:13px;color:#374151;line-height:1.6;" id="alex-transcript">La conversación aparecerá acá...</p>
+      </div>
+    </div>
+    <div style="padding:0 20px 20px;display:flex;gap:10px;">
+      <button onclick="closeAlexVoice()" style="flex:1;padding:12px;border:1.5px solid #ddd;border-radius:12px;background:white;font-weight:600;cursor:pointer;font-size:14px;">Cerrar</button>
+      <button onclick="closeAlexVoice()" style="flex:1;padding:12px;background:#002147;color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:14px;">Finalizar</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- MOTIVACION MODAL -->
+<div id="motivacion-modal" style="display:none;position:fixed;inset:0;z-index:220;background:rgba(0,0,0,0.6);align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 0;">
+  <div style="background:white;border-radius:24px;width:100%;max-width:560px;margin:auto;overflow:hidden;">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#002147,#1d4ed8);padding:24px;position:relative;">
+      <button onclick="closeMotivacionModal()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.15);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;color:white;font-size:16px;">✕</button>
+      <p style="color:rgba(255,255,255,0.7);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Tu centro de motivación</p>
+      <h2 style="color:white;font-family:Manrope,sans-serif;font-weight:800;font-size:22px;line-height:1.2;">Aprender inglés cambia vidas ⚡</h2>
+    </div>
+
+    <div style="padding:24px;display:flex;flex-direction:column;gap:20px;">
+
+      <!-- Tabs -->
+      <div style="display:flex;gap:6px;background:#f1f5f9;border-radius:12px;padding:4px;">
+        <button onclick="motivTab('habitos')" id="mtab-habitos" style="flex:1;padding:8px 4px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;background:#002147;color:white;">🔥 Hábitos</button>
+        <button onclick="motivTab('aprendizaje')" id="mtab-aprendizaje" style="flex:1;padding:8px 4px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:#64748b;">🧠 Aprendizaje</button>
+        <button onclick="motivTab('guia')" id="mtab-guia" style="flex:1;padding:8px 4px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:#64748b;">📖 Guía</button>
+        <button onclick="motivTab('exitosos')" id="mtab-exitosos" style="flex:1;padding:8px 4px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:#64748b;">🌟 Éxitos</button>
+      </div>
+
+      <!-- Tab: Habitos Atomicos -->
+      <div id="mcontent-habitos">
+        <p style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">Inspirado en Hábitos Atómicos — James Clear</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="background:#fef9ee;border-left:4px solid #f59e0b;border-radius:0 12px 12px 0;padding:14px;">
+            <p style="font-weight:700;color:#92400e;font-size:14px;margin-bottom:4px;">🔥 "Las pequeñas acciones diarias construyen resultados extraordinarios."</p>
+            <p style="color:#78350f;font-size:12px;line-height:1.5;">10 minutos hoy no parecen mucho. Pero 10 minutos cada día por 60 días son 10 horas de práctica real. Así se aprende un idioma.</p>
+          </div>
+          <div style="background:#f0f9ff;border-left:4px solid #0ea5e9;border-radius:0 12px 12px 0;padding:14px;">
+            <p style="font-weight:700;color:#0c4a6e;font-size:14px;margin-bottom:4px;">⚡ "No elevás tus metas, elevás tus sistemas."</p>
+            <p style="color:#075985;font-size:12px;line-height:1.5;">Este curso es tu sistema. Clase + audio + simulador cada día. No necesitás motivación — necesitás el sistema funcionando.</p>
+          </div>
+          <div style="background:#f0fdf4;border-left:4px solid #22c55e;border-radius:0 12px 12px 0;padding:14px;">
+            <p style="font-weight:700;color:#14532d;font-size:14px;margin-bottom:4px;">🎯 "Cada acción es un voto por la persona que querés ser."</p>
+            <p style="color:#166534;font-size:12px;line-height:1.5;">Cada clase que completás es un voto por ser el vendedor que puede atender a cualquier cliente en el mundo.</p>
+          </div>
+          <div style="background:#fdf4ff;border-left:4px solid #a855f7;border-radius:0 12px 12px 0;padding:14px;">
+            <p style="font-weight:700;color:#581c87;font-size:14px;margin-bottom:4px;">🔁 "La repetición es la que crea la identidad."</p>
+            <p style="color:#6b21a8;font-size:12px;line-height:1.5;">No digas "estoy aprendiendo inglés". Decí "soy alguien que practica inglés todos los días". Esa diferencia lo cambia todo.</p>
+          </div>
+          <div style="background:#fff1f2;border-left:4px solid #f43f5e;border-radius:0 12px 12px 0;padding:14px;">
+            <p style="font-weight:700;color:#881337;font-size:14px;margin-bottom:4px;">📈 "No rompas la cadena."</p>
+            <p style="color:#9f1239;font-size:12px;line-height:1.5;">Cada día de racha es un eslabón. El sistema de racha de esta app existe por una razón: mantener la cadena inquebrantable.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Aprendizaje -->
+      <div id="mcontent-aprendizaje" style="display:none;">
+        <p style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">Consejos de expertos en adquisición de idiomas</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="background:#f0f4ff;border-radius:14px;padding:14px;">
+            <p style="font-size:18px;margin-bottom:6px;">🎬</p>
+            <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">Mirá series primero en español, luego en inglés sin subtítulos</p>
+            <p style="color:#64748b;font-size:13px;line-height:1.5;">Elegí un episodio que ya conozcas. Miralo en español. Después miralo completo en inglés sin subtítulos. Tu cerebro va a completar lo que no entiende con contexto — así funciona la adquisición natural.</p>
+          </div>
+          <div style="background:#f0fdf4;border-radius:14px;padding:14px;">
+            <p style="font-size:18px;margin-bottom:6px;">🎵</p>
+            <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">Escuchá música en inglés y seguí la letra</p>
+            <p style="color:#64748b;font-size:13px;line-height:1.5;">Buscá la letra en Google mientras escuchás. No es necesario entender todo — el ritmo y la melodía ayudan a que las frases se graben en la memoria.</p>
+          </div>
+          <div style="background:#fff7ed;border-radius:14px;padding:14px;">
+            <p style="font-size:18px;margin-bottom:6px;">📱</p>
+            <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">Cambiá el idioma de tu celular a inglés</p>
+            <p style="color:#64748b;font-size:13px;line-height:1.5;">Es un input constante de 50-100 palabras por día sin esfuerzo extra. En una semana ya no lo vas a notar — pero tu cerebro sí.</p>
+          </div>
+          <div style="background:#fdf4ff;border-radius:14px;padding:14px;">
+            <p style="font-size:18px;margin-bottom:6px;">🗣️</p>
+            <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">Pensá en inglés al hacer tareas simples</p>
+            <p style="color:#64748b;font-size:13px;line-height:1.5;">Cuando caminás al trabajo, describí mentalmente lo que ves en inglés. "There's a blue car. The weather is warm." Son 5 minutos de práctica gratis al día.</p>
+          </div>
+          <div style="background:#f0f9ff;border-radius:14px;padding:14px;">
+            <p style="font-size:18px;margin-bottom:6px;">🔄</p>
+            <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:4px;">Repetí los audios de este curso más de una vez</p>
+            <p style="color:#64748b;font-size:13px;line-height:1.5;">La primera vez escuchás. La segunda vez entendés más. La tercera vez ya anticipás las frases. Así funciona el input comprensible — no es memorizar, es absorber.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Guía de uso -->
+      <div id="mcontent-guia" style="display:none;">
+        <p style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">Cómo usar este curso al máximo</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="background:#002147;border-radius:14px;padding:16px;">
+            <p style="color:white;font-weight:800;font-size:15px;margin-bottom:8px;">📅 Rutina diaria recomendada (10 min)</p>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;align-items:center;gap:8px;"><span style="background:rgba(255,255,255,0.15);color:white;font-size:11px;font-weight:700;padding:2px 8px;border-radius:100px;">1</span><p style="color:rgba(255,255,255,0.85);font-size:13px;">Completá una clase (video + vocabulario + shadowing) ~4 min</p></div>
+              <div style="display:flex;align-items:center;gap:8px;"><span style="background:rgba(255,255,255,0.15);color:white;font-size:11px;font-weight:700;padding:2px 8px;border-radius:100px;">2</span><p style="color:rgba(255,255,255,0.85);font-size:13px;">Escuchá el audio del día ~3 min</p></div>
+              <div style="display:flex;align-items:center;gap:8px;"><span style="background:rgba(255,255,255,0.15);color:white;font-size:11px;font-weight:700;padding:2px 8px;border-radius:100px;">3</span><p style="color:rgba(255,255,255,0.85);font-size:13px;">Practicá 1 simulador libre ~3 min</p></div>
+            </div>
+          </div>
+          <div style="background:#f0f4ff;border-radius:14px;padding:14px;">
+            <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:6px;">🚀 Modo intensivo (semana completa de una vez)</p>
+            <p style="color:#64748b;font-size:13px;line-height:1.5;">Hacé las 5 clases de una semana en un día. Luego, durante los próximos 6 días, volvé a esas clases pero solo con el shadowing y los simuladores. Así reforzás sin avanzar hasta que esté sólido.</p>
+          </div>
+          <div style="background:#f0fdf4;border-radius:14px;padding:14px;">
+            <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:6px;">🎯 Cómo usar el Shadowing</p>
+            <p style="color:#64748b;font-size:13px;line-height:1.5;">Alex te enseña frase por frase. Escuchá primero completo. Luego repetí cuando te lo pida. No importa si no sale perfecto — lo que importa es la cantidad de repeticiones.</p>
+          </div>
+          <div style="background:#fff7ed;border-radius:14px;padding:14px;">
+            <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:6px;">🎭 Cómo usar los Simuladores</p>
+            <p style="color:#64748b;font-size:13px;line-height:1.5;">Presioná Comenzar y el cliente empieza. Respondé como si fuera real. Si te trabás, el cliente repite más despacio. Al final recibís una nota y un consejo específico.</p>
+          </div>
+          <div style="background:#fdf4ff;border-radius:14px;padding:14px;">
+            <p style="font-weight:700;color:#002147;font-size:14px;margin-bottom:6px;">🎧 Cómo usar los Audios</p>
+            <p style="color:#64748b;font-size:13px;line-height:1.5;">Escuchá mientras caminás, en el colectivo o durante un descanso. La primera escucha es de exploración. La segunda escucha es de comprensión. La tercera ya es tuya.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Personas exitosas -->
+      <div id="mcontent-exitosos" style="display:none;">
+        <p style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">Lo que dicen quienes llegaron lejos</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="background:#fef9ee;border-radius:14px;padding:16px;">
+            <p style="font-size:28px;color:#f59e0b;margin-bottom:6px;">"</p>
+            <p style="font-weight:600;color:#1e293b;font-size:14px;line-height:1.6;margin-bottom:8px;">Si solo pudiera darle un consejo a los jóvenes emprendedores, les diría que aprendan inglés. Abrió todo para mí.</p>
+            <p style="font-size:12px;font-weight:700;color:#f59e0b;">Jack Ma — Fundador de Alibaba</p>
+          </div>
+          <div style="background:#f0f9ff;border-radius:14px;padding:16px;">
+            <p style="font-size:28px;color:#0ea5e9;margin-bottom:6px;">"</p>
+            <p style="font-weight:600;color:#1e293b;font-size:14px;line-height:1.6;margin-bottom:8px;">El inglés no es solo un idioma. Es una llave que abre puertas que ni sabías que existían.</p>
+            <p style="font-size:12px;font-weight:700;color:#0ea5e9;">Carlos Slim — Empresario, una de las mayores fortunas del mundo</p>
+          </div>
+          <div style="background:#f0fdf4;border-radius:14px;padding:16px;">
+            <p style="font-size:28px;color:#22c55e;margin-bottom:6px;">"</p>
+            <p style="font-weight:600;color:#1e293b;font-size:14px;line-height:1.6;margin-bottom:8px;">Aprender un segundo idioma es una de las mejores inversiones que puede hacer una persona. El retorno es de por vida.</p>
+            <p style="font-size:12px;font-weight:700;color:#22c55e;">Sundar Pichai — CEO de Google</p>
+          </div>
+          <div style="background:#fdf4ff;border-radius:14px;padding:16px;">
+            <p style="font-size:28px;color:#a855f7;margin-bottom:6px;">"</p>
+            <p style="font-weight:600;color:#1e293b;font-size:14px;line-height:1.6;margin-bottom:8px;">El inglés me permitió conectar con personas de todo el mundo. Sin eso, mi carrera habría sido completamente diferente.</p>
+            <p style="font-size:12px;font-weight:700;color:#a855f7;">Indra Nooyi — Ex CEO de PepsiCo</p>
+          </div>
+          <div style="background:#fff1f2;border-radius:14px;padding:16px;">
+            <p style="font-size:28px;color:#f43f5e;margin-bottom:6px;">"</p>
+            <p style="font-weight:600;color:#1e293b;font-size:14px;line-height:1.6;margin-bottom:8px;">Saber inglés multiplica tus oportunidades. Es la diferencia entre quedarte en un mercado local o competir en el mundo.</p>
+            <p style="font-size:12px;font-weight:700;color:#f43f5e;">Ricardo Salinas Pliego — Fundador de Grupo Salinas</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div style="padding:0 24px 24px;">
+      <button onclick="closeMotivacionModal()" style="width:100%;padding:14px;background:#002147;color:white;border:none;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;font-family:Manrope,sans-serif;">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+
+<div id="xp-how-modal" style="display:none;position:fixed;inset:0;z-index:220;background:rgba(0,0,0,0.6);align-items:flex-end;justify-content:center;">
+  <div style="background:white;border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:28px 24px 36px;margin:0 auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <h3 style="font-family:Manrope,sans-serif;font-size:18px;font-weight:800;color:#002147;">Cómo funciona el sistema de XP</h3>
+      <button onclick="document.getElementById('xp-how-modal').style.display='none'" style="background:#f1f5f9;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+      <div style="background:#f0f4ff;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:24px;">🥇</span>
+        <div><p style="font-weight:700;color:#002147;font-size:14px;">Primera escucha del día</p><p style="color:#64748b;font-size:13px;">+15 XP — la más valiosa</p></div>
+      </div>
+      <div style="background:#f0fdf4;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:24px;">🥈</span>
+        <div><p style="font-weight:700;color:#002147;font-size:14px;">Segunda escucha</p><p style="color:#64748b;font-size:13px;">+8 XP — la comprensión se profundiza</p></div>
+      </div>
+      <div style="background:#fff7ed;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:24px;">🥉</span>
+        <div><p style="font-weight:700;color:#002147;font-size:14px;">Tercera escucha en adelante</p><p style="color:#64748b;font-size:13px;">+3 XP — refuerzo y fluidez</p></div>
+      </div>
+      <div style="background:#fdf4ff;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:24px;">🔒</span>
+        <div><p style="font-weight:700;color:#002147;font-size:14px;">Máximo por día</p><p style="color:#64748b;font-size:13px;">30 XP diarios por audios — para mantener el balance</p></div>
+      </div>
+      <div style="background:#fef9ee;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:24px;">🔥</span>
+        <div><p style="font-weight:700;color:#002147;font-size:14px;">Bonus de racha</p><p style="color:#64748b;font-size:13px;">7 días seguidos: +50 XP · 30 días: +200 XP</p></div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:#94a3b8;text-align:center;margin-bottom:16px;">💡 Consejo: escuchá el audio de tu clase del día para multiplicar el aprendizaje</p>
+    <button onclick="document.getElementById('xp-how-modal').style.display='none'" style="width:100%;padding:14px;background:#002147;color:white;border:none;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;">Entendido 👍</button>
   </div>
 </div>
 
