@@ -16879,6 +16879,7 @@ function launchConfetti() {
 // ── SIMULADOR DE VOZ ──────────────────────────────────────────
 function openVoiceModal(mode) {
   voiceMode = mode;
+  activeModalType = 'voice';
   const modal = document.getElementById('voice-modal');
   modal.classList.add('open');
 
@@ -16941,13 +16942,38 @@ function startVoiceSession() {
   connectDirect();
 }
 
+// Which modal is currently active: 'voice' or 'sim'
+var activeModalType = 'voice';
+
+function safeSetStatus(msg, sub) {
+  if (activeModalType === 'voice') {
+    setStatus(msg, sub || '');
+  } else {
+    var el = document.getElementById('sim-status');
+    if (el) el.textContent = msg;
+  }
+}
+
+function safeAddTranscript(who, text) {
+  if (activeModalType === 'voice') {
+    addToTranscript(who, text);
+  } else {
+    var el = document.getElementById('sim-transcript');
+    if (el) {
+      if (el.textContent === 'La conversacion aparecera aca...') el.textContent = '';
+      el.textContent += (el.textContent ? '\n' : '') + who + ': ' + text;
+      el.scrollTop = el.scrollHeight;
+    }
+  }
+}
+
 function connectDirect() {
   const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${apiKey}`;
   
   try {
     wsConnection = new WebSocket(wsUrl);
   } catch(e) {
-    setStatus('Error al conectar', e.message);
+    safeSetStatus('Error al conectar');
     return;
   }
 
@@ -16955,7 +16981,7 @@ function connectDirect() {
     console.log('WebSocket abierto, enviando setup...');
     const setupMsg = {
       setup: {
-        model: 'models/gemini-3.1-flash-live-preview',
+        model: 'models/gemini-2.0-flash-live-001',
         generationConfig: {
           responseModalities: ['AUDIO'],
           speechConfig: {
@@ -16966,13 +16992,16 @@ function connectDirect() {
       }
     };
     wsConnection.send(JSON.stringify(setupMsg));
-    setStatus('Conectando...', 'Un momento...');
+    safeSetStatus('Listo — presioná el botón verde');
 
-    document.getElementById('finish-btn').style.display = 'block';
+    // Show finish button only in voice modal
+    if (activeModalType === 'voice') {
+      var fb = document.getElementById('finish-btn');
+      if (fb) fb.style.display = 'block';
+      var wb = document.getElementById('wave-bars');
+      if (wb) wb.classList.remove('inactive');
+    }
     startMicrophone();
-
-    // Connection ready — update status
-    setStatus('Listo', 'Presioná el botón verde para comenzar');
   };
 
   wsConnection.onmessage = async (event) => {
@@ -16983,23 +17012,29 @@ function connectDirect() {
       const parts = data?.serverContent?.modelTurn?.parts || [];
       parts.forEach(part => {
         if (part.inlineData?.data) playAudioChunk(part.inlineData.data);
-        if (part.text) addToTranscript('Alex', part.text);
+        if (part.text) safeAddTranscript('Alex', part.text);
       });
       const trans = data?.serverContent?.outputTranscription?.text;
-      if (trans) addToTranscript('Alex', trans);
+      if (trans) safeAddTranscript('Alex', trans);
     } catch(e) { console.log('Error parsing:', e); }
   };
 
   wsConnection.onerror = (e) => {
     console.log('WS error:', e);
-    setStatus('Error de conexión', 'Verificá tu API Key');
-    document.getElementById('wave-bars').classList.add('inactive');
+    safeSetStatus('Error de conexión');
+    if (activeModalType === 'voice') {
+      var wb = document.getElementById('wave-bars');
+      if (wb) wb.classList.add('inactive');
+    }
   };
 
   wsConnection.onclose = (e) => {
-    console.log('WS cerró. Código:', e.code, 'Razón:', e.reason);
-    setStatus('Sesión finalizada — código: ' + e.code, e.reason || '');
-    document.getElementById('wave-bars').classList.add('inactive');
+    console.log('WS cerró. Código:', e.code);
+    safeSetStatus('Sesión finalizada');
+    if (activeModalType === 'voice') {
+      var wb = document.getElementById('wave-bars');
+      if (wb) wb.classList.add('inactive');
+    }
   };
 }
 
@@ -17382,6 +17417,7 @@ function openSimulator(sim) {
   document.getElementById('sim-modal').style.display = 'flex';
   currentSystemPrompt = sim.prompt;
   voiceMode = 'simulation';
+  activeModalType = 'sim';
   connectDirect();
 }
 
@@ -17790,6 +17826,7 @@ function openPracticaClase(classNum) {
   document.getElementById('sim-modal').style.display = 'flex';
   currentSystemPrompt = getPracticaPrompt(classNum);
   voiceMode = 'simulation';
+  activeModalType = 'sim';
   var startBtn = document.getElementById('sim-start-btn');
   if (startBtn) startBtn.style.display = 'flex';
   connectDirect();
