@@ -17370,7 +17370,7 @@ function openSimulator(sim) {
   document.getElementById('sim-modal-avatar').innerHTML = getAvatar(sim);
   document.getElementById('sim-modal-name').textContent = sim.name + ' - ' + sim.country;
   document.getElementById('sim-modal-topic').textContent = sim.topic;
-  document.getElementById('sim-transcript').textContent = 'La conversación aparecerá acá...';
+  document.getElementById('sim-transcript').textContent = 'La conversacion aparecera aca...';
   var startBtn = document.getElementById('sim-start-btn');
   if (startBtn) startBtn.style.display = 'flex';
   document.getElementById('sim-status').textContent = 'Conectando...';
@@ -17772,7 +17772,7 @@ function openPracticaClase(classNum) {
   document.getElementById('sim-modal-avatar').innerHTML = '<div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#7c3aed);display:flex;align-items:center;justify-content:center;"><span class=\"material-symbols-outlined\" style=\"color:white;font-size:28px;\">school</span></div>';
   document.getElementById('sim-modal-name').textContent = 'Practica de Clase ' + classNum;
   document.getElementById('sim-modal-topic').textContent = title;
-  document.getElementById('sim-transcript').textContent = 'La conversación aparecerá acá...';
+  document.getElementById('sim-transcript').textContent = 'La conversacion aparecera aca...';
   var startBtn = document.getElementById('sim-start-btn');
   if (startBtn) startBtn.style.display = 'flex';
   document.getElementById('sim-status').textContent = 'Conectando...';
@@ -17905,8 +17905,7 @@ async function connectAlex() {
         }
         if (part.text) {
           const t = document.getElementById('alex-transcript');
-          if (t) { t.textContent += (t.textContent === 'La conversación aparecerá acá...' ? '' : '
-') + 'Alex: ' + part.text; t.scrollTop = t.scrollHeight; }
+          if (t) { t.textContent += (t.textContent === 'La conversacion aparecera aca...' ? '' : '\n') + 'Alex: ' + part.text; t.scrollTop = t.scrollHeight; }
         }
       }
     }
