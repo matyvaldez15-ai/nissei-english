@@ -17268,6 +17268,12 @@ function safeAddTranscript(who, text) {
 }
 
 function connectDirect() {
+  // Close any existing connection first
+  if (wsConnection) {
+    try { wsConnection.close(); } catch(e) {}
+    wsConnection = null;
+  }
+
   const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${apiKey}`;
   
   try {
@@ -17329,12 +17335,23 @@ function connectDirect() {
   };
 
   wsConnection.onclose = (e) => {
-    console.log('WS cerró. Código:', e.code);
-    safeSetStatus('Sesión finalizada');
+    console.log('WS cerró. Código:', e.code, 'Razón:', e.reason);
+    if (e.code === 1008) {
+      safeSetStatus('Error de API (1008) — Esperá 30 segundos y volvé a intentar');
+    } else if (e.code === 1000) {
+      safeSetStatus('Sesión finalizada correctamente');
+    } else {
+      safeSetStatus('Conexión cerrada (código: ' + e.code + ') — Intentá de nuevo');
+    }
     if (activeModalType === 'voice') {
       var wb = document.getElementById('wave-bars');
       if (wb) wb.classList.add('inactive');
     }
+    // Re-show the Comenzar button so user can retry
+    var vBtn = document.getElementById('voice-start-btn');
+    if (vBtn && activeModalType === 'voice') vBtn.style.display = 'flex';
+    var sBtn = document.getElementById('sim-start-btn');
+    if (sBtn && activeModalType === 'sim') sBtn.style.display = 'flex';
   };
 }
 
@@ -17713,16 +17730,16 @@ function openSimulator(sim) {
   document.getElementById('sim-transcript').textContent = 'La conversacion aparecera aca...';
   var startBtn = document.getElementById('sim-start-btn');
   if (startBtn) startBtn.style.display = 'flex';
-  document.getElementById('sim-status').textContent = 'Conectando...';
+  document.getElementById('sim-status').textContent = 'Conectando con Gemini...';
   document.getElementById('sim-modal').style.display = 'flex';
   currentSystemPrompt = sim.prompt;
   voiceMode = 'simulation';
   activeModalType = 'sim';
-  // Use same apiKey as classes
   if (!apiKey) {
     apiKey = localStorage.getItem('gemini_api_key') || '';
   }
-  connectDirect();
+  // Small delay to let modal render before connecting
+  setTimeout(function() { connectDirect(); }, 300);
 }
 
 function stopVoiceSession() {
@@ -18174,16 +18191,20 @@ function voiceSimSendHello() {
 }
 
 function sendHelloWhenReady(ws, attempts) {
-  if (ws && ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify({
+  if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
+    wsConnection.send(JSON.stringify({
       client_content: {
         turns: [{ role: 'user', parts: [{ text: 'Hello' }] }],
         turn_complete: true
       }
     }));
-  } else if (attempts < 20) {
-    // Retry every 300ms up to 6 seconds
-    setTimeout(function() { sendHelloWhenReady(wsConnection, attempts + 1); }, 300);
+    safeSetStatus('Conectado — Alex esta hablando...');
+  } else if (attempts < 40) {
+    // Retry every 500ms up to 20 seconds
+    setTimeout(function() { sendHelloWhenReady(wsConnection, attempts + 1); }, 500);
+  } else {
+    // Still not connected after 20 seconds — show retry button
+    safeSetStatus('No se pudo conectar. Cerrá y volvé a abrir.');
   }
 }
 
