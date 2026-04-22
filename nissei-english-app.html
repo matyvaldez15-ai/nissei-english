@@ -16982,13 +16982,13 @@ function connectDirect() {
     const setupMsg = {
       setup: {
         model: 'models/gemini-2.0-flash-live-001',
-        generationConfig: {
-          responseModalities: ['AUDIO'],
-          speechConfig: {
-            voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Charon' } }
+        generation_config: {
+          response_modalities: ['AUDIO'],
+          speech_config: {
+            voice_config: { prebuilt_voice_config: { voice_name: 'Charon' } }
           }
         },
-        systemInstruction: { parts: [{ text: currentSystemPrompt }] }
+        system_instruction: { parts: [{ text: currentSystemPrompt }] }
       }
     };
     wsConnection.send(JSON.stringify(setupMsg));
@@ -17418,6 +17418,10 @@ function openSimulator(sim) {
   currentSystemPrompt = sim.prompt;
   voiceMode = 'simulation';
   activeModalType = 'sim';
+  // Use same apiKey as classes
+  if (!apiKey) {
+    apiKey = localStorage.getItem('gemini_api_key') || '';
+  }
   connectDirect();
 }
 
